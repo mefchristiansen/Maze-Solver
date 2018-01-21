@@ -4,7 +4,17 @@ import java.awt.*;
 import javax.swing.*;
 
 public class MazeSolver {
-	public static final int VISITED = 1;
+    enum Dir {
+        N(0, -1), S(0, 1), E(1, 0), W(-1, 0);
+
+        final int dx;
+        final int dy;
+        
+        Dir(int dx, int dy) {
+            this.dx = dx;
+            this.dy = dy;
+        }    
+    };
 
 	private final int numRows;
 	private final int numCols;
@@ -12,34 +22,84 @@ public class MazeSolver {
 	LinkedList<Node> solution;
 
 	public static void main(String[] args) {
-		MazeSolver mazeSolver = new MazeSolver();
+		MazeSolver mazeSolver = new MazeSolver(11);
+
+        Node end;
+        end = mazeSolver.BFSSolve(1,1,9,9);
+        end = mazeSolver.DFSSolve(1,1,9,9);
 
 	}
 
-	public MazeSolver() {
-		numRows = 5;
-		numCols = 5;
+	public MazeSolver(int size) {
+		numRows = size;
+		numCols = size;
 
-		maze = new char[numRows][numCols];
+		initMaze();
 
-		for (int r = 0; r < numRows; r++) {
-			for (int c = 0; c < numCols; c++) {
-				maze[r][c] = ' ';
-			}
-		}
+        printMaze();
 
-		initGUI();
+		// initGUI();
 	}
 
-	private void initGUI() {
-		// JFrame frame = new JFrame("Maze Solver");
-		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// frame.setBounds(50, 50, 200, 200);
-		// frame.setVisible(true);
-	}
+	// private void initGUI() {
+	// 	JFrame frame = new JFrame("Java Mazes");
+ //        JPanel container = new JPanel();
+ //        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+ //        frame.setContentPane(container);
+ //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+ //        frame.pack();
+ //        frame.setLocationRelativeTo(null);
+ //        frame.setVisible(true);
+	// }
 
+    private void initMaze() {
+        maze = new char[numRows][numCols];
 
-	public void BFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
+        for (int r = 0; r < numRows; r++) {
+            for (int c = 0; c < numCols; c++) {
+                maze[r][c] = 'O';
+            }
+        }
+
+        Random rand = new Random();
+
+        int r = rand.nextInt(numRows);
+        while (r % 2 == 0) {
+            r = rand.nextInt(numRows);
+        }
+        int c = rand.nextInt(numCols);
+        while (c % 2 == 0) {
+            c = rand.nextInt(numCols);
+        }
+
+        maze[r][c] = ' ';
+
+        System.out.println("Start. R: " + r + ", C: " + c);
+
+        generateMaze(r, c);
+
+    }
+
+    private void generateMaze(int r, int c) {
+        Dir[] dirs = Dir.values();
+        Collections.shuffle(Arrays.asList(dirs));
+        for (Dir dir : dirs) {
+            int nc = c + dir.dx * 2;
+            int nr = r + dir.dy * 2;
+            if (inBounds(nr, nc) && maze[nr][nc] != ' ') {
+                maze[nr - dir.dy][nc - dir.dx] = ' ';
+                maze[nr][nc] = ' ';
+
+                // printMaze();
+
+                // System.exit(0);
+
+                generateMaze(nr, nc);
+            }
+        }
+    }
+
+	public Node BFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
 		Queue<Node> searchQueue = new LinkedList<Node>();
 		boolean[][] visited = new boolean[numRows][numCols];
 		for (int r = 0; r < numRows; r++) {
@@ -61,7 +121,9 @@ public class MazeSolver {
 			row = topNode.row();
 			col = topNode.col();
 
-			topNode.printNode();
+            if (row == rowEnd && col == colEnd) {
+                return topNode;
+            }
 
 			for (int rowDir = -1; rowDir <= 1; rowDir++) {
 				for (int colDir = -1; colDir <= 1; colDir++) {
@@ -79,57 +141,116 @@ public class MazeSolver {
 			}
 		}
 
+        return null;
+
 	}
 
-	public void DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
-		boolean[][] visited = new boolean[numRows][numCols];
-		for (int r = 0; r < numRows; r++) {
-			for (int c = 0; c < numCols; c++) {
-				visited[r][c] = false;
-			}
-		}
+    public Node DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
+        Stack<Node> searchStack = new Stack<Node>();
+        boolean[][] visited = new boolean[numRows][numCols];
+        for (int r = 0; r < numRows; r++) {
+            for (int c = 0; c < numCols; c++) {
+                visited[r][c] = false;
+            }
+        }
 
-		Node root = new Node(rowStart, colStart, null);
+        int row, col, newRow, newCol;
 
-		Stack<Node> pathStack = new Stack<Node>();
+        Node root = new Node(rowStart, colStart, null);
+        searchStack.add(root);
+        visited[rowStart][colStart] = true;
 
-		DFS(root, visited, pathStack);
-	}
+        while(searchStack.empty()) {
+            Node topNode = searchStack.peek();
+            searchStack.pop();
 
-	public void DFS(Node root, boolean[][] visited, Stack<Node> pathStack) {
-		if (root == null) {
-			return;
-		}
+            row = topNode.row();
+            col = topNode.col();
 
-		int row = root.row();
-		int col = root.col();
-		int newRow, newCol;
+            if (row == rowEnd && col == colEnd) {
+                return topNode;
+            }
 
-		root.printNode();
+            for (int rowDir = -1; rowDir <= 1; rowDir++) {
+                for (int colDir = -1; colDir <= 1; colDir++) {
+                    if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
+                        newRow = row + rowDir;
+                        newCol = col + colDir;
 
-		visited[row][col] = true;
+                        if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
+                            visited[newRow][newCol] = true;
+                            Node child = new Node(newRow, newCol, topNode);
+                            searchStack.push(child);
+                        }
+                    }
+                }
+            }
+        }
 
-		pathStack.push(root);
+        return null;
+    }
 
-		for (int rowDir = -1; rowDir <= 1; rowDir++) {
-			for (int colDir = -1; colDir <= 1; colDir++) {
-				if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
-					newRow = row + rowDir;
-					newCol = col + colDir;
+	// public void DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
+	// 	boolean[][] visited = new boolean[numRows][numCols];
+	// 	for (int r = 0; r < numRows; r++) {
+	// 		for (int c = 0; c < numCols; c++) {
+	// 			visited[r][c] = false;
+	// 		}
+	// 	}
 
-					if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
-						Node child = new Node(newRow, newCol, root);
-						DFS(child, visited, pathStack);
-					}
-				}
-			}
-		}
-	}
+	// 	Node root = new Node(rowStart, colStart, null);
+
+	// 	Stack<Node> pathStack = new Stack<Node>();
+
+	// 	DFS(root, visited, pathStack, rowEnd, colEnd);
+	// }
+
+	// public void DFS(Node root, boolean[][] visited, Stack<Node> pathStack, int rowEnd, int colEnd) {
+	// 	if (root == null) {
+	// 		return;
+	// 	}
+
+	// 	int row = root.row();
+	// 	int col = root.col();
+
+ //        if (row == rowEnd && col == colEnd) {
+ //            return;
+ //        }
+
+	// 	int newRow, newCol;
+
+	// 	visited[row][col] = true;
+
+	// 	pathStack.push(root);
+
+	// 	for (int rowDir = -1; rowDir <= 1; rowDir++) {
+	// 		for (int colDir = -1; colDir <= 1; colDir++) {
+	// 			if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
+	// 				newRow = row + rowDir;
+	// 				newCol = col + colDir;
+
+	// 				if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
+	// 					Node child = new Node(newRow, newCol, root);
+	// 					DFS(child, visited, pathStack, rowEnd, colEnd);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+
+ //        pathStack.pop();
+	// }
 
 	private boolean inBounds(int row, int col) {
 		return row >= 0 && col >= 0 && row < numRows && col < numCols;
 	}
 
-
+    private void printMaze() {
+        for (int r = 0; r < numRows; r++) {
+            System.out.println();
+            for (int c = 0; c < numCols; c++) {
+                System.out.print(maze[r][c]);
+            }
+        }
+    }
 
 }
