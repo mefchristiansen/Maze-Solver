@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Maze {
 	private final int numRows;
 	private final int numCols;

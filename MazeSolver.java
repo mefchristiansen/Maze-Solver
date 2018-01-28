@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class MazeSolver {
 	enum Direction {
@@ -13,10 +16,11 @@ public class MazeSolver {
 	}
 
 	private Maze maze;
+	private MazeDisplay mazeDisplay;
 
-	public MazeSolver(Maze maze) {
+	public MazeSolver(Maze maze, MazeDisplay mazeDisplay) {
 		this.maze = maze;
-		this.maze.initVisited();
+		this.mazeDisplay = mazeDisplay;
 	}
 
 	public void DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
@@ -35,24 +39,20 @@ public class MazeSolver {
 			Cell unvisitedNeighbor = unvisitedNeighbor(current);
 
 			if (unvisitedNeighbor != null) {
-				// System.out.println("HERE 1");
 			    searchStack.push(current);
 			    current = unvisitedNeighbor;
 			    current.setVisited(true);
 			    current.setSolution(true);
-
-			    // System.out.println("GOING HERE");
-
 			} else if (!searchStack.empty()) {
-				// System.out.println("HERE 2");
 				current.setSolution(false);
 			    current = searchStack.peek();
 			    searchStack.pop();
 			} else {
-				// System.out.println("HERE 3");
 				current.setSolution(false);
 			    current = null;
 			}
+
+			mazeDisplay.animate();
 		}
 	}
 
@@ -82,54 +82,8 @@ public class MazeSolver {
 	    return unvisitedNeighbors.get(rand.nextInt(unvisitedNeighbors.size()));
 	}
 
-
-
- //    public Cell DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
- //        Stack<Cell> searchStack = new Stack<Cell>();
- //        boolean[][] visited = new boolean[numRows][numCols];
- //        for (int r = 0; r < numRows; r++) {
- //            for (int c = 0; c < numCols; c++) {
- //                visited[r][c] = false;
- //            }
- //        }
-
- //        int row, col, newRow, newCol;
-
- //        Cell root = new Cell(rowStart, colStart, null);
- //        searchStack.push(root);
- //        visited[rowStart][colStart] = true;
-
- //        while(!searchStack.empty()) {
- //            Cell topCell = searchStack.peek();
- //            searchStack.pop();
-
- //            row = topCell.row();
- //            col = topCell.col();
-
- //            if (row == rowEnd && col == colEnd) {
- //                return topCell;
- //            }
-
- //            for (int rowDir = -1; rowDir <= 1; rowDir++) {
- //                for (int colDir = -1; colDir <= 1; colDir++) {
- //                    if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
- //                        newRow = row + rowDir;
- //                        newCol = col + colDir;
-
- //                        if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
- //                            visited[newRow][newCol] = true;
- //                            Cell child = new Cell(newRow, newCol, topCell);
- //                            searchStack.push(child);
- //                        }
- //                    }
- //                }
- //            }
- //        }
-
- //        return null;
- //    }
-
-	// public void DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
+	// public Cell BFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
+	// 	Queue<Cell> searchQueue = new LinkedList<Cell>();
 	// 	boolean[][] visited = new boolean[numRows][numCols];
 	// 	for (int r = 0; r < numRows; r++) {
 	// 		for (int c = 0; c < numCols; c++) {
@@ -137,92 +91,41 @@ public class MazeSolver {
 	// 		}
 	// 	}
 
+	// 	int row, col, newRow, newCol;
+
 	// 	Cell root = new Cell(rowStart, colStart, null);
+	// 	searchQueue.add(root);
+	// 	visited[rowStart][colStart] = true;
 
-	// 	Stack<Cell> pathStack = new Stack<Cell>();
+	// 	while(searchQueue.size() != 0) {
+	// 		Cell topCell = searchQueue.peek();
+	// 		searchQueue.remove();
 
-	// 	DFS(root, visited, pathStack, rowEnd, colEnd);
-	// }
+	// 		row = topCell.row();
+	// 		col = topCell.col();
 
-	// public void DFS(Cell root, boolean[][] visited, Stack<Cell> pathStack, int rowEnd, int colEnd) {
-	// 	if (root == null) {
-	// 		return;
-	// 	}
+ //            if (row == rowEnd && col == colEnd) {
+ //                return topCell;
+ //            }
 
-	// 	int row = root.row();
-	// 	int col = root.col();
+	// 		for (int rowDir = -1; rowDir <= 1; rowDir++) {
+	// 			for (int colDir = -1; colDir <= 1; colDir++) {
+	// 				if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
+	// 					newRow = row + rowDir;
+	// 					newCol = col + colDir;
 
- //        if (row == rowEnd && col == colEnd) {
- //            return;
- //        }
-
-	// 	int newRow, newCol;
-
-	// 	visited[row][col] = true;
-
-	// 	pathStack.push(root);
-
-	// 	for (int rowDir = -1; rowDir <= 1; rowDir++) {
-	// 		for (int colDir = -1; colDir <= 1; colDir++) {
-	// 			if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
-	// 				newRow = row + rowDir;
-	// 				newCol = col + colDir;
-
-	// 				if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
-	// 					Cell child = new Cell(newRow, newCol, root);
-	// 					DFS(child, visited, pathStack, rowEnd, colEnd);
+	// 					if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
+	// 						visited[newRow][newCol] = true;
+	// 						Cell child = new Cell(newRow, newCol, topCell);
+	// 						searchQueue.add(child);
+	// 					}
 	// 				}
 	// 			}
 	// 		}
 	// 	}
 
- //        pathStack.pop();
+ //        return null;
+
 	// }
-
-			// public Cell BFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
-			// 	Queue<Cell> searchQueue = new LinkedList<Cell>();
-			// 	boolean[][] visited = new boolean[numRows][numCols];
-			// 	for (int r = 0; r < numRows; r++) {
-			// 		for (int c = 0; c < numCols; c++) {
-			// 			visited[r][c] = false;
-			// 		}
-			// 	}
-
-			// 	int row, col, newRow, newCol;
-
-			// 	Cell root = new Cell(rowStart, colStart, null);
-			// 	searchQueue.add(root);
-			// 	visited[rowStart][colStart] = true;
-
-			// 	while(searchQueue.size() != 0) {
-			// 		Cell topCell = searchQueue.peek();
-			// 		searchQueue.remove();
-
-			// 		row = topCell.row();
-			// 		col = topCell.col();
-
-		 //            if (row == rowEnd && col == colEnd) {
-		 //                return topCell;
-		 //            }
-
-			// 		for (int rowDir = -1; rowDir <= 1; rowDir++) {
-			// 			for (int colDir = -1; colDir <= 1; colDir++) {
-			// 				if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
-			// 					newRow = row + rowDir;
-			// 					newCol = col + colDir;
-
-			// 					if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
-			// 						visited[newRow][newCol] = true;
-			// 						Cell child = new Cell(newRow, newCol, topCell);
-			// 						searchQueue.add(child);
-			// 					}
-			// 				}
-			// 			}
-			// 		}
-			// 	}
-
-		 //        return null;
-
-			// }
 
 }

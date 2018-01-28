@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class MazeGenerator {
 	enum Direction {
@@ -13,9 +16,11 @@ public class MazeGenerator {
 	}
 
 	private Maze maze;
+	private MazeDisplay mazeDisplay;
 
-	public MazeGenerator(Maze maze) {
+	public MazeGenerator(Maze maze, MazeDisplay mazeDisplay) {
 		this.maze = maze;
+		this.mazeDisplay = mazeDisplay;
 	}
 
 	public void generateMaze() {
@@ -37,6 +42,9 @@ public class MazeGenerator {
 	        if (unvisitedNeighbor != null) {
 	            searchStack.push(current);
 	            removeWalls(current, unvisitedNeighbor);
+
+	            mazeDisplay.animate();
+
 	            current = unvisitedNeighbor;
 	            current.setVisited(true);
 
