@@ -5,6 +5,7 @@
 * Draw path from start to end
 * A*
 * Reset Button
+* Click Start and End
 * Color Scheme
 
 ## Links:
