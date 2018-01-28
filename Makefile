@@ -5,8 +5,12 @@ JC = javac
 	$(JC) $(JFLAGS) $*.java
 
 CLASSES = \
+	MazeRunner.java \
+	Maze.java \
+	MazeDisplay.java \
+	MazeGenerator.java \
 	MazeSolver.java \
-	Node.java
+	Cell.java
 
 default: classes
 
@@ -16,4 +20,4 @@ clean:
 	$(RM) *.class
 
 run:
-	@java MazeSolver
+	@java MazeRunner

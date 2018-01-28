@@ -1,194 +1,133 @@
-import java.io.*;
 import java.util.*;
-import java.awt.*;
-import javax.swing.*;
 
 public class MazeSolver {
-    enum Dir {
-        N(0, -1), S(0, 1), E(1, 0), W(-1, 0);
+	enum Direction {
+	    UP(0,1), DOWN(0,-1), LEFT(-1,0), RIGHT(1,0);
 
-        final int dx;
-        final int dy;
-        
-        Dir(int dx, int dy) {
-            this.dx = dx;
-            this.dy = dy;
-        }    
-    };
+	    private final int dx, dy;
 
-	private final int numRows;
-	private final int numCols;
-	private char[][] maze;
-	LinkedList<Node> solution;
-
-	public static void main(String[] args) {
-		MazeSolver mazeSolver = new MazeSolver(11);
-
-        Node end;
-        end = mazeSolver.BFSSolve(1,1,9,9);
-        end = mazeSolver.DFSSolve(1,1,9,9);
-
+	    private Direction(int dx, int dy) {
+	        this.dx = dx;
+	        this.dy = dy;
+	    }
 	}
 
-	public MazeSolver(int size) {
-		numRows = size;
-		numCols = size;
+	private Maze maze;
 
-		initMaze();
-
-        printMaze();
-
-		// initGUI();
+	public MazeSolver(Maze maze) {
+		this.maze = maze;
+		this.maze.initVisited();
 	}
 
-	// private void initGUI() {
-	// 	JFrame frame = new JFrame("Java Mazes");
- //        JPanel container = new JPanel();
- //        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
- //        frame.setContentPane(container);
- //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- //        frame.pack();
- //        frame.setLocationRelativeTo(null);
- //        frame.setVisible(true);
-	// }
+	public void DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
+		Cell current, next;
+		current = maze.mazeCell(rowStart, colStart);
+		current.setVisited(true);
+		current.setSolution(true);
 
-    private void initMaze() {
-        maze = new char[numRows][numCols];
+		Stack<Cell> searchStack = new Stack<Cell>();
 
-        for (int r = 0; r < numRows; r++) {
-            for (int c = 0; c < numCols; c++) {
-                maze[r][c] = 'O';
-            }
-        }
+		while (current != null) {
+			if (current.row() == rowEnd && current.col() == colEnd) {
+				return;
+			}
 
-        Random rand = new Random();
+			Cell unvisitedNeighbor = unvisitedNeighbor(current);
 
-        int r = rand.nextInt(numRows);
-        while (r % 2 == 0) {
-            r = rand.nextInt(numRows);
-        }
-        int c = rand.nextInt(numCols);
-        while (c % 2 == 0) {
-            c = rand.nextInt(numCols);
-        }
+			if (unvisitedNeighbor != null) {
+				// System.out.println("HERE 1");
+			    searchStack.push(current);
+			    current = unvisitedNeighbor;
+			    current.setVisited(true);
+			    current.setSolution(true);
 
-        maze[r][c] = ' ';
+			    // System.out.println("GOING HERE");
 
-        System.out.println("Start. R: " + r + ", C: " + c);
-
-        generateMaze(r, c);
-
-    }
-
-    private void generateMaze(int r, int c) {
-        Dir[] dirs = Dir.values();
-        Collections.shuffle(Arrays.asList(dirs));
-        for (Dir dir : dirs) {
-            int nc = c + dir.dx * 2;
-            int nr = r + dir.dy * 2;
-            if (inBounds(nr, nc) && maze[nr][nc] != ' ') {
-                maze[nr - dir.dy][nc - dir.dx] = ' ';
-                maze[nr][nc] = ' ';
-
-                // printMaze();
-
-                // System.exit(0);
-
-                generateMaze(nr, nc);
-            }
-        }
-    }
-
-	public Node BFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
-		Queue<Node> searchQueue = new LinkedList<Node>();
-		boolean[][] visited = new boolean[numRows][numCols];
-		for (int r = 0; r < numRows; r++) {
-			for (int c = 0; c < numCols; c++) {
-				visited[r][c] = false;
+			} else if (!searchStack.empty()) {
+				// System.out.println("HERE 2");
+				current.setSolution(false);
+			    current = searchStack.peek();
+			    searchStack.pop();
+			} else {
+				// System.out.println("HERE 3");
+				current.setSolution(false);
+			    current = null;
 			}
 		}
-
-		int row, col, newRow, newCol;
-
-		Node root = new Node(rowStart, colStart, null);
-		searchQueue.add(root);
-		visited[rowStart][colStart] = true;
-
-		while(searchQueue.size() != 0) {
-			Node topNode = searchQueue.peek();
-			searchQueue.remove();
-
-			row = topNode.row();
-			col = topNode.col();
-
-            if (row == rowEnd && col == colEnd) {
-                return topNode;
-            }
-
-			for (int rowDir = -1; rowDir <= 1; rowDir++) {
-				for (int colDir = -1; colDir <= 1; colDir++) {
-					if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
-						newRow = row + rowDir;
-						newCol = col + colDir;
-
-						if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
-							visited[newRow][newCol] = true;
-							Node child = new Node(newRow, newCol, topNode);
-							searchQueue.add(child);
-						}
-					}
-				}
-			}
-		}
-
-        return null;
-
 	}
 
-    public Node DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
-        Stack<Node> searchStack = new Stack<Node>();
-        boolean[][] visited = new boolean[numRows][numCols];
-        for (int r = 0; r < numRows; r++) {
-            for (int c = 0; c < numCols; c++) {
-                visited[r][c] = false;
-            }
-        }
+	private Cell unvisitedNeighbor(Cell currCell) {
+	    List<Cell> unvisitedNeighbors = new ArrayList<Cell>();
+	    int currRow = currCell.row();
+	    int currCol = currCell.col();
+	    int newRow, newCol;
+	    Cell nextCell;
+	    Random rand = new Random();
 
-        int row, col, newRow, newCol;
+	    for (Direction dir : Direction.values()) {
+	        newRow = currRow + dir.dy;
+	        newCol = currCol + dir.dx;
 
-        Node root = new Node(rowStart, colStart, null);
-        searchStack.add(root);
-        visited[rowStart][colStart] = true;
+	        nextCell = maze.mazeCell(newRow, newCol);
 
-        while(searchStack.empty()) {
-            Node topNode = searchStack.peek();
-            searchStack.pop();
+	        if (maze.inBounds(newRow, newCol) && !nextCell.visited() && !currCell.wallPresent(dir.dx, dir.dy)) {
+	            unvisitedNeighbors.add(nextCell);
+	        }
+	    }
 
-            row = topNode.row();
-            col = topNode.col();
+	    if (unvisitedNeighbors.size() == 0) {
+	        return null;
+	    }
 
-            if (row == rowEnd && col == colEnd) {
-                return topNode;
-            }
+	    return unvisitedNeighbors.get(rand.nextInt(unvisitedNeighbors.size()));
+	}
 
-            for (int rowDir = -1; rowDir <= 1; rowDir++) {
-                for (int colDir = -1; colDir <= 1; colDir++) {
-                    if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
-                        newRow = row + rowDir;
-                        newCol = col + colDir;
 
-                        if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
-                            visited[newRow][newCol] = true;
-                            Node child = new Node(newRow, newCol, topNode);
-                            searchStack.push(child);
-                        }
-                    }
-                }
-            }
-        }
 
-        return null;
-    }
+ //    public Cell DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
+ //        Stack<Cell> searchStack = new Stack<Cell>();
+ //        boolean[][] visited = new boolean[numRows][numCols];
+ //        for (int r = 0; r < numRows; r++) {
+ //            for (int c = 0; c < numCols; c++) {
+ //                visited[r][c] = false;
+ //            }
+ //        }
+
+ //        int row, col, newRow, newCol;
+
+ //        Cell root = new Cell(rowStart, colStart, null);
+ //        searchStack.push(root);
+ //        visited[rowStart][colStart] = true;
+
+ //        while(!searchStack.empty()) {
+ //            Cell topCell = searchStack.peek();
+ //            searchStack.pop();
+
+ //            row = topCell.row();
+ //            col = topCell.col();
+
+ //            if (row == rowEnd && col == colEnd) {
+ //                return topCell;
+ //            }
+
+ //            for (int rowDir = -1; rowDir <= 1; rowDir++) {
+ //                for (int colDir = -1; colDir <= 1; colDir++) {
+ //                    if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
+ //                        newRow = row + rowDir;
+ //                        newCol = col + colDir;
+
+ //                        if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
+ //                            visited[newRow][newCol] = true;
+ //                            Cell child = new Cell(newRow, newCol, topCell);
+ //                            searchStack.push(child);
+ //                        }
+ //                    }
+ //                }
+ //            }
+ //        }
+
+ //        return null;
+ //    }
 
 	// public void DFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
 	// 	boolean[][] visited = new boolean[numRows][numCols];
@@ -198,14 +137,14 @@ public class MazeSolver {
 	// 		}
 	// 	}
 
-	// 	Node root = new Node(rowStart, colStart, null);
+	// 	Cell root = new Cell(rowStart, colStart, null);
 
-	// 	Stack<Node> pathStack = new Stack<Node>();
+	// 	Stack<Cell> pathStack = new Stack<Cell>();
 
 	// 	DFS(root, visited, pathStack, rowEnd, colEnd);
 	// }
 
-	// public void DFS(Node root, boolean[][] visited, Stack<Node> pathStack, int rowEnd, int colEnd) {
+	// public void DFS(Cell root, boolean[][] visited, Stack<Cell> pathStack, int rowEnd, int colEnd) {
 	// 	if (root == null) {
 	// 		return;
 	// 	}
@@ -230,7 +169,7 @@ public class MazeSolver {
 	// 				newCol = col + colDir;
 
 	// 				if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
-	// 					Node child = new Node(newRow, newCol, root);
+	// 					Cell child = new Cell(newRow, newCol, root);
 	// 					DFS(child, visited, pathStack, rowEnd, colEnd);
 	// 				}
 	// 			}
@@ -240,17 +179,50 @@ public class MazeSolver {
  //        pathStack.pop();
 	// }
 
-	private boolean inBounds(int row, int col) {
-		return row >= 0 && col >= 0 && row < numRows && col < numCols;
-	}
+			// public Cell BFSSolve(int rowStart, int colStart, int rowEnd, int colEnd) {
+			// 	Queue<Cell> searchQueue = new LinkedList<Cell>();
+			// 	boolean[][] visited = new boolean[numRows][numCols];
+			// 	for (int r = 0; r < numRows; r++) {
+			// 		for (int c = 0; c < numCols; c++) {
+			// 			visited[r][c] = false;
+			// 		}
+			// 	}
 
-    private void printMaze() {
-        for (int r = 0; r < numRows; r++) {
-            System.out.println();
-            for (int c = 0; c < numCols; c++) {
-                System.out.print(maze[r][c]);
-            }
-        }
-    }
+			// 	int row, col, newRow, newCol;
+
+			// 	Cell root = new Cell(rowStart, colStart, null);
+			// 	searchQueue.add(root);
+			// 	visited[rowStart][colStart] = true;
+
+			// 	while(searchQueue.size() != 0) {
+			// 		Cell topCell = searchQueue.peek();
+			// 		searchQueue.remove();
+
+			// 		row = topCell.row();
+			// 		col = topCell.col();
+
+		 //            if (row == rowEnd && col == colEnd) {
+		 //                return topCell;
+		 //            }
+
+			// 		for (int rowDir = -1; rowDir <= 1; rowDir++) {
+			// 			for (int colDir = -1; colDir <= 1; colDir++) {
+			// 				if ((rowDir == 0 || colDir == 0) && (rowDir != 0 || colDir != 0)) {
+			// 					newRow = row + rowDir;
+			// 					newCol = col + colDir;
+
+			// 					if (inBounds(newRow, newCol) && maze[newRow][newCol] == ' ' && !visited[newRow][newCol]) {
+			// 						visited[newRow][newCol] = true;
+			// 						Cell child = new Cell(newRow, newCol, topCell);
+			// 						searchQueue.add(child);
+			// 					}
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+
+		 //        return null;
+
+			// }
 
 }
