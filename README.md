@@ -3,6 +3,7 @@
 ## To Do:
 * Click to set start and end
 * Reset Button
+* Click Start and End
 * Color Scheme
 
 ## Links:
