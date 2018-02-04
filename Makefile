@@ -10,6 +10,7 @@ CLASSES = \
 	MazeDisplay.java \
 	MazeGenerator.java \
 	MazeSolver.java \
+	MazeClickListener.java \
 	Cell.java
 
 default: classes

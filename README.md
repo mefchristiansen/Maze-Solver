@@ -1,9 +1,9 @@
 # MazeSolver
 
 ## To Do:
-* Add Current and remove visited display to maze generation
-* Draw path from start to end
+* Click to set start and end
 * A*
+* Draw path from start to end
 * Reset Button
 * Color Scheme
 

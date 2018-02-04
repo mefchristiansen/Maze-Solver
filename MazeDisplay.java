@@ -1,76 +1,46 @@
 import java.awt.Color;
-import java.awt.Stroke;
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.BasicStroke;
-import java.awt.Rectangle;
 
 import javax.swing.JPanel;
 
 public class MazeDisplay extends JPanel {
 	private static final Color BACKGROUND = new Color(55, 50, 55);
-	private static final Color WALL = Color.white;
-	private static final int WALL_STROKE_SIZE = 2;
-	private static final Stroke WALL_STROKE = new BasicStroke(WALL_STROKE_SIZE);
-	private static final Color SOLUTION = Color.red;
-	private static final Color VISITED = Color.blue;
-	private static final Stroke SOLUTION_STROKE = new BasicStroke(3);
 
     private Maze maze;
-    private final int scale;
-    private final int margin;
-    private final long sleep;
+    private final int scale, margin;
+    private final long generationSleep, solveSleep, solutionSleep;
+    private String displayState, initState;
 
-
-    public MazeDisplay(Maze maze, int scale, int margin, long sleep) {
+    public MazeDisplay(Maze maze, int scale, int margin, long generationSleep, long solveSleep, long solutionSleep) {
     	super();
     	this.maze = maze;
     	this.scale = scale;
     	this.margin = margin;
-    	this.sleep = sleep;
+    	this.generationSleep = generationSleep;
+        this.solveSleep = solveSleep;
+        this.solutionSleep = solutionSleep;
+        this.displayState = "generate";
+        this.initState = "start";
     	initMazeDisplay();
+    }
+
+    public void setDisplayState(String displayState) {
+        this.displayState = displayState;
     }
 
     @Override
     public void paintComponent(Graphics graphics) {
     	super.paintComponent(graphics);
     	Graphics2D g = (Graphics2D) graphics;
-    	g.setStroke(WALL_STROKE);
-    	g.setColor(WALL);
 
     	for (int r = 0; r < maze.numRows(); r++) {
     	    for (int c = 0; c < maze.numCols(); c++) {
-    	    	drawCell(g, maze.mazeCell(r,c));
+    	    	Cell cell = maze.mazeCell(r,c);
+                cell.drawCell(g, scale, margin, displayState);
     	    }
     	}
-    }
-
-    private void drawCell(Graphics2D g, Cell cell) {
-    	int cellX = margin + cell.col() * scale;
-    	int cellY = margin + cell.row() * scale;
-    	int xStart, yStart, xEnd, yEnd;
-
-    	g.setColor(WALL);
-
-    	for (Cell.Wall wall : cell.getWalls()) {
-    		if (wall.isPresent()) {
-    			xStart = cellX + (wall.xStart() * scale);
-    			yStart = cellY + (wall.yStart() * scale);
-    			xEnd = cellX + (wall.xEnd() * scale);
-    			yEnd = cellY + (wall.yEnd() * scale);
-    			g.drawLine(xStart, yStart, xEnd, yEnd);
-    		}
-    	}
-
-    	if (cell.isSolution()) {
-    		g.setColor(SOLUTION);
-    		g.fill(new Rectangle(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
-    	} else if (cell.visited()) {
-    		g.setColor(VISITED);
-    		g.fill(new Rectangle(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
-    	}
-
     }
 
     private void initMazeDisplay() {
@@ -81,11 +51,50 @@ public class MazeDisplay extends JPanel {
         repaint();
     }
 
-    public void animate() {
+    public void generationAnimate() {
     	try {
-            Thread.sleep(sleep);
+            Thread.sleep(generationSleep);
         } catch (InterruptedException ignored) {
         }
         repaint();
+    }
+
+    public void solveAnimate() {
+        try {
+            Thread.sleep(solveSleep);
+        } catch (InterruptedException ignored) {
+        }
+        repaint();
+    }
+
+    public void solutionAnimate() {
+        try {
+            Thread.sleep(solutionSleep);
+        } catch (InterruptedException ignored) {
+        }
+        repaint();
+    }
+
+    public boolean disableMouseListener() {
+        return initState == "solve";
+    }
+
+    public void setPoint(int x, int y) {
+        for (int r = 0; r < maze.numRows(); r++) {
+            for (int c = 0; c < maze.numCols(); c++) {
+                Cell cell = maze.mazeCell(r,c);
+                if (cell.pointInside(x, y, scale, margin)) {
+                    if (initState == "start" ) {
+                        cell.setStart();
+                        initState = "end";
+                        repaint();
+                    } else if (initState == "end") {
+                        cell.setEnd();
+                        initState = "solve";
+                        repaint();
+                    }
+                }
+            }
+        }
     }
 }

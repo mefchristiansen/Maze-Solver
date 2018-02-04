@@ -46,10 +46,13 @@ public class Maze {
         return maze[startRow][startCol];
     }
 
-    public void initVisited() {
+    public void resetMaze() {
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {
-                maze[r][c].setVisited(false);
+                Cell current = maze[r][c];
+                current.setVisited(false);
+                current.setCurrent(false);
+                current.setVisiting(false);
             }
         }
     }

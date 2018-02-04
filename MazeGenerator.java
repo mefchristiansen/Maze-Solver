@@ -32,6 +32,7 @@ public class MazeGenerator {
 
 	    Cell current, next;
 	    current = maze.mazeCell(startRow, startCol);
+	    current.setCurrent(true);
 	    current.setVisited(true);
 
 	    Stack<Cell> searchStack = new Stack<Cell>();
@@ -41,19 +42,23 @@ public class MazeGenerator {
 
 	        if (unvisitedNeighbor != null) {
 	            searchStack.push(current);
+
 	            removeWalls(current, unvisitedNeighbor);
 
-	            mazeDisplay.animate();
-
+	            current.setCurrent(false);
 	            current = unvisitedNeighbor;
+	            current.setCurrent(true);
 	            current.setVisited(true);
-
 	        } else if (!searchStack.empty()) {
-	            current = searchStack.peek();
-	            searchStack.pop();
+	        	current.setCurrent(false);
+	            current = searchStack.pop();
+	            current.setCurrent(true);
 	        } else {
+	        	current.setCurrent(false);
 	            current = null;
 	        }
+
+	        mazeDisplay.generationAnimate();
 	    }
 	}
 
