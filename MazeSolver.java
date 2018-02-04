@@ -39,6 +39,10 @@ public class MazeSolver {
 			end = DFSSolve(rowStart, colStart, rowEnd, colEnd);
 		} else if (solutionMethod == "BFS") {
 			end = BFSSolve(rowStart, colStart, rowEnd, colEnd);
+		} else if (solutionMethod == "A*") {
+			end = aStar(rowStart, colStart, rowEnd, colEnd);
+		} else {
+			return;
 		}
 
 		animateSolutionPath(end);
@@ -135,9 +139,11 @@ public class MazeSolver {
 
 			if (unvisitedNeighbors != null) {
 				for (Cell neighbor : unvisitedNeighbors) {
-					searchQueue.add(neighbor);
-					neighbor.setVisiting(true);
-					neighbor.setParent(current);
+					if (!neighbor.visiting()) {
+						searchQueue.add(neighbor);
+						neighbor.setVisiting(true);
+						neighbor.setParent(current);
+					}
 				}
 			}
 
@@ -146,6 +152,60 @@ public class MazeSolver {
 		}
 
 		return current;
+	}
+
+	private Cell aStar(int rowStart, int colStart, int rowEnd, int colEnd) {
+		List<Cell> openSet = new ArrayList<Cell>();
+		Cell start = maze.mazeCell(rowStart, colStart);
+		Cell end = maze.mazeCell(rowEnd, colEnd);
+		start.setG(0);
+		start.setF(heuristic(start, end));
+		start.setVisiting(true);
+		openSet.add(start);
+		Cell current = null;
+		int currentIndex, tentativeG;
+
+		while (openSet.size() != 0) {
+			currentIndex = lowestFIndex(openSet);
+			current = openSet.get(currentIndex);
+
+			current.setCurrent(true);
+
+			mazeDisplay.solveAnimate();
+
+			if (current.row() == rowEnd && current.col() == colEnd) {
+				return current;
+			}
+
+			openSet.remove(currentIndex);
+			current.setVisiting(false);
+			current.setVisited(true);
+
+			List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
+
+			if (unvisitedNeighbors != null) {
+				for (Cell neighbor : unvisitedNeighbors) {
+					if (!neighbor.visiting()) {
+						openSet.add(neighbor);
+						neighbor.setVisiting(true);
+						neighbor.setParent(current);
+					}
+
+					tentativeG = current.getG() + 1;
+
+					if (tentativeG >= neighbor.getG()) {
+						continue;
+					}
+
+					neighbor.setG(tentativeG);
+					neighbor.setF(neighbor.getG() + heuristic(neighbor, end));
+				}
+			}
+
+			current.setCurrent(false);
+		}
+
+		return null;
 	}
 
 	private List<Cell> unvisitedNeighbors(Cell currCell) {
@@ -170,8 +230,21 @@ public class MazeSolver {
 	    return unvisitedNeighbors.size() == 0 ? null : unvisitedNeighbors;
 	}
 
-	private void aStar(int rowStart, int colStart, int rowEnd, int colEnd) {
+	private int lowestFIndex(List<Cell> openSet) {
+		int lowestIndex = 0;
 
+		for (int i = 1; i < openSet.size(); i++) {
+			if (openSet.get(i).getF() < openSet.get(0).getF()) {
+				lowestIndex = i;
+			}
+		}
+
+		return lowestIndex;
+	}
+
+	// Manhattan Distance
+	private int heuristic(Cell neighbor, Cell end) {
+		return Math.abs(neighbor.row() - end.row()) + Math.abs(neighbor.col() - end.col());
 	}
 
 	private void animateSolutionPath(Cell end) {

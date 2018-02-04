@@ -1,14 +1,14 @@
 import javax.swing.JFrame;
 
 public class MazeRunner {
-	private static final int NUM_ROWS = 10;
-	private static final int NUM_COLS = 10;
+	private static final int NUM_ROWS = 20;
+	private static final int NUM_COLS = 20;
 	private static final int CELL_SIZE = 25;
 	private static final int MARGIN = 10;
-	private static final long GENERATION_SLEEP_TIME = 20L;
-	private static final long SOLVE_SLEEP_TIME = 50L;
+	private static final long GENERATION_SLEEP_TIME = 1L;
+	private static final long SOLVE_SLEEP_TIME = 25L;
 	private static final long SOLUTION_SLEEP_TIME = 15L;
-	private static final String SOLUTION_METHOD = "BFS";
+	private static final String SOLUTION_METHOD = "A*";
 
 	public static void main(String[] args) {
         Maze maze = new Maze(NUM_ROWS, NUM_COLS);

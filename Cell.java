@@ -49,8 +49,7 @@ public class Cell {
 
 	private static final int NUM_WALLS = 4;
 
-	private int row;
-	private int col;
+	private int row, col, f, g, h;
 	private Wall[] walls;
 	private boolean current, visiting, visited, end, solution;
 	private Cell parent;
@@ -61,6 +60,7 @@ public class Cell {
 		walls = new Wall[] { new Wall(0,0,1,0), new Wall(0,1,1,1), new Wall(0,0,0,1), new Wall(1,0,1,1) }; // TOP, BOTTOM, LEFT, RIGHT.
 		current = visiting = visited = end = solution = false;
 		parent = null;
+		f = g = Integer.MAX_VALUE;
 	}
 
 	public int col() {
@@ -111,6 +111,10 @@ public class Cell {
 		this.visiting = visiting;
 	}
 
+	public boolean visiting() {
+		return visiting;
+	}
+
 	public void setStart() {
 		this.current = true;
 	}
@@ -129,6 +133,30 @@ public class Cell {
 
 	public void setSolution(boolean solution) {
 		this.solution = solution;
+	}
+
+	public void setF(int f) {
+		this.f = f;
+	}
+
+	public int getF() {
+		return f;
+	}
+
+	public void setG(int g) {
+		this.g = g;
+	}
+
+	public int getG() {
+		return g;
+	}
+
+	public void setH(int h) {
+		this.h = h;
+	}
+
+	public int getH() {
+		return h;
 	}
 
 	public boolean pointInside(int x, int y, int scale, int margin) {
