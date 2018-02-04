@@ -2,8 +2,6 @@
 
 ## To Do:
 * Click to set start and end
-* A*
-* Draw path from start to end
 * Reset Button
 * Color Scheme
 
