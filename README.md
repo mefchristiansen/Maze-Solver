@@ -1,7 +1,7 @@
 # MazeSolver
 
 ## To Do:
-* Click to set start and end
+* Click to set start and end (multithreading)
 * Reset Button
 * Color Scheme
 
