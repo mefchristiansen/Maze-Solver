@@ -1,18 +1,6 @@
-import java.awt.Color;
-import java.awt.Stroke;
-import java.awt.Graphics2D;
-import java.awt.BasicStroke;
-import java.awt.Rectangle;
+package model;
 
 public class Cell {
-	private static final Color WALL = Color.white;
-	private static final int WALL_STROKE_SIZE = 2;
-	private static final Stroke WALL_STROKE = new BasicStroke(WALL_STROKE_SIZE);
-    private static final Color CURRENT = Color.green;
-    private static final Color END = Color.magenta;
-    private static final Color SOLUTION = Color.green;
-    private static final Color VISITING = Color.red;
-    private static final Color VISITED = Color.blue;
 
 	public class Wall {
 	    private int xStart, yStart, xEnd, yEnd;
@@ -47,9 +35,7 @@ public class Cell {
 	    }
 	}
 
-	private static final int NUM_WALLS = 4;
-
-	private int row, col, f, g, h;
+	private int row, col, f, g;
 	private Wall[] walls;
 	private boolean current, visiting, visited, end, solution;
 	private Cell parent;
@@ -123,6 +109,8 @@ public class Cell {
 		this.end = true;
 	}
 
+	public boolean getEnd() { return end; }
+
 	public Cell parent() {
 		return parent;
 	}
@@ -134,6 +122,8 @@ public class Cell {
 	public void setSolution(boolean solution) {
 		this.solution = solution;
 	}
+
+	public boolean getSolution() { return solution; }
 
 	public void setF(int f) {
 		this.f = f;
@@ -151,14 +141,6 @@ public class Cell {
 		return g;
 	}
 
-	public void setH(int h) {
-		this.h = h;
-	}
-
-	public int getH() {
-		return h;
-	}
-
 	public boolean pointInside(int x, int y, int scale, int margin) {
 		int cellXStart = margin + col * scale;
 		int cellYStart = margin + row * scale;
@@ -166,53 +148,5 @@ public class Cell {
 		int cellYEnd = cellYStart + scale;
 
 		return (x >= cellXStart && x <= cellXEnd) && (y >= cellYStart && y <= cellYEnd);
-	}
-
-	public void drawCell(Graphics2D g, int scale, int margin, String state) {
-		int cellX = margin + col * scale;
-		int cellY = margin + row * scale;
-		int xStart, yStart, xEnd, yEnd;
-
-		g.setStroke(WALL_STROKE);
-		g.setColor(WALL);
-
-		for (Cell.Wall wall : walls) {
-			if (wall.isPresent()) {
-				xStart = cellX + (wall.xStart() * scale);
-				yStart = cellY + (wall.yStart() * scale);
-				xEnd = cellX + (wall.xEnd() * scale);
-				yEnd = cellY + (wall.yEnd() * scale);
-				g.drawLine(xStart, yStart, xEnd, yEnd);
-			}
-		}
-
-	    if (state == "solve") {
-	        if (visiting) {
-	            g.setColor(VISITING);
-	            g.fill(new Rectangle(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
-	        } else if (visited) {
-	            g.setColor(VISITED);
-	            g.fill(new Rectangle(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
-	        }
-	    }
-
-	    if (current) {
-	        g.setColor(CURRENT);
-	        g.fill(new Rectangle(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
-	    }
-
-	    if (end) {
-	        g.setColor(END);
-	        g.fill(new Rectangle(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
-	    }
-
-	    if (solution) {
-	    	g.setColor(SOLUTION);
-	    	g.fill(new Rectangle(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
-	    }
-	}
-
-	public void printCell() {
-		System.out.println("Row: " + row + ", Col: " + col);
 	}
 }

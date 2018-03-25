@@ -1,26 +1,13 @@
-import java.util.Stack;
-import java.util.List;
+package model;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
-public class MazeGenerator {
-	enum Direction {
-	    UP(0,1), DOWN(0,-1), LEFT(-1,0), RIGHT(1,0);
-
-	    private final int dx, dy;
-
-	    private Direction(int dx, int dy) {
-	        this.dx = dx;
-	        this.dy = dy;
-	    }
-	}
-
-	private Maze maze;
-	private MazeDisplay mazeDisplay;
-
-	public MazeGenerator(Maze maze, MazeDisplay mazeDisplay) {
+public class RecursiveBacktracker extends MazeGenerator {
+	public RecursiveBacktracker(Maze maze) {
 		this.maze = maze;
-		this.mazeDisplay = mazeDisplay;
 	}
 
 	public void generateMaze() {
@@ -28,14 +15,13 @@ public class MazeGenerator {
 
 	    int startRow = rand.nextInt(maze.numRows() - 1);
 	    int startCol = rand.nextInt(maze.numCols() - 1);
-	    maze.setStartCell(startRow, startCol);
 
-	    Cell current, next;
+	    Cell current;
 	    current = maze.mazeCell(startRow, startCol);
 	    current.setCurrent(true);
 	    current.setVisited(true);
 
-	    Stack<Cell> searchStack = new Stack<Cell>();
+	    Stack<Cell> searchStack = new Stack<>();
 
 	    while (current != null) {
 	        Cell unvisitedNeighbor = unvisitedNeighbor(current, rand);
@@ -58,12 +44,14 @@ public class MazeGenerator {
 	            current = null;
 	        }
 
-	        mazeDisplay.generationAnimate();
+	        // Send event to observers that the maze has been updated.
+			setChanged();
+	        notifyObservers();
 	    }
 	}
 
 	private Cell unvisitedNeighbor(Cell currCell, Random rand) {
-	    List<Cell> unvisitedNeighbors = new ArrayList<Cell>();
+	    List<Cell> unvisitedNeighbors = new ArrayList<>();
 	    int currRow = currCell.row();
 	    int currCol = currCell.col();
 	    int newRow, newCol;
@@ -109,5 +97,5 @@ public class MazeGenerator {
 	        return;
 	    }
 	}
-	
+
 }

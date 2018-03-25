@@ -1,9 +1,10 @@
+package model;
+
 public class Maze {
 	private final int numRows;
 	private final int numCols;
 	private Cell[][] maze;
-    private int startRow;
-    private int startCol;
+    public Cell startingCell, endingCell;
 
 	public Maze(int numRows, int numCols) {
 		this.numRows = numRows;
@@ -35,15 +36,6 @@ public class Maze {
 
     public boolean inBounds(int row, int col) {
         return row >= 0 && col >= 0 && row < numRows && col < numCols;
-    }
-
-    public void setStartCell(int row, int col) {
-        startRow = row;
-        startCol = col;
-    }
-
-    public Cell startCell() {
-        return maze[startRow][startCol];
     }
 
     public void resetMaze() {
