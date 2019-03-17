@@ -4,8 +4,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class SelectionFrame {
-
+public class MazeSolverSelectionFrame {
     // Make public so controller can listen in on button presses
     public Button aStarButton;
     public Button dfsButton;
@@ -13,12 +12,12 @@ public class SelectionFrame {
 
     public Frame selectorFrame;
 
-    public SelectionFrame() {
+    public MazeSolverSelectionFrame() {
         Frame selectorFrame = new Frame("Select an Algoirthm");
         Panel selectionPanel = new Panel();
-        this.aStarButton = new Button("A Star");
-        this.dfsButton = new Button("Depth First Search");
-        this.bfsButton = new Button("Breadth First Search");
+        this.aStarButton = new Button("A Star (A*)");
+        this.dfsButton = new Button("Depth First Search (DFS)");
+        this.bfsButton = new Button("Breadth First Search (BFS)");
         selectionPanel.add(aStarButton);
         selectionPanel.add(dfsButton);
         selectionPanel.add(bfsButton);
@@ -26,8 +25,8 @@ public class SelectionFrame {
         selectorFrame.add(selectionPanel);
 
         selectorFrame.addWindowListener(new CloseListener());
-        selectorFrame.setSize(200,125);
-        selectorFrame.setLocation(100,100);
+        selectorFrame.setSize(225, 125);
+        selectorFrame.setLocation(100, 100);
         selectorFrame.setVisible(true);
 
         this.selectorFrame = selectorFrame;

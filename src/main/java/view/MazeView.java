@@ -4,14 +4,13 @@ import model.Maze;
 import model.MazeGenerator;
 import model.MazeSolver;
 import view.drawable.MazeDisplay;
-import view.drawable.SelectionFrame;
+import view.drawable.MazeSolverSelectionFrame;
 
 import java.util.Observable;
 
 public class MazeView implements java.util.Observer {
-
     public MazeDisplay mazeDisplay;
-    public SelectionFrame selectionFrame;
+    public MazeSolverSelectionFrame selectionFrame;
 
     public MazeView(Maze maze, int scale, int margin, long generationSleep, long solveSleep, long solutionSleep) {
     	super();
