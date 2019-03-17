@@ -12,10 +12,8 @@ public class MazeRunner {
     private static final long SOLUTION_SLEEP_TIME = 15L;
 
 	public static void main(String[] args) {
-
         // Initialize model objects
         Maze maze = new Maze(NUM_ROWS, NUM_COLS);
-        MazeGenerator mazeGenerator = new RecursiveBacktracker(maze);
         MazeSolver mazeSolver = new BFS(maze);
 
         // Create view
@@ -23,15 +21,14 @@ public class MazeRunner {
         GENERATION_SLEEP_TIME, SOLVE_SLEEP_TIME, SOLUTION_SLEEP_TIME);
 
         // Have the view listen in on events triggered by the model
-        mazeGenerator.addObserver(mazeView);
         mazeSolver.addObserver(mazeView);
 
         // Bind the model and view to the controller
-        MazeController controller = new MazeController();
-        controller.addModel(maze, mazeGenerator, mazeSolver);
-        controller.addView(mazeView);
+        MazeController mazeController = new MazeController();
+        mazeController.addModel(maze, mazeSolver);
+        mazeController.addView(mazeView);
 
         // Start building maze
-        controller.launch();
+        mazeController.launch();
 	}
 }

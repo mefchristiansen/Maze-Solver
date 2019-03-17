@@ -4,6 +4,7 @@ import controller.listener.AlgorithmSelectListener;
 import controller.listener.MazeClickListener;
 import model.Maze;
 import model.MazeGenerator;
+import model.MazeGeneratorFactory;
 import model.MazeSolver;
 import view.MazeView;
 import view.drawable.SelectionFrame;
@@ -27,11 +28,14 @@ public class MazeController implements java.awt.event.ActionListener {
     // Which algorithm to run
     public String searchAlgorithm;
 
+    /**
+    /* @param maze Maze object to add to controller from model
+    /* @returns
+    **/
     public MazeController(){}
 
-    public void addModel(Maze maze, MazeGenerator generator, MazeSolver solver) {
+    public void addModel(Maze maze, MazeSolver solver) {
         this.maze = maze;
-        this.generator = generator;
         this.solver = solver;
     }
 
@@ -49,9 +53,11 @@ public class MazeController implements java.awt.event.ActionListener {
     }
 
     public void generateMaze() {
+        setMazeGenerator();
         view.setDisplayState("generate");
         generator.generateMaze();
         maze.resetMaze();
+        displaySelectFrame();
     }
 
     public void launch() {
@@ -63,8 +69,8 @@ public class MazeController implements java.awt.event.ActionListener {
             while(maze.startingCell == null || maze.endingCell == null) {
                 try {
                     view.wait();
-
                 } catch(InterruptedException e) {
+                    System.out.println(e);
                 }
             }
             this.view.mazeDisplay.removeMouseListener(this.mazeClickListener);
@@ -78,6 +84,13 @@ public class MazeController implements java.awt.event.ActionListener {
         this.view.selectionFrame.aStarButton.addMouseListener(algorithmSelectListener);
         this.view.selectionFrame.dfsButton.addMouseListener(algorithmSelectListener);
         this.view.selectionFrame.bfsButton.addMouseListener(algorithmSelectListener);
+    }
+
+    private void setMazeGenerator() {
+        MazeGenerator generator = MazeGeneratorFactory.getMazeGenerator("RECURSIVE", this.maze);
+        generator.addObserver(this.view);
+
+        this.generator = generator;
     }
 
     @Override
