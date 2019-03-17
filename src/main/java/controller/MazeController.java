@@ -6,6 +6,7 @@ import model.Maze;
 import model.MazeGenerator;
 import model.MazeGeneratorFactory;
 import model.MazeSolver;
+import model.MazeSolverFactory;
 import view.MazeView;
 import view.drawable.SelectionFrame;
 
@@ -13,6 +14,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 
 public class MazeController implements java.awt.event.ActionListener {
+    private static final int CELL_SIZE = 25;
+    private static final int MARGIN = 10;
+    private static final long GENERATION_SLEEP_TIME = 10L;
+    private static final long SOLVE_SLEEP_TIME = 25L;
+    private static final long SOLUTION_SLEEP_TIME = 15L;
+
     // Model
     private Maze maze;
     private MazeGenerator generator;
@@ -28,15 +35,13 @@ public class MazeController implements java.awt.event.ActionListener {
     // Which algorithm to run
     public String searchAlgorithm;
 
-    /**
-    /* @param maze Maze object to add to controller from model
-    /* @returns
-    **/
-    public MazeController(){}
-
-    public void addModel(Maze maze, MazeSolver solver) {
+    public MazeController(Maze maze) {
         this.maze = maze;
-        this.solver = solver;
+
+        // Create view
+        MazeView mazeView = new MazeView(maze, CELL_SIZE, MARGIN,
+        GENERATION_SLEEP_TIME, SOLVE_SLEEP_TIME, SOLUTION_SLEEP_TIME);
+        addView(mazeView);
     }
 
     public void addView(MazeView view) {
@@ -47,6 +52,7 @@ public class MazeController implements java.awt.event.ActionListener {
     }
 
     public void solveMaze() {
+        setMazeSolver();
         view.setDisplayState("solve");
         solver.solve(maze.startingCell.row(), maze.startingCell.col(), maze.endingCell.row(), maze.endingCell.col());
         solver.walkSolutionPath();
@@ -88,9 +94,18 @@ public class MazeController implements java.awt.event.ActionListener {
 
     private void setMazeGenerator() {
         MazeGenerator generator = MazeGeneratorFactory.getMazeGenerator("RECURSIVE", this.maze);
+        // Have the view listen in on events triggered by the model
         generator.addObserver(this.view);
 
         this.generator = generator;
+    }
+
+    private void setMazeSolver() {
+        MazeSolver solver = MazeSolverFactory.getMazeSolver("DFS", this.maze);
+        // Have the view listen in on events triggered by the model
+        solver.addObserver(this.view);
+
+        this.solver = solver;
     }
 
     @Override

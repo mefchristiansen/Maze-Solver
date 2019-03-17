@@ -2,8 +2,8 @@ package model;
 
 import java.util.*;
 
-public class aStar extends MazeSolver {
-	public aStar(Maze maze) {
+public class AStar extends MazeSolver {
+	public AStar(Maze maze) {
 		this.maze = maze;
 	}
 
