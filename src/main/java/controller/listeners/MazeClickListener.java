@@ -1,4 +1,4 @@
-package controller.listener;
+package controller.listeners;
 
 import view.MazeView;
 

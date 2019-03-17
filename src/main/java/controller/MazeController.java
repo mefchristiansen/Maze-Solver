@@ -1,7 +1,7 @@
 package controller;
 
-import controller.listener.AlgorithmSelectListener;
-import controller.listener.MazeClickListener;
+import controller.listeners.AlgorithmSelectListener;
+import controller.listeners.MazeClickListener;
 import model.Maze;
 import model.MazeGenerator;
 import model.MazeGeneratorFactory;
@@ -51,24 +51,20 @@ public class MazeController implements java.awt.event.ActionListener {
         this.view.mazeDisplay.addMouseListener(this.mazeClickListener);
     }
 
-    public void solveMaze() {
+    public void launch() {
+        generateMaze();
+        setEndpoints();
+        solveMaze();
+    }
+
+    private void solveMaze() {
         setMazeSolver();
         view.setDisplayState("solve");
         solver.solve(maze.startingCell.row(), maze.startingCell.col(), maze.endingCell.row(), maze.endingCell.col());
         solver.walkSolutionPath();
     }
 
-    public void generateMaze() {
-        setMazeGenerator();
-        view.setDisplayState("generate");
-        generator.generateMaze();
-        maze.resetMaze();
-        displaySelectFrame();
-    }
-
-    public void launch() {
-        generateMaze();
-
+    private void setEndpoints() {
         this.mazeClickListener.enable();
 
         synchronized (view) {
@@ -81,8 +77,14 @@ public class MazeController implements java.awt.event.ActionListener {
             }
             this.view.mazeDisplay.removeMouseListener(this.mazeClickListener);
         }
+    }
 
-        solveMaze();
+    private void generateMaze() {
+        setMazeGenerator();
+        view.setDisplayState("generate");
+        generator.generateMaze();
+        maze.resetMaze();
+        // displaySelectFrame();
     }
 
     private void displaySelectFrame() {
@@ -93,7 +95,7 @@ public class MazeController implements java.awt.event.ActionListener {
     }
 
     private void setMazeGenerator() {
-        MazeGenerator generator = MazeGeneratorFactory.getMazeGenerator("RECURSIVE", this.maze);
+        MazeGenerator generator = MazeGeneratorFactory.getMazeGenerator("RECURSIVE", maze);
         // Have the view listen in on events triggered by the model
         generator.addObserver(this.view);
 
@@ -101,7 +103,7 @@ public class MazeController implements java.awt.event.ActionListener {
     }
 
     private void setMazeSolver() {
-        MazeSolver solver = MazeSolverFactory.getMazeSolver("DFS", this.maze);
+        MazeSolver solver = MazeSolverFactory.getMazeSolver("DFS", maze);
         // Have the view listen in on events triggered by the model
         solver.addObserver(this.view);
 
