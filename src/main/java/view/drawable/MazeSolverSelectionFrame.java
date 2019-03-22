@@ -1,5 +1,7 @@
 package view.drawable;
 
+import controller.listeners.AlgorithmSelectListener;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -12,12 +14,17 @@ public class MazeSolverSelectionFrame {
 
     public Frame selectorFrame;
 
-    public MazeSolverSelectionFrame() {
+    public MazeSolverSelectionFrame(AlgorithmSelectListener algorithmSelectListener) {
         Frame selectorFrame = new Frame("Select an Algoirthm");
         Panel selectionPanel = new Panel();
         this.aStarButton = new Button("A Star (A*)");
         this.dfsButton = new Button("Depth First Search (DFS)");
         this.bfsButton = new Button("Breadth First Search (BFS)");
+
+        aStarButton.addMouseListener(algorithmSelectListener);
+        dfsButton.addMouseListener(algorithmSelectListener);
+        dfsButton.addMouseListener(algorithmSelectListener);
+
         selectionPanel.add(aStarButton);
         selectionPanel.add(dfsButton);
         selectionPanel.add(bfsButton);

@@ -1,7 +1,5 @@
 package controller;
 
-import controller.listeners.AlgorithmSelectListener;
-import controller.listeners.MazeClickListener;
 import model.Maze;
 import model.MazeGenerator;
 import model.MazeGeneratorFactory;
@@ -9,6 +7,8 @@ import model.MazeSolver;
 import model.MazeSolverFactory;
 import view.MazeView;
 import view.drawable.MazeSolverSelectionFrame;
+import controller.listeners.AlgorithmSelectListener;
+import controller.listeners.MazeClickListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -30,7 +30,7 @@ public class MazeController implements java.awt.event.ActionListener {
 
     // Listeners
     private MazeClickListener mazeClickListener;
-    private MouseAdapter algorithmSelectListener;
+    private AlgorithmSelectListener algorithmSelectListener;
 
     public MazeController(Maze maze) {
         this.maze = maze;
@@ -63,11 +63,19 @@ public class MazeController implements java.awt.event.ActionListener {
 
     public void setSolverMethod() {
         this.algorithmSelectListener = new AlgorithmSelectListener(this, view);
+        this.view.selectionFrame = new MazeSolverSelectionFrame(algorithmSelectListener);
+        this.algorithmSelectListener.enable();
 
-        this.view.selectionFrame = new MazeSolverSelectionFrame();
-        this.view.selectionFrame.aStarButton.addMouseListener(algorithmSelectListener);
-        this.view.selectionFrame.dfsButton.addMouseListener(algorithmSelectListener);
-        this.view.selectionFrame.bfsButton.addMouseListener(algorithmSelectListener);
+        synchronized (view.selectionFrame) {
+            while(solver == null) {
+                try {
+                    view.selectionFrame.wait();
+                } catch(InterruptedException e) {
+                    System.out.println(e);
+                }
+            }
+            // this.view.mazeDisplay.removeMouseListener(this.mazeClickListener);
+        }
     }
 
     private void setEndpoints() {

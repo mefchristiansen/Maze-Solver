@@ -36,4 +36,12 @@ public class MazeView implements java.util.Observer {
         // }
 
     }
+
+    public int getDisplayHeight() {
+        return mazeDisplay.getHeight();
+    }
+
+    public int getDisplayWidth() {
+        return mazeDisplay.getWidth();
+    }
 }
