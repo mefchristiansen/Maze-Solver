@@ -50,7 +50,7 @@ public class MazeController implements java.awt.event.ActionListener {
     private void initMaze() {
         generateMaze();
 
-        // setSolverMethod();
+        setSolverMethod();
         if (solver == null) {
             setMazeSolver(null);
         }

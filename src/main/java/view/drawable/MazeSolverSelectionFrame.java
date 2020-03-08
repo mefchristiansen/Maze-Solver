@@ -23,7 +23,7 @@ public class MazeSolverSelectionFrame {
 
         aStarButton.addMouseListener(algorithmSelectListener);
         dfsButton.addMouseListener(algorithmSelectListener);
-        dfsButton.addMouseListener(algorithmSelectListener);
+        bfsButton.addMouseListener(algorithmSelectListener);
 
         selectionPanel.add(aStarButton);
         selectionPanel.add(dfsButton);

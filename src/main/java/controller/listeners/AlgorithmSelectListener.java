@@ -29,15 +29,12 @@ public class AlgorithmSelectListener extends MouseAdapter {
                 switch (buttonLabel) {
                     case "A Star (A*)":
                         controller.setMazeSolver("AStar");
-                        System.out.println("A*");
                         break;
                     case "Depth First Search (DFS)":
                         controller.setMazeSolver("DFS");
-                        System.out.println("DFS");
                         break;
                     case "Breadth First Search (BFS)":
                         controller.setMazeSolver("BFS");
-                        System.out.println("BFS");
                         break;
                 }
                 view.selectionFrame.selectorFrame.dispose();
