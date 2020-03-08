@@ -4,8 +4,13 @@ public class MazeSolverFactory {
 	private Maze maze;
 
 	public static MazeSolver getMazeSolver(String solverType, Maze maze) {
-		if (solverType == null || maze == null) {
+		if (maze == null) {
 			return null;
+		}
+
+		// Default to a star
+		if (solverType == null) {
+			return new AStar(maze);
 		}
 
 		if (solverType.equalsIgnoreCase("BFS")) {
@@ -20,6 +25,9 @@ public class MazeSolverFactory {
 			return new AStar(maze);
 		}
 
-		return null;
+		// Default to a star
+		else {
+			return new AStar(maze);
+		}
 	}
 }

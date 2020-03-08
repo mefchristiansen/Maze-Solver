@@ -96,6 +96,9 @@ public class MazeDisplay extends JPanel {
     }
 
     public void solutionAnimate() {
+        System.out.println("SOLUTION ANIMATION");
+
+
         try {
             Thread.sleep(solutionSleep);
         } catch (InterruptedException ignored) {

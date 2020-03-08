@@ -16,9 +16,9 @@ import java.awt.event.MouseAdapter;
 public class MazeController implements java.awt.event.ActionListener {
     private static final int CELL_SIZE = 25;
     private static final int MARGIN = 10;
-    private static final long GENERATION_SLEEP_TIME = 1L;
-    private static final long SOLVE_SLEEP_TIME = 25L;
-    private static final long SOLUTION_SLEEP_TIME = 15L;
+    private static final long GENERATION_SLEEP_TIME = 15L;
+    private static final long SOLVE_SLEEP_TIME = 50L;
+    private static final long SOLUTION_SLEEP_TIME = 50L;
 
     // Model
     private Maze maze;
@@ -42,10 +42,30 @@ public class MazeController implements java.awt.event.ActionListener {
     }
 
     public void launch() {
-        generateMaze();
-        setSolverMethod();
-        setEndpoints();
+        initMaze();
         solveMaze();
+        showSolution();
+    }
+
+    private void initMaze() {
+        generateMaze();
+
+        // setSolverMethod();
+        if (solver == null) {
+            setMazeSolver(null);
+        }
+
+        setEndpoints();
+    }
+
+    private void solveMaze() {
+        view.setDisplayState("solve");
+        solver.solve(maze.startingCell.row(), maze.startingCell.col(), maze.endingCell.row(), maze.endingCell.col());
+    }
+
+    private void showSolution() {
+        view.setDisplayState("solution");
+        solver.walkSolutionPath();
     }
 
     private void generateMaze() {
@@ -53,12 +73,6 @@ public class MazeController implements java.awt.event.ActionListener {
         view.setDisplayState("generate");
         generator.generateMaze();
         maze.resetMaze();
-    }
-
-    private void solveMaze() {
-        view.setDisplayState("solve");
-        solver.solve(maze.startingCell.row(), maze.startingCell.col(), maze.endingCell.row(), maze.endingCell.col());
-        solver.walkSolutionPath();
     }
 
     public void setSolverMethod() {

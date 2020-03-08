@@ -3,8 +3,8 @@ import model.*;
 import view.MazeView;
 
 public class MazeRunner {
-	private static final int NUM_ROWS = 25;
-	private static final int NUM_COLS = 25;
+	private static final int NUM_ROWS = 10;
+	private static final int NUM_COLS = 10;
 
 	public static void main(String[] args) {
         // Initialize maze

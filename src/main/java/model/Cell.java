@@ -37,7 +37,7 @@ public class Cell {
 
 	private int row, col, f, g;
 	private Wall[] walls;
-	private boolean current, visiting, visited, end, solution;
+	private boolean current, visiting, visited, start, end, solution;
 	private Cell parent;
 
 	public Cell(int row, int col) {
@@ -55,6 +55,15 @@ public class Cell {
 
 	public int row() {
 		return row;
+	}
+
+	public int getCellX(int margin, int scale) {
+		return margin + col * scale;
+	}
+
+	public int getCellY(int margin, int scale) {
+		return margin + row * scale;
+
 	}
 
 	public Wall[] getWalls() {
@@ -102,8 +111,10 @@ public class Cell {
 	}
 
 	public void setStart() {
-		this.current = true;
+		this.start = true;
 	}
+
+	public boolean getStart() { return start; }
 
 	public void setEnd() {
 		this.end = true;
