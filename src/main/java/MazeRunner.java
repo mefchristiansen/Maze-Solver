@@ -1,6 +1,5 @@
 import controller.MazeController;
 import model.*;
-import view.MazeView;
 
 public class MazeRunner {
 	private static final int NUM_ROWS = 10;

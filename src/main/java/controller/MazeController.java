@@ -5,13 +5,12 @@ import model.MazeGenerator;
 import model.MazeGeneratorFactory;
 import model.MazeSolver;
 import model.MazeSolverFactory;
-import view.MazeView;
+import view.MazeSolverView;
 import view.drawable.MazeSolverSelectionFrame;
 import controller.listeners.AlgorithmSelectListener;
 import controller.listeners.MazeClickListener;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 
 public class MazeController implements java.awt.event.ActionListener {
     private static final int CELL_SIZE = 25;
@@ -26,7 +25,7 @@ public class MazeController implements java.awt.event.ActionListener {
     private MazeSolver solver;
 
     // View
-    private MazeView view;
+    private MazeSolverView view;
 
     // Listeners
     private MazeClickListener mazeClickListener;
@@ -36,7 +35,7 @@ public class MazeController implements java.awt.event.ActionListener {
         this.maze = maze;
 
         // Create view
-        MazeView mazeView = new MazeView(maze, CELL_SIZE, MARGIN,
+        MazeSolverView mazeView = new MazeSolverView(maze, CELL_SIZE, MARGIN,
         GENERATION_SLEEP_TIME, SOLVE_SLEEP_TIME, SOLUTION_SLEEP_TIME);
         this.view = mazeView;
     }

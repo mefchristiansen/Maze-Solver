@@ -1,16 +1,15 @@
 package controller.listeners;
 
-import view.MazeView;
+import view.MazeSolverView;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.*;
 
 public class MazeClickListener extends MouseAdapter {
-	private MazeView view;
+	private MazeSolverView view;
 	private boolean enabled;
 
-	public MazeClickListener(MazeView view) {
+	public MazeClickListener(MazeSolverView view) {
 		super();
 		this.view = view;
 		enabled = false;

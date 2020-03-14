@@ -6,18 +6,16 @@ import model.Maze;
 import javax.swing.*;
 import java.awt.*;
 
-public class MazeDisplay extends JPanel {
-
+public class MazePanel extends JPanel {
 	private static final Color BACKGROUND = new Color(55, 50, 55);
-    private Maze maze;
+    private model.Maze maze;
     private final int scale, margin;
     private final long generationSleep, solveSleep, solutionSleep;
     private String displayState, initState;
 
     public void setDisplayState(String state) { this.displayState = state; }
 
-    public MazeDisplay(Maze maze, int scale, int margin, String displayState, long generationSleep, long solveSleep, long solutionSleep) {
-    	super();
+    public MazePanel(model.Maze maze, int scale, int margin, String displayState, long generationSleep, long solveSleep, long solutionSleep) {
     	this.maze = maze;
     	this.scale = scale;
     	this.margin = margin;
@@ -27,7 +25,7 @@ public class MazeDisplay extends JPanel {
         this.solveSleep = solveSleep;
         this.solutionSleep = solutionSleep;
 
-    	initMazeDisplay();
+        initMazePanel();
     }
 
     @Override
@@ -43,19 +41,12 @@ public class MazeDisplay extends JPanel {
     	}
     }
 
-    private void initMazeDisplay() {
-    	Dimension size = new Dimension(maze.numCols() * scale + margin * 2, maze.numRows() * scale + margin * 2);
+    private void initMazePanel() {
+        Dimension size = new Dimension(maze.numCols() * scale + margin * 2, maze.numRows() * scale + margin * 2);
         setMinimumSize(size);
         setPreferredSize(size);
         setBackground(BACKGROUND);
         repaint();
-
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.add(this);
-        frame.pack();
-        frame.setResizable(false);
-        frame.setVisible(true);
     }
 
     public void setPoint(int x, int y) {

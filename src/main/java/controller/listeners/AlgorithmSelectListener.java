@@ -1,7 +1,7 @@
 package controller.listeners;
 
 import controller.MazeController;
-import view.MazeView;
+import view.MazeSolverView;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,10 +9,10 @@ import java.awt.event.MouseEvent;
 
 public class AlgorithmSelectListener extends MouseAdapter {
     private MazeController controller;
-    private MazeView view;
+    private MazeSolverView view;
     private boolean enabled;
 
-    public AlgorithmSelectListener(MazeController controller, MazeView view) {
+    public AlgorithmSelectListener(MazeController controller, MazeSolverView view) {
         super();
         this.controller = controller;
         this.view = view;
