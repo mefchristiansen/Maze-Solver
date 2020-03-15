@@ -22,6 +22,8 @@ public class MazeSolverView extends JFrame implements java.util.Observer {
         this.guiPanel = new GUIPanel();
 
         initDisplay();
+
+        setVisible(true);
     }
 
     private void initDisplay() {
@@ -31,17 +33,24 @@ public class MazeSolverView extends JFrame implements java.util.Observer {
 
         GridBagConstraints gbc = new GridBagConstraints();
 
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.VERTICAL;
+
         getContentPane().add(this.mazeDisplay, gbc);
 
-        gbc.gridx = 1;
+        gbc.gridx = 2;
         gbc.gridy = 0;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.VERTICAL;
+
         getContentPane().add(this.guiPanel, gbc);
 
         pack();
-
-        setVisible(true);
     }
 
     public void setDisplayState(String displayState) {

@@ -13,7 +13,7 @@ import controller.listeners.MazeClickListener;
 import java.awt.event.ActionEvent;
 
 public class MazeController implements java.awt.event.ActionListener {
-    private static final int CELL_SIZE = 25;
+    private static final int CELL_SIZE = 20;
     private static final int MARGIN = 10;
     private static final long GENERATION_SLEEP_TIME = 15L;
     private static final long SOLVE_SLEEP_TIME = 50L;
@@ -49,7 +49,7 @@ public class MazeController implements java.awt.event.ActionListener {
     private void initMaze() {
         generateMaze();
 
-        setSolverMethod();
+//        setSolverMethod();
         if (solver == null) {
             setMazeSolver(null);
         }
