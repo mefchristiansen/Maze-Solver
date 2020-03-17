@@ -9,7 +9,7 @@ import java.awt.*;
 
 import java.util.Observable;
 
-public class MazeSolverView extends JFrame implements java.util.Observer {
+public class MazeSolverView extends JFrame {
     public MazePanel mazePanel;
 
     public GUIPanel guiPanel;
@@ -55,21 +55,5 @@ public class MazeSolverView extends JFrame implements java.util.Observer {
 
     public void setDisplayState(String displayState) {
         this.mazePanel.setDisplayState(displayState);
-    }
-
-    public void update(Observable o, Object arg) {
-        // Who sent us a notification?
-        // if (o.getClass() == MazeGenerator.class) {
-            // We can directly call the maze display since we know that it has inherited the same maze object as the model.
-            this.mazePanel.generationAnimate();
-        // }
-        // else if (o.getClass() == MazeSolver.class) {
-            // if (arg != null) {
-                // this.mazePanel.solveAnimate();
-            // } else {
-                // this.mazePanel.solutionAnimate();
-            // }
-        // }
-
     }
 }

@@ -43,6 +43,9 @@ public class RecursiveBacktracker extends MazeGenerator {
 	        	current.setCurrent(false);
 	            current = null;
 	        }
+
+            // Send event to observers that the maze has been updated.
+            fireStateChanged();
 	    }
 	}
 

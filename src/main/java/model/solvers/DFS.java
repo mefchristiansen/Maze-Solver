@@ -21,8 +21,7 @@ public class DFS extends MazeSolver {
 				return;
 			}
 
-			setChanged();
-			notifyObservers();
+			fireStateChanged();
 
 			Cell unvisitedNeighbor = unvisitedNeighbor(current);
 

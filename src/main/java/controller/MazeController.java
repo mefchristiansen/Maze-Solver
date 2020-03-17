@@ -49,11 +49,11 @@ public class MazeController implements java.awt.event.ActionListener {
     private void initMaze() {
         generateMaze();
 
-//        setSolverMethod();
-        if (solver == null) {
-            setMazeSolver(null);
-        }
-
+        setSolverMethod();
+//        if (solver == null) {
+//            setMazeSolver(null);
+//        }
+//
         setEndpoints();
     }
 
@@ -111,7 +111,7 @@ public class MazeController implements java.awt.event.ActionListener {
     public void setMazeGenerator() {
         MazeGenerator generator = MazeGeneratorFactory.getMazeGenerator("RECURSIVE", maze);
         // Have the view listen in on events triggered by the model
-        generator.addObserver(this.view);
+        generator.addChangeListener(this.view.mazePanel);
 
         this.generator = generator;
     }
@@ -119,7 +119,7 @@ public class MazeController implements java.awt.event.ActionListener {
     public void setMazeSolver(String algorithm) {
         MazeSolver solver = MazeSolverFactory.getMazeSolver(algorithm, maze);
         // Have the view listen in on events triggered by the model
-        solver.addObserver(this.view);
+        solver.addChangeListener(this.view.mazePanel);
 
         this.solver = solver;
     }

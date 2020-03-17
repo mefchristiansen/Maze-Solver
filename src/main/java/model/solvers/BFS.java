@@ -20,8 +20,7 @@ public class BFS extends MazeSolver {
 			current.setVisited(true);
 			current.setCurrent(true);
 
-			setChanged();
-			notifyObservers();
+			fireStateChanged();
 
 			if (current.row() == rowEnd && current.col() == colEnd) {
 				goal = current;
