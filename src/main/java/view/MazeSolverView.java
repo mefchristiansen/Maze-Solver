@@ -9,8 +9,8 @@ import java.awt.*;
 
 import java.util.Observable;
 
-public class MazeSolverView extends JFrame implements java.util.Observer {
-    public MazePanel mazeDisplay;
+public class MazeSolverView extends JFrame {
+    public MazePanel mazePanel;
 
     public GUIPanel guiPanel;
 
@@ -18,7 +18,7 @@ public class MazeSolverView extends JFrame implements java.util.Observer {
 
     public MazeSolverView(model.Maze maze, int scale, int margin, long generationSleep, long solveSleep, long solutionSleep) {
         super("Maze Solver - Marcus Christiansen");
-        this.mazeDisplay = new MazePanel(maze, scale, margin, "generate", generationSleep, solveSleep, solutionSleep);
+        this.mazePanel = new MazePanel(maze, scale, margin, "generate", generationSleep, solveSleep, solutionSleep);
         this.guiPanel = new GUIPanel();
 
         initDisplay();
@@ -40,7 +40,7 @@ public class MazeSolverView extends JFrame implements java.util.Observer {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.VERTICAL;
 
-        getContentPane().add(this.mazeDisplay, gbc);
+        getContentPane().add(this.mazePanel, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 0;
@@ -54,22 +54,6 @@ public class MazeSolverView extends JFrame implements java.util.Observer {
     }
 
     public void setDisplayState(String displayState) {
-        this.mazeDisplay.setDisplayState(displayState);
-    }
-
-    public void update(Observable o, Object arg) {
-        // Who sent us a notification?
-        // if (o.getClass() == MazeGenerator.class) {
-            // We can directly call the maze display since we know that it has inherited the same maze object as the model.
-            this.mazeDisplay.generationAnimate();
-        // }
-        // else if (o.getClass() == MazeSolver.class) {
-            // if (arg != null) {
-                // this.mazeDisplay.solveAnimate();
-            // } else {
-                // this.mazeDisplay.solutionAnimate();
-            // }
-        // }
-
+        this.mazePanel.setDisplayState(displayState);
     }
 }

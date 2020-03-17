@@ -50,9 +50,8 @@ public class RecursiveBacktracker extends MazeGenerator {
 	            current = null;
 	        }
 
-	        // Send event to observers that the maze has been updated.
-			setChanged();
-	        notifyObservers();
+            // Send event to observers that the maze has been updated.
+            fireStateChanged();
 	    }
 	}
 

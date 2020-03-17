@@ -19,7 +19,7 @@ public class MazeClickListener extends MouseAdapter {
 	public void mouseReleased(MouseEvent e) {
 		synchronized (view) {
 			if (enabled) {
-				this.view.mazeDisplay.setPoint(e.getX(), e.getY());
+				this.view.mazePanel.setPoint(e.getX(), e.getY());
 			}
 		    view.notify();
 		}

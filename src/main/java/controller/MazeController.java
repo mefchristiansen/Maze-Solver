@@ -49,7 +49,6 @@ public class MazeController implements java.awt.event.ActionListener {
 //        if (solver == null) {
 //            setMazeSolver(null);
 //        }
-
         setEndpoints();
     }
 
@@ -83,13 +82,13 @@ public class MazeController implements java.awt.event.ActionListener {
                     System.out.println(e);
                 }
             }
-            // this.view.mazeDisplay.removeMouseListener(this.mazeClickListener);
+            // this.view.mazePanel.removeMouseListener(this.mazeClickListener);
         }
     }
 
     private void setEndpoints() {
         this.mazeClickListener = new MazeClickListener(this.view);
-        this.view.mazeDisplay.addMouseListener(this.mazeClickListener);
+        this.view.mazePanel.addMouseListener(this.mazeClickListener);
         this.mazeClickListener.enable();
 
         synchronized (view) {
@@ -100,14 +99,14 @@ public class MazeController implements java.awt.event.ActionListener {
                     System.out.println(e);
                 }
             }
-            this.view.mazeDisplay.removeMouseListener(this.mazeClickListener);
+            this.view.mazePanel.removeMouseListener(this.mazeClickListener);
         }
     }
 
     public void setMazeGenerator() {
         MazeGenerator generator = MazeGeneratorFactory.initMazeGenerator(GeneratorType.RECURSIVE_BACKTRACKER, maze);
         // Have the view listen in on events triggered by the model
-        generator.addObserver(this.view);
+        generator.addChangeListener(this.view.mazePanel);
 
         this.generator = generator;
     }
@@ -115,7 +114,7 @@ public class MazeController implements java.awt.event.ActionListener {
     public void setMazeSolver(SolverType solverType) {
         MazeSolver solver = MazeSolverFactory.initMazeSolver(solverType, maze);
         // Have the view listen in on events triggered by the model
-        solver.addObserver(this.view);
+        solver.addChangeListener(this.view.mazePanel);
 
         this.solver = solver;
     }

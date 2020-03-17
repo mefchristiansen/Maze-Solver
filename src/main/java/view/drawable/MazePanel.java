@@ -4,9 +4,11 @@ import model.Cell;
 import model.Maze;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
-public class MazePanel extends JPanel {
+public class MazePanel extends JPanel implements ChangeListener {
 	private static final Color BACKGROUND = new Color(55, 50, 55);
     private model.Maze maze;
     private final int scale, margin;
@@ -26,6 +28,11 @@ public class MazePanel extends JPanel {
         this.solutionSleep = solutionSleep;
 
         initMazePanel();
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent event) {
+        generationAnimate();
     }
 
     @Override
