@@ -1,12 +1,18 @@
-package model;
+package model.solvers;
+
+import model.Cell;
+import model.Direction;
+import model.Maze;
+import model.MazeSolver;
 
 import java.util.*;
 
 public class DFS extends MazeSolver {
 	public DFS(Maze maze) {
-		this.maze = maze;
+		super(maze);
 	}
 
+	@Override
 	public void solve(int rowStart, int colStart, int rowEnd, int colEnd) {
 		Cell current, next;
 		current = maze.mazeCell(rowStart, colStart);

@@ -1,12 +1,18 @@
-package model;
+package model.solvers;
+
+import model.Cell;
+import model.Direction;
+import model.Maze;
+import model.MazeSolver;
 
 import java.util.*;
 
 public class AStar extends MazeSolver {
 	public AStar(Maze maze) {
-		this.maze = maze;
+		super(maze);
 	}
 
+	@Override
 	public void solve(int rowStart, int colStart, int rowEnd, int colEnd) {
 		List<Cell> openSet = new ArrayList<>();
 		Cell start = maze.mazeCell(rowStart, colStart);

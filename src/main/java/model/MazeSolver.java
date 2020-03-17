@@ -6,6 +6,10 @@ public abstract class MazeSolver extends java.util.Observable {
 	protected Maze maze;
 	protected Cell goal;
 
+	public MazeSolver(Maze maze) {
+		this.maze = maze;
+	}
+
 	public abstract void solve(int rowStart, int colStart, int rowEnd, int colEnd);
 
 	public void walkSolutionPath() {

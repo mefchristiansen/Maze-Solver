@@ -45,10 +45,10 @@ public class MazeController implements java.awt.event.ActionListener {
     private void initMaze() {
         generateMaze();
 
-//        setSolverMethod();
-        if (solver == null) {
-            setMazeSolver(null);
-        }
+        setSolverMethod();
+//        if (solver == null) {
+//            setMazeSolver(null);
+//        }
 
         setEndpoints();
     }
@@ -112,8 +112,8 @@ public class MazeController implements java.awt.event.ActionListener {
         this.generator = generator;
     }
 
-    public void setMazeSolver(String algorithm) {
-        MazeSolver solver = MazeSolverFactory.getMazeSolver(algorithm, maze);
+    public void setMazeSolver(SolverType solverType) {
+        MazeSolver solver = MazeSolverFactory.initMazeSolver(solverType, maze);
         // Have the view listen in on events triggered by the model
         solver.addObserver(this.view);
 

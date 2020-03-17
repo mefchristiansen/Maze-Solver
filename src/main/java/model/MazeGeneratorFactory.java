@@ -2,28 +2,23 @@ package model;
 
 import model.generators.*;
 
-// public enum MazeGenerator {
-// 	RECURSIVE_BACKTRACKET {
-// 		public MazeGenerator create() {
-// 			return new RecursiveBacktracker
-// 		}
-// 	}
-// }
-
 public class MazeGeneratorFactory {
 
 	public static MazeGenerator initMazeGenerator(GeneratorType generatorType, Maze maze) {
-        if (generatorType == null || maze == null) {
+        if (maze == null) {
             return null;
         }
 
-        MazeGenerator mazeGenerator = null;
+        MazeGenerator mazeGenerator;
 
         switch(generatorType) {
             case RECURSIVE_BACKTRACKER:
                 mazeGenerator = new RecursiveBacktracker(maze);
                 break;
+
+            // Default to recursive backtracker
             default:
+                mazeGenerator = new RecursiveBacktracker(maze);
                 break;
         }
 

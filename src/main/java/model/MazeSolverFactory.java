@@ -1,33 +1,35 @@
 package model;
 
-public class MazeSolverFactory {
-	private Maze maze;
+import model.solvers.*;
 
-	public static MazeSolver getMazeSolver(String solverType, Maze maze) {
+public class MazeSolverFactory {
+
+	public static MazeSolver initMazeSolver(SolverType solverType, Maze maze) {
 		if (maze == null) {
 			return null;
 		}
 
-		// Default to a star
-		if (solverType == null) {
-			return new AStar(maze);
+		MazeSolver mazeSolver;
+
+		switch(solverType) {
+			case BFS:
+				mazeSolver = new BFS(maze);
+				break;
+
+			case DFS:
+				mazeSolver = new DFS(maze);
+				break;
+
+			case AStar:
+				mazeSolver = new AStar(maze);
+				break;
+
+			// Default to A*
+			default:
+				mazeSolver = new AStar(maze);
+				break;
 		}
 
-		if (solverType.equalsIgnoreCase("BFS")) {
-			return new BFS(maze);
-		}
-
-		else if (solverType.equalsIgnoreCase("DFS")) {
-			return new DFS(maze);
-		}
-
-		else if (solverType.equalsIgnoreCase("AStar")) {
-			return new AStar(maze);
-		}
-
-		// Default to a star
-		else {
-			return new AStar(maze);
-		}
+		return mazeSolver;
 	}
 }

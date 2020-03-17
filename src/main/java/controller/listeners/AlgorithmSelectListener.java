@@ -1,6 +1,8 @@
 package controller.listeners;
 
 import controller.MazeController;
+import model.GeneratorType;
+import model.SolverType;
 import view.MazeSolverView;
 
 import java.awt.*;
@@ -28,13 +30,13 @@ public class AlgorithmSelectListener extends MouseAdapter {
 
                 switch (buttonLabel) {
                     case "A Star (A*)":
-                        controller.setMazeSolver("AStar");
+                        controller.setMazeSolver(SolverType.AStar);
                         break;
                     case "Depth First Search (DFS)":
-                        controller.setMazeSolver("DFS");
+                        controller.setMazeSolver(SolverType.DFS);
                         break;
                     case "Breadth First Search (BFS)":
-                        controller.setMazeSolver("BFS");
+                        controller.setMazeSolver(SolverType.BFS);
                         break;
                 }
                 view.selectionFrame.selectorFrame.dispose();
