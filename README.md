@@ -2,13 +2,14 @@
 
 ## To Do:
 
-* Solver Picker
-    * Force pick
-* Reset Button
-* Start Button
-* Interface
-    * Stats
-    * Instructions
+* Instructions
+
+## Future:
+
+* More maze generators (different kinds of mazes)
+* More maze solvers
+* Speed slider
+* Choose number of rows / columns
 
 ## Links:
 * https://algs4.cs.princeton.edu/41graph/Maze.java.html
