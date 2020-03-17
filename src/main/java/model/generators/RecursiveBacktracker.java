@@ -1,15 +1,21 @@
-package model;
+package model.generators;
 
-import java.util.ArrayList;
+import model.Cell;
+import model.Direction;
+import model.Maze;
+import model.MazeGenerator;
+
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
 public class RecursiveBacktracker extends MazeGenerator {
 	public RecursiveBacktracker(Maze maze) {
-		this.maze = maze;
+	    super(maze);
 	}
 
+	@Override
 	public void generateMaze() {
 	    Random rand = new Random();
 

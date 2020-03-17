@@ -1,5 +1,7 @@
 package model;
 
+import model.generators.*;
+
 // public enum MazeGenerator {
 // 	RECURSIVE_BACKTRACKET {
 // 		public MazeGenerator create() {
@@ -9,17 +11,22 @@ package model;
 // }
 
 public class MazeGeneratorFactory {
-	private Maze maze;
 
-	public static MazeGenerator getMazeGenerator(String generatorType, Maze maze) {
-		if (generatorType == null || maze == null) {
-			return null;
-		}
+	public static MazeGenerator initMazeGenerator(GeneratorType generatorType, Maze maze) {
+        if (generatorType == null || maze == null) {
+            return null;
+        }
 
-		if (generatorType.equalsIgnoreCase("RECURSIVE")) {
-			return new RecursiveBacktracker(maze);
-		}
+        MazeGenerator mazeGenerator = null;
 
-		return null;
+        switch(generatorType) {
+            case RECURSIVE_BACKTRACKER:
+                mazeGenerator = new RecursiveBacktracker(maze);
+                break;
+            default:
+                break;
+        }
+
+		return mazeGenerator;
 	}
 }

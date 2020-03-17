@@ -1,10 +1,6 @@
 package controller;
 
-import model.Maze;
-import model.MazeGenerator;
-import model.MazeGeneratorFactory;
-import model.MazeSolver;
-import model.MazeSolverFactory;
+import model.*;
 import view.MazeSolverView;
 import view.drawable.MazeSolverSelectionFrame;
 import controller.listeners.AlgorithmSelectListener;
@@ -109,7 +105,7 @@ public class MazeController implements java.awt.event.ActionListener {
     }
 
     public void setMazeGenerator() {
-        MazeGenerator generator = MazeGeneratorFactory.getMazeGenerator("RECURSIVE", maze);
+        MazeGenerator generator = MazeGeneratorFactory.initMazeGenerator(GeneratorType.RECURSIVE_BACKTRACKER, maze);
         // Have the view listen in on events triggered by the model
         generator.addObserver(this.view);
 
