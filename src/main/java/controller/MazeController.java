@@ -87,13 +87,13 @@ public class MazeController implements java.awt.event.ActionListener {
                     System.out.println(e);
                 }
             }
-            // this.view.mazeDisplay.removeMouseListener(this.mazeClickListener);
+            // this.view.mazePanel.removeMouseListener(this.mazeClickListener);
         }
     }
 
     private void setEndpoints() {
         this.mazeClickListener = new MazeClickListener(this.view);
-        this.view.mazeDisplay.addMouseListener(this.mazeClickListener);
+        this.view.mazePanel.addMouseListener(this.mazeClickListener);
         this.mazeClickListener.enable();
 
         synchronized (view) {
@@ -104,7 +104,7 @@ public class MazeController implements java.awt.event.ActionListener {
                     System.out.println(e);
                 }
             }
-            this.view.mazeDisplay.removeMouseListener(this.mazeClickListener);
+            this.view.mazePanel.removeMouseListener(this.mazeClickListener);
         }
     }
 
