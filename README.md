@@ -6,6 +6,8 @@
 
 ## Future:
 
+* More maze generators (different kinds of mazes)
+* More maze solvers
 * Speed slider
 * Choose number of rows / columns
 
