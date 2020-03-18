@@ -1,5 +1,6 @@
 package view;
 
+import controller.MazeController;
 import view.drawable.MazePanel;
 import view.drawable.GUIPanel;
 import view.drawable.MazeSolverSelectionFrame;
@@ -16,10 +17,10 @@ public class MazeSolverView extends JFrame {
 
     public MazeSolverSelectionFrame selectionFrame;
 
-    public MazeSolverView(model.Maze maze, int scale, int margin, long generationSleep, long solveSleep, long solutionSleep) {
+    public MazeSolverView(model.Maze maze, MazeController mazeController, int scale, int margin, long generationSleep, long solveSleep, long solutionSleep) {
         super("Maze Solver - Marcus Christiansen");
         this.mazePanel = new MazePanel(maze, scale, margin, "generate", generationSleep, solveSleep, solutionSleep);
-        this.guiPanel = new GUIPanel();
+        this.guiPanel = new GUIPanel(mazeController);
 
         initDisplay();
 

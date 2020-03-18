@@ -31,7 +31,7 @@ public class MazeController implements java.awt.event.ActionListener {
         this.maze = maze;
 
         // Create view
-        MazeSolverView mazeView = new MazeSolverView(maze, CELL_SIZE, MARGIN,
+        MazeSolverView mazeView = new MazeSolverView(maze, this, CELL_SIZE, MARGIN,
         GENERATION_SLEEP_TIME, SOLVE_SLEEP_TIME, SOLUTION_SLEEP_TIME);
         this.view = mazeView;
     }
@@ -42,19 +42,21 @@ public class MazeController implements java.awt.event.ActionListener {
         showSolution();
     }
 
-    private void initMaze() {
+    public void initMaze() {
         generateMaze();
 
-        setSolverMethod();
+//        setSolverMethod();
 //        if (solver == null) {
 //            setMazeSolver(null);
 //        }
         setEndpoints();
     }
 
-    private void solveMaze() {
+    public void solveMaze() {
+        setMazeSolver(SolverType.AStar);
         view.setDisplayState("solve");
         solver.solve(maze.startingCell.row(), maze.startingCell.col(), maze.endingCell.row(), maze.endingCell.col());
+        showSolution();
     }
 
     private void showSolution() {
@@ -62,7 +64,7 @@ public class MazeController implements java.awt.event.ActionListener {
         solver.walkSolutionPath();
     }
 
-    private void generateMaze() {
+    public void generateMaze() {
         setMazeGenerator();
         view.setDisplayState("generate");
         generator.generateMaze();

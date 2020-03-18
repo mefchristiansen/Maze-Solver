@@ -13,6 +13,6 @@ public class MazeRunner {
         MazeController mazeController = new MazeController(maze);
 
         // Start building maze
-        mazeController.launch();
+//        mazeController.launch();
 	}
 }

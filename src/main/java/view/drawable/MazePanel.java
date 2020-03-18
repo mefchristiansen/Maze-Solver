@@ -79,6 +79,7 @@ public class MazePanel extends JPanel implements ChangeListener {
 
     public void generationAnimate() {
         try {
+            System.out.println("PAINT");
             Thread.sleep(generationSleep);
         } catch (InterruptedException ignored) {
         }

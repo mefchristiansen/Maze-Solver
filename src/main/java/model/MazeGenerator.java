@@ -26,6 +26,7 @@ public abstract class MazeGenerator {
     }
 
     protected void fireStateChanged() {
+	    System.out.println("FIRE");
         if (listenerList != null && listenerList.size() > 0) {
             ChangeEvent event = new ChangeEvent(this);
             for (ChangeListener listener : listenerList) {
