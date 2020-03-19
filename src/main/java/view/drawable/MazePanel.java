@@ -11,34 +11,33 @@ import java.awt.*;
 public class MazePanel extends JPanel implements ChangeListener {
 	private static final Color BACKGROUND = new Color(55, 50, 55);
     private model.Maze maze;
+    private MazeDrawable mazeDrawable;
     private String displayState, initState;
-
-    public void setDisplayState(String state) { this.displayState = state; }
 
     public MazePanel(Maze maze, String displayState) {
     	this.maze = maze;
+        this.mazeDrawable = new MazeDrawable(this.maze);
+
     	this.displayState = displayState;
         this.initState = "start";
 
         initMazePanel();
     }
 
+    public void setDisplayState(String state) {
+        this.displayState = state;
+        this.mazeDrawable.setDisplayState(state);
+    }
+
     @Override
     public void stateChanged(ChangeEvent event) {
-        generationAnimate();
+        animateMaze();
     }
 
     @Override
     public void paintComponent(Graphics graphics) {
-    	super.paintComponent(graphics);
-    	Graphics2D g = (Graphics2D) graphics;
-
-    	for (int r = 0; r < maze.numRows(); r++) {
-    	    for (int c = 0; c < maze.numCols(); c++) {
-    	    	Cell cell = maze.mazeCell(r,c);
-                CellDrawable.drawCell(cell, g, MazeConstants.CELL_SIZE, MazeConstants.MARGIN, displayState);
-    	    }
-    	}
+        super.paintComponent(graphics);
+        mazeDrawable.drawMaze(graphics);
     }
 
     private void initMazePanel() {
@@ -70,7 +69,7 @@ public class MazePanel extends JPanel implements ChangeListener {
         }
     }
 
-    public void generationAnimate() {
+    public void animateMaze() {
         try {
             System.out.println("PAINT");
             Thread.sleep(MazeConstants.ANIMATION_SLEEP);
