@@ -35,8 +35,7 @@ public class MazeController {
         this.maze = maze;
 
         // Create view
-        MazeSolverView mazeView = new MazeSolverView(maze, this, CELL_SIZE, MARGIN,
-        GENERATION_SLEEP_TIME, SOLVE_SLEEP_TIME, SOLUTION_SLEEP_TIME);
+        MazeSolverView mazeView = new MazeSolverView(maze, this);
         this.view = mazeView;
     }
 

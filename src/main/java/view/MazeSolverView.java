@@ -16,9 +16,9 @@ public class MazeSolverView extends JFrame {
 
     public MazeSolverSelectionFrame selectionFrame;
 
-    public MazeSolverView(Maze maze, MazeController mazeController, int scale, int margin, long generationSleep, long solveSleep, long solutionSleep) {
+    public MazeSolverView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
-        this.mazePanel = new MazePanel(maze, scale, margin, "generate", generationSleep, solveSleep, solutionSleep);
+        this.mazePanel = new MazePanel(maze, "generate");
         this.guiPanel = new GUIPanel(mazeController);
 
         initDisplay();

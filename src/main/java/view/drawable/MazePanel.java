@@ -11,21 +11,14 @@ import java.awt.*;
 public class MazePanel extends JPanel implements ChangeListener {
 	private static final Color BACKGROUND = new Color(55, 50, 55);
     private model.Maze maze;
-    private final int scale, margin;
-    private final long generationSleep, solveSleep, solutionSleep;
     private String displayState, initState;
 
     public void setDisplayState(String state) { this.displayState = state; }
 
-    public MazePanel(model.Maze maze, int scale, int margin, String displayState, long generationSleep, long solveSleep, long solutionSleep) {
+    public MazePanel(Maze maze, String displayState) {
     	this.maze = maze;
-    	this.scale = scale;
-    	this.margin = margin;
     	this.displayState = displayState;
         this.initState = "start";
-        this.generationSleep = generationSleep;
-        this.solveSleep = solveSleep;
-        this.solutionSleep = solutionSleep;
 
         initMazePanel();
     }
@@ -43,13 +36,13 @@ public class MazePanel extends JPanel implements ChangeListener {
     	for (int r = 0; r < maze.numRows(); r++) {
     	    for (int c = 0; c < maze.numCols(); c++) {
     	    	Cell cell = maze.mazeCell(r,c);
-                CellDrawable.drawCell(cell, g, scale, margin, displayState);
+                CellDrawable.drawCell(cell, g, MazeConstants.CELL_SIZE, MazeConstants.MARGIN, displayState);
     	    }
     	}
     }
 
     private void initMazePanel() {
-        Dimension size = new Dimension(maze.numCols() * scale + margin * 2, maze.numRows() * scale + margin * 2);
+        Dimension size = new Dimension(maze.numCols() * MazeConstants.CELL_SIZE + MazeConstants.MARGIN * 2, maze.numRows() * MazeConstants.CELL_SIZE + MazeConstants.MARGIN * 2);
         setMinimumSize(size);
         setPreferredSize(size);
         setBackground(BACKGROUND);
@@ -60,7 +53,7 @@ public class MazePanel extends JPanel implements ChangeListener {
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {
                 Cell cell = maze.mazeCell(r,c);
-                if (cell.pointInside(x, y, scale, margin)) {
+                if (cell.pointInside(x, y, MazeConstants.CELL_SIZE, MazeConstants.MARGIN)) {
                     if (initState.equals("start")) {
                         cell.setStart();
                         maze.startingCell = cell;
@@ -80,28 +73,28 @@ public class MazePanel extends JPanel implements ChangeListener {
     public void generationAnimate() {
         try {
             System.out.println("PAINT");
-            Thread.sleep(generationSleep);
+            Thread.sleep(MazeConstants.ANIMATION_SLEEP);
         } catch (InterruptedException ignored) {
         }
         repaint();
     }
 
-    public void solveAnimate() {
-        try {
-            Thread.sleep(solveSleep);
-        } catch (InterruptedException ignored) {
-        }
-        repaint();
-    }
-
-    public void solutionAnimate() {
-        System.out.println("SOLUTION ANIMATION");
-
-
-        try {
-            Thread.sleep(solutionSleep);
-        } catch (InterruptedException ignored) {
-        }
-        repaint();
-    }
+//    public void solveAnimate() {
+//        try {
+//            Thread.sleep(solveSleep);
+//        } catch (InterruptedException ignored) {
+//        }
+//        repaint();
+//    }
+//
+//    public void solutionAnimate() {
+//        System.out.println("SOLUTION ANIMATION");
+//
+//
+//        try {
+//            Thread.sleep(solutionSleep);
+//        } catch (InterruptedException ignored) {
+//        }
+//        repaint();
+//    }
 }
