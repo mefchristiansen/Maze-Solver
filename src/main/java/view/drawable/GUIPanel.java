@@ -1,6 +1,7 @@
 package view.drawable;
 
 import controller.MazeController;
+import model.SolverType;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -57,19 +58,17 @@ public class GUIPanel extends JPanel implements ActionListener {
 
         solveMethodRadioPanel.setBorder(solveMethodTitledBorder);
 
-        JRadioButton bfsRadio = new JRadioButton("BFS");
-        JRadioButton dfsRadio = new JRadioButton("DFS");
-        JRadioButton aStarRadio = new JRadioButton("A*");
-
         Box solveMethodRadioBox = Box.createVerticalBox();
-        solveMethodRadioBox.add(bfsRadio);
-        solveMethodRadioBox.add(dfsRadio);
-        solveMethodRadioBox.add(aStarRadio);
-
         ButtonGroup solveMethodRadioButtonGroup = new ButtonGroup();
-        solveMethodRadioButtonGroup.add(bfsRadio);
-        solveMethodRadioButtonGroup.add(dfsRadio);
-        solveMethodRadioButtonGroup.add(aStarRadio);
+
+        for (SolverType solverType : SolverType.values()) {
+            JRadioButton solverTypeOption = new JRadioButton(solverType.getName());
+
+            solveMethodRadioBox.add(solverTypeOption);
+            solveMethodRadioButtonGroup.add(solverTypeOption);
+        }
+
+        solveMethodRadioButtonGroup.getElements().nextElement().setSelected(true);
 
         solveMethodRadioPanel.add(solveMethodRadioBox);
 

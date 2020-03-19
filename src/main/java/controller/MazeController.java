@@ -12,12 +12,6 @@ import view.MazeSolverView;
 import view.drawable.MazeSolverSelectionFrame;
 
 public class MazeController {
-    private static final int CELL_SIZE = 20;
-    private static final int MARGIN = 10;
-    private static final long GENERATION_SLEEP_TIME = 15L;
-    private static final long SOLVE_SLEEP_TIME = 50L;
-    private static final long SOLUTION_SLEEP_TIME = 50L;
-
     // Model
     private Maze maze;
     private MazeGenerator generator;
@@ -73,6 +67,7 @@ public class MazeController {
         setEndpoints();
     }
 
+//    SolverType solverType
     public void solveMaze() {
         setMazeSolver(SolverType.AStar);
         setViewDisplayState("solve");
