@@ -7,7 +7,7 @@ import java.util.*;
 public abstract class MazeSolver {
 	protected Maze maze;
 	protected Cell goal;
-	protected List<ChangeListener> listenerList = new ArrayList<>();
+	private List<ChangeListener> listenerList = new ArrayList<>();
 
 	public MazeSolver(Maze maze) {
 		this.maze = maze;

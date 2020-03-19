@@ -1,14 +1,18 @@
 package controller;
 
-import model.*;
+import model.Maze;
+import model.MazeGenerator;
+import model.MazeGeneratorFactory;
+import model.MazeSolver;
+import model.MazeSolverFactory;
+import model.GeneratorType;
+import model.SolverType;
 import view.MazeSolverView;
 import view.drawable.MazeSolverSelectionFrame;
 import controller.listeners.AlgorithmSelectListener;
 import controller.listeners.MazeClickListener;
 
-import java.awt.event.ActionEvent;
-
-public class MazeController implements java.awt.event.ActionListener {
+public class MazeController {
     private static final int CELL_SIZE = 20;
     private static final int MARGIN = 10;
     private static final long GENERATION_SLEEP_TIME = 15L;
@@ -119,10 +123,5 @@ public class MazeController implements java.awt.event.ActionListener {
         solver.addChangeListener(this.view.mazePanel);
 
         this.solver = solver;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
     }
 }

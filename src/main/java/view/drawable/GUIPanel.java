@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GUIPanel extends JPanel {
-    public MazeController mazeController;
+    private final MazeController mazeController;
 
     public GUIPanel(MazeController mazeController) {
         this.mazeController = mazeController;

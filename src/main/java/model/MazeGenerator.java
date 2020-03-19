@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MazeGenerator {
-    protected List<ChangeListener> listenerList = new ArrayList<>();
+    private List<ChangeListener> listenerList = new ArrayList<>();
 	protected Maze maze;
 
 	public MazeGenerator(Maze maze) {
@@ -26,7 +26,7 @@ public abstract class MazeGenerator {
     }
 
     protected void fireStateChanged() {
-	    System.out.println("FIRE");
+//	    System.out.println("FIRE");
         if (listenerList != null && listenerList.size() > 0) {
             ChangeEvent event = new ChangeEvent(this);
             for (ChangeListener listener : listenerList) {
