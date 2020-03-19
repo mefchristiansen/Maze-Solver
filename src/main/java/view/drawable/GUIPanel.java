@@ -52,23 +52,28 @@ public class GUIPanel extends JPanel {
     }
 
     private JPanel initSolveMethodRadio() {
-        JPanel p = new JPanel();
+        JPanel solveMethodRadioPanel = new JPanel();
 
         TitledBorder solveMethodTitledBorder = new TitledBorder("Solve Method");
 
-        p.setBorder(solveMethodTitledBorder);
+        solveMethodRadioPanel.setBorder(solveMethodTitledBorder);
 
-        JRadioButton option1 = new JRadioButton("BFS");
-        JRadioButton option2 = new JRadioButton("DFS");
-        JRadioButton option3 = new JRadioButton("A*");
+        JRadioButton bfsRadio = new JRadioButton("BFS");
+        JRadioButton dfsRadio = new JRadioButton("DFS");
+        JRadioButton aStarRadio = new JRadioButton("A*");
 
-        Box box1 = Box.createVerticalBox();
-        box1.add(option1);
-        box1.add(option2);
-        box1.add(option3);
+        Box solveMethodRadioBox = Box.createVerticalBox();
+        solveMethodRadioBox.add(bfsRadio);
+        solveMethodRadioBox.add(dfsRadio);
+        solveMethodRadioBox.add(aStarRadio);
 
-        p.add(box1);
+        ButtonGroup solveMethodRadioButtonGroup = new ButtonGroup();
+        solveMethodRadioButtonGroup.add(bfsRadio);
+        solveMethodRadioButtonGroup.add(dfsRadio);
+        solveMethodRadioButtonGroup.add(aStarRadio);
 
-        return p;
+        solveMethodRadioPanel.add(solveMethodRadioBox);
+
+        return solveMethodRadioPanel;
     }
 }
