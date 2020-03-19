@@ -1,5 +1,7 @@
 package controller;
 
+import controller.listeners.MazeGeneratorListener;
+import controller.listeners.MazeSolverListener;
 import model.Maze;
 import model.MazeGenerator;
 import model.MazeGeneratorFactory;
@@ -31,12 +33,26 @@ public class MazeController {
     private MazeClickListener mazeClickListener;
     private AlgorithmSelectListener algorithmSelectListener;
 
+    private MazeGeneratorListener mazeGeneratorListener;
+    private MazeSolverListener mazeSolverListener;
+
     public MazeController(Maze maze) {
         this.maze = maze;
+
+        this.mazeGeneratorListener = new MazeGeneratorListener(this);
+        this.mazeSolverListener = new MazeSolverListener(this);
 
         // Create view
         MazeSolverView mazeView = new MazeSolverView(maze, this);
         this.view = mazeView;
+    }
+
+    public MazeGeneratorListener getMazeGeneratorListener() {
+        return mazeGeneratorListener;
+    }
+
+    public MazeSolverListener getMazeSolverListener() {
+        return mazeSolverListener;
     }
 
     public void launch() {
