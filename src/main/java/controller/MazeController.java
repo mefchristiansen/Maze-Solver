@@ -1,7 +1,6 @@
 package controller;
 
-import controller.listeners.MazeGeneratorListener;
-import controller.listeners.MazeSolverListener;
+import controller.listeners.*;
 import model.Maze;
 import model.MazeGenerator;
 import model.MazeGeneratorFactory;
@@ -11,8 +10,6 @@ import model.GeneratorType;
 import model.SolverType;
 import view.MazeSolverView;
 import view.drawable.MazeSolverSelectionFrame;
-import controller.listeners.AlgorithmSelectListener;
-import controller.listeners.MazeClickListener;
 
 public class MazeController {
     private static final int CELL_SIZE = 20;
@@ -35,12 +32,16 @@ public class MazeController {
 
     private MazeGeneratorListener mazeGeneratorListener;
     private MazeSolverListener mazeSolverListener;
+    private MazeResetListener mazeResetListener;
+//    private MazeGUIListener mazeGUIListener;
 
     public MazeController(Maze maze) {
         this.maze = maze;
 
         this.mazeGeneratorListener = new MazeGeneratorListener(this);
         this.mazeSolverListener = new MazeSolverListener(this);
+        this.mazeResetListener = new MazeResetListener(this);
+//        this.mazeGUIListener = new MazeGUIListener(this);
 
         // Create view
         MazeSolverView mazeView = new MazeSolverView(maze, this);
@@ -55,39 +56,45 @@ public class MazeController {
         return mazeSolverListener;
     }
 
-    public void launch() {
-        initMaze();
-        solveMaze();
-        showSolution();
+    public MazeResetListener getMazeResetListener() {
+        return mazeResetListener;
+    }
+
+//    public MazeGUIListener getMazeGUIListener() {
+//        return mazeGUIListener;
+//    }
+
+    private void setViewDisplayState(String displayState) {
+        view.setDisplayState(displayState);
     }
 
     public void initMaze() {
         generateMaze();
-
-//        setSolverMethod();
-//        if (solver == null) {
-//            setMazeSolver(null);
-//        }
         setEndpoints();
     }
 
     public void solveMaze() {
         setMazeSolver(SolverType.AStar);
-        view.setDisplayState("solve");
+        setViewDisplayState("solve");
         solver.solve(maze.startingCell.row(), maze.startingCell.col(), maze.endingCell.row(), maze.endingCell.col());
         showSolution();
     }
 
+    public void resetMaze() {
+        maze.resetMaze();
+        view.repaintMaze();
+    }
+
     private void showSolution() {
-        view.setDisplayState("solution");
+        setViewDisplayState("solution");
         solver.walkSolutionPath();
     }
 
-    public void generateMaze() {
+    private void generateMaze() {
         setMazeGenerator();
-        view.setDisplayState("generate");
+        setViewDisplayState("generate");
         generator.generateMaze();
-        maze.resetMaze();
+        maze.voidVisits();
     }
 
     public void setSolverMethod() {

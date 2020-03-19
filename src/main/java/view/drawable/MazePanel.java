@@ -71,7 +71,7 @@ public class MazePanel extends JPanel implements ChangeListener {
 
     public void animateMaze() {
         try {
-            System.out.println("PAINT");
+//            System.out.println("PAINT");
             Thread.sleep(MazeConstants.ANIMATION_SLEEP);
         } catch (InterruptedException ignored) {
         }

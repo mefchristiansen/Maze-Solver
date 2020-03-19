@@ -1,6 +1,5 @@
 package controller;
 
-import model.Maze;
 
 import java.awt.event.ActionListener;
 

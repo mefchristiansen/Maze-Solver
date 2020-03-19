@@ -53,6 +53,10 @@ public class MazeSolverView extends JFrame {
         pack();
     }
 
+    public void repaintMaze() {
+        mazePanel.repaint();
+    }
+
     public void setDisplayState(String displayState) {
         this.mazePanel.setDisplayState(displayState);
     }

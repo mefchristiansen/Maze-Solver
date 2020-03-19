@@ -5,8 +5,10 @@ import controller.MazeController;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class GUIPanel extends JPanel {
+public class GUIPanel extends JPanel implements ActionListener {
     private final MazeController mazeController;
 
     public GUIPanel(MazeController mazeController) {
@@ -21,6 +23,7 @@ public class GUIPanel extends JPanel {
 
         // Generate Maze Button
         JButton generateMazeButton = new JButton("Generate");
+        generateMazeButton.setActionCommand("generate");
         generateMazeButton.addActionListener(mazeController.getMazeGeneratorListener());
         add(generateMazeButton);
 
@@ -30,15 +33,20 @@ public class GUIPanel extends JPanel {
 
         // Solve Maze Button
         JButton solveMazeButton = new JButton("Solve");
+        solveMazeButton.setActionCommand("solve");
         solveMazeButton.addActionListener(mazeController.getMazeSolverListener());
         add(solveMazeButton);
 
         // Reset Maze Button
         JButton resetMazeButton = new JButton("Reset");
+        resetMazeButton.setActionCommand("reset");
+        resetMazeButton.addActionListener(mazeController.getMazeResetListener());
         add(resetMazeButton);
 
         // Exit Button
         JButton exitButton = new JButton("Exit");
+        exitButton.setActionCommand("exit");
+        exitButton.addActionListener(this);
         add(exitButton);
     }
 
@@ -66,5 +74,14 @@ public class GUIPanel extends JPanel {
         solveMethodRadioPanel.add(solveMethodRadioBox);
 
         return solveMethodRadioPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent mazeGuiButtonClick) {
+        String buttonIntention = mazeGuiButtonClick.getActionCommand();
+
+        if (buttonIntention == "exit") {
+            System.exit(0);
+        }
     }
 }
