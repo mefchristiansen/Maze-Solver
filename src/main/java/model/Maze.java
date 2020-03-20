@@ -6,6 +6,10 @@ public class Maze {
 	private Cell[][] maze;
     public Cell startingCell, endingCell;
 
+    public Maze() {
+        this(MazeConstants.NUM_ROWS, MazeConstants.NUM_COLS);
+    }
+
 	public Maze(int numRows, int numCols) {
 		this.numRows = numRows;
 		this.numCols = numCols;

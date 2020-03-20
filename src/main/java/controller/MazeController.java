@@ -9,41 +9,62 @@ import model.MazeSolverFactory;
 import model.GeneratorType;
 import model.SolverType;
 import view.MazeSolverView;
-import view.drawable.MazeSolverSelectionFrame;
 
 public class MazeController {
     // Model
     private Maze maze;
-    private MazeGenerator generator;
-    private MazeSolver solver;
+
+    private GeneratorType generatorType;
+    private SolverType solverType;
 
     // View
     private MazeSolverView view;
 
     // Listeners
     private MazeClickListener mazeClickListener;
-    private AlgorithmSelectListener algorithmSelectListener;
 
     private MazeGeneratorListener mazeGeneratorListener;
     private MazeSolverListener mazeSolverListener;
+    private MazeSolverSelectionRadioListener mazeSolverSelectionRadioListener;
     private MazeResetListener mazeResetListener;
+
 //    private MazeGUIListener mazeGUIListener;
 
-    public MazeController(Maze maze) {
-        this.maze = maze;
+    public MazeController() {
+        this.maze = new Maze();
+
+        this.generatorType = GeneratorType.RECURSIVE_BACKTRACKER;
+        this.solverType = SolverType.BFS;
 
         this.mazeGeneratorListener = new MazeGeneratorListener(this);
+        this.mazeSolverSelectionRadioListener = new MazeSolverSelectionRadioListener(this);
         this.mazeSolverListener = new MazeSolverListener(this);
         this.mazeResetListener = new MazeResetListener(this);
+
 //        this.mazeGUIListener = new MazeGUIListener(this);
 
         // Create view
-        MazeSolverView mazeView = new MazeSolverView(maze, this);
-        this.view = mazeView;
+        this.view = new MazeSolverView(maze, this);
+    }
+
+    public void setGeneratorType(GeneratorType generatorType) {
+        this.generatorType = generatorType;
+    }
+
+    public SolverType getSolverType() {
+        return solverType;
+    }
+
+    public void setSolverType(SolverType solverType) {
+        this.solverType = solverType;
     }
 
     public MazeGeneratorListener getMazeGeneratorListener() {
         return mazeGeneratorListener;
+    }
+
+    public MazeSolverSelectionRadioListener getMazeSolverSelectionRadioListener() {
+        return mazeSolverSelectionRadioListener;
     }
 
     public MazeSolverListener getMazeSolverListener() {
@@ -67,48 +88,6 @@ public class MazeController {
         setEndpoints();
     }
 
-//    SolverType solverType
-    public void solveMaze() {
-        setMazeSolver(SolverType.AStar);
-        setViewDisplayState("solve");
-        solver.solve(maze.startingCell.row(), maze.startingCell.col(), maze.endingCell.row(), maze.endingCell.col());
-        showSolution();
-    }
-
-    public void resetMaze() {
-        maze.resetMaze();
-        view.repaintMaze();
-    }
-
-    private void showSolution() {
-        setViewDisplayState("solution");
-        solver.walkSolutionPath();
-    }
-
-    private void generateMaze() {
-        setMazeGenerator();
-        setViewDisplayState("generate");
-        generator.generateMaze();
-        maze.voidVisits();
-    }
-
-    public void setSolverMethod() {
-        this.algorithmSelectListener = new AlgorithmSelectListener(this, view);
-        this.view.selectionFrame = new MazeSolverSelectionFrame(algorithmSelectListener);
-        this.algorithmSelectListener.enable();
-
-        synchronized (view.selectionFrame) {
-            while(solver == null) {
-                try {
-                    view.selectionFrame.wait();
-                } catch(InterruptedException e) {
-                    System.out.println(e);
-                }
-            }
-            // this.view.mazePanel.removeMouseListener(this.mazeClickListener);
-        }
-    }
-
     private void setEndpoints() {
         this.mazeClickListener = new MazeClickListener(this.view);
         this.view.mazePanel.addMouseListener(this.mazeClickListener);
@@ -126,19 +105,25 @@ public class MazeController {
         }
     }
 
-    public void setMazeGenerator() {
-        MazeGenerator generator = MazeGeneratorFactory.initMazeGenerator(GeneratorType.RECURSIVE_BACKTRACKER, maze);
-        // Have the view listen in on events triggered by the model
+    private void generateMaze() {
+        MazeGenerator generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze);
         generator.addChangeListener(this.view.mazePanel);
-
-        this.generator = generator;
+        setViewDisplayState("generate");
+        generator.generateMaze();
     }
 
-    public void setMazeSolver(SolverType solverType) {
+    public void solveMaze() {
         MazeSolver solver = MazeSolverFactory.initMazeSolver(solverType, maze);
-        // Have the view listen in on events triggered by the model
         solver.addChangeListener(this.view.mazePanel);
+        setViewDisplayState("solve");
+        solver.solve();
 
-        this.solver = solver;
+        setViewDisplayState("solution");
+        solver.walkSolutionPath();
+    }
+
+    public void resetMaze() {
+        maze.resetMaze();
+        view.repaintMaze();
     }
 }

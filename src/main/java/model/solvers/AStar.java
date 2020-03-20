@@ -13,16 +13,21 @@ public class AStar extends MazeSolver {
 	}
 
 	@Override
-	public void solve(int rowStart, int colStart, int rowEnd, int colEnd) {
+	public void solve() {
+		int rowStart = maze.startingCell.row();
+		int colStart = maze.startingCell.col();
+		int rowEnd = maze.endingCell.row();
+		int colEnd = maze.endingCell.col();
 		List<Cell> openSet = new ArrayList<>();
 		Cell start = maze.mazeCell(rowStart, colStart);
 		Cell end = maze.mazeCell(rowEnd, colEnd);
+		Cell current;
+		int currentIndex, tentativeG;
+
 		start.setG(0);
 		start.setF(heuristic(start, end));
 		start.setVisiting(true);
 		openSet.add(start);
-		Cell current;
-		int currentIndex, tentativeG;
 
 		while (openSet.size() != 0) {
 			currentIndex = lowestFIndex(openSet);

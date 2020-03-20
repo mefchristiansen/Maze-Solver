@@ -13,9 +13,12 @@ public class BFS extends MazeSolver {
 	}
 
 	@Override
-	public void solve(int rowStart, int colStart, int rowEnd, int colEnd) {
+	public void solve() {
+		int rowStart = maze.startingCell.row();
+		int colStart = maze.startingCell.col();
+		int rowEnd = maze.endingCell.row();
+		int colEnd = maze.endingCell.col();
 		Cell current;
-		current = null;
 
 		Queue<Cell> searchQueue = new LinkedList<>();
 		searchQueue.add(maze.mazeCell(rowStart, colStart));

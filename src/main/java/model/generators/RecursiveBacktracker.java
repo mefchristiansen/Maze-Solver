@@ -53,6 +53,8 @@ public class RecursiveBacktracker extends MazeGenerator {
             // Send event to observers that the maze has been updated.
             fireStateChanged();
 	    }
+
+		maze.voidVisits();
 	}
 
 	private Cell unvisitedNeighbor(Cell currCell, Random rand) {

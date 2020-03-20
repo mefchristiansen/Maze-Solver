@@ -4,7 +4,6 @@ import model.Maze;
 import controller.MazeController;
 import view.drawable.MazePanel;
 import view.drawable.GUIPanel;
-import view.drawable.MazeSolverSelectionFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +12,6 @@ public class MazeSolverView extends JFrame {
     public MazePanel mazePanel;
 
     public GUIPanel guiPanel;
-
-    public MazeSolverSelectionFrame selectionFrame;
 
     public MazeSolverView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");

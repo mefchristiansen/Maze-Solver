@@ -13,6 +13,5 @@ public class MazeResetListener extends MazeActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         mazeController.resetMaze();
-//        new Thread(() -> mazeController.resetMaze()).start();
     }
 }

@@ -12,8 +12,8 @@ public class MazeDrawable {
 
     public MazeDrawable(Maze maze) {
         this.maze = maze;
-        this.scale = MazeConstants.CELL_SIZE;
-        this.margin = MazeConstants.MARGIN;
+        this.scale = MazeDrawableConstants.CELL_SIZE;
+        this.margin = MazeDrawableConstants.MARGIN;
     }
 
     public void setDisplayState(String state) {

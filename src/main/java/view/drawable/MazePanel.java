@@ -41,7 +41,7 @@ public class MazePanel extends JPanel implements ChangeListener {
     }
 
     private void initMazePanel() {
-        Dimension size = new Dimension(maze.numCols() * MazeConstants.CELL_SIZE + MazeConstants.MARGIN * 2, maze.numRows() * MazeConstants.CELL_SIZE + MazeConstants.MARGIN * 2);
+        Dimension size = new Dimension(maze.numCols() * MazeDrawableConstants.CELL_SIZE + MazeDrawableConstants.MARGIN * 2, maze.numRows() * MazeDrawableConstants.CELL_SIZE + MazeDrawableConstants.MARGIN * 2);
         setMinimumSize(size);
         setPreferredSize(size);
         setBackground(BACKGROUND);
@@ -52,7 +52,7 @@ public class MazePanel extends JPanel implements ChangeListener {
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {
                 Cell cell = maze.mazeCell(r,c);
-                if (cell.pointInside(x, y, MazeConstants.CELL_SIZE, MazeConstants.MARGIN)) {
+                if (cell.pointInside(x, y, MazeDrawableConstants.CELL_SIZE, MazeDrawableConstants.MARGIN)) {
                     if (initState.equals("start")) {
                         cell.setStart();
                         maze.startingCell = cell;
@@ -72,7 +72,7 @@ public class MazePanel extends JPanel implements ChangeListener {
     public void animateMaze() {
         try {
 //            System.out.println("PAINT");
-            Thread.sleep(MazeConstants.ANIMATION_SLEEP);
+            Thread.sleep(MazeDrawableConstants.ANIMATION_SLEEP);
         } catch (InterruptedException ignored) {
         }
         repaint();

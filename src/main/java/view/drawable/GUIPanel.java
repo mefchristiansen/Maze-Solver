@@ -8,6 +8,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
 
 public class GUIPanel extends JPanel implements ActionListener {
     private final MazeController mazeController;
@@ -63,12 +64,24 @@ public class GUIPanel extends JPanel implements ActionListener {
 
         for (SolverType solverType : SolverType.values()) {
             JRadioButton solverTypeOption = new JRadioButton(solverType.getName());
+            solverTypeOption.addActionListener(mazeController.getMazeSolverSelectionRadioListener());
+
+            if (solverType == mazeController.getSolverType()) {
+                solverTypeOption.setSelected(true);
+            }
 
             solveMethodRadioBox.add(solverTypeOption);
             solveMethodRadioButtonGroup.add(solverTypeOption);
         }
 
-        solveMethodRadioButtonGroup.getElements().nextElement().setSelected(true);
+//        for (Enumeration<AbstractButton> buttons = solveMethodRadioButtonGroup.getElements(); buttons.hasMoreElements();) {
+//            AbstractButton button = buttons.nextElement();
+//
+//            if (button.getText() == mazeController.getSolverType().getName()) {
+//                button.setSelected(true);
+//                break;
+//            }
+//        }
 
         solveMethodRadioPanel.add(solveMethodRadioBox);
 

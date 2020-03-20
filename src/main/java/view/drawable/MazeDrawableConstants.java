@@ -1,6 +1,6 @@
 package view.drawable;
 
-public class MazeConstants {
+public class MazeDrawableConstants {
     static final int CELL_SIZE = 20;
     static final int MARGIN = 10;
     static final long ANIMATION_SLEEP = 15L;

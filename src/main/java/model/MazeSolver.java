@@ -32,7 +32,7 @@ public abstract class MazeSolver {
 		}
 	}
 
-	public abstract void solve(int rowStart, int colStart, int rowEnd, int colEnd);
+	public abstract void solve();
 
 	public void walkSolutionPath() {
 		while (goal != null) {
