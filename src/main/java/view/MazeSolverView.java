@@ -10,7 +10,6 @@ import java.awt.*;
 
 public class MazeSolverView extends JFrame {
     public MazePanel mazePanel;
-
     public GUIPanel guiPanel;
 
     public MazeSolverView(Maze maze, MazeController mazeController) {
@@ -19,8 +18,6 @@ public class MazeSolverView extends JFrame {
         this.guiPanel = new GUIPanel(mazeController);
 
         initDisplay();
-
-        setVisible(true);
     }
 
     private void initDisplay() {
@@ -48,6 +45,8 @@ public class MazeSolverView extends JFrame {
         getContentPane().add(this.guiPanel, gbc);
 
         pack();
+
+        setVisible(true);
     }
 
     public void repaintMaze() {

@@ -1,5 +1,7 @@
 package model;
 
+import controller.MazeController;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.beans.PropertyChangeListener;
@@ -10,9 +12,11 @@ import java.util.List;
 public abstract class MazeGenerator {
     private List<ChangeListener> listenerList = new ArrayList<>();
 	protected Maze maze;
+    protected MazeController mazeController;
 
-	public MazeGenerator(Maze maze) {
+	public MazeGenerator(Maze maze, MazeController mazeController) {
 		this.maze = maze;
+		this.mazeController = mazeController;
 	}
 
     public synchronized void addChangeListener(ChangeListener listener) {

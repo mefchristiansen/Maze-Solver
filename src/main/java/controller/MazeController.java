@@ -10,6 +10,8 @@ import model.GeneratorType;
 import model.SolverType;
 import view.MazeSolverView;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class MazeController {
     // Model
     private Maze maze;
@@ -28,6 +30,8 @@ public class MazeController {
 
 //    private MazeGUIListener mazeGUIListener;
 
+    private AtomicBoolean run;
+
     public MazeController() {
         this.maze = new Maze();
 
@@ -43,6 +47,8 @@ public class MazeController {
 
         // Create view
         this.view = new MazeSolverView(maze, this);
+
+        this.run = new AtomicBoolean(false);
     }
 
     public void setGeneratorType(GeneratorType generatorType) {
@@ -83,7 +89,7 @@ public class MazeController {
 
     public void initMaze() {
         generateMaze();
-        setEndpoints();
+//        setEndpoints();
     }
 
     private void setEndpoints() {
@@ -104,9 +110,10 @@ public class MazeController {
     }
 
     private void generateMaze() {
-        MazeGenerator generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze);
+        MazeGenerator generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
         generator.addChangeListener(this.view.mazePanel);
         setViewDisplayState("generate");
+        setRun(true);
         generator.generateMaze();
     }
 
@@ -114,6 +121,7 @@ public class MazeController {
         MazeSolver solver = MazeSolverFactory.initMazeSolver(solverType, maze);
         solver.addChangeListener(this.view.mazePanel);
         setViewDisplayState("solve");
+        setRun(true);
         solver.solve();
 
         setViewDisplayState("solution");
@@ -121,10 +129,17 @@ public class MazeController {
     }
 
     public void resetMaze() {
-//        mazeGeneratorListener.stopGenerator();
-//        mazeSolverListener.cancelSolverThread();
+        setRun(false);
 
         maze.resetMaze();
         view.repaintMaze();
+    }
+
+    private void setRun(boolean runState) {
+        this.run.set(runState);
+    }
+
+    public boolean run() {
+        return this.run.get();
     }
 }

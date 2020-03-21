@@ -1,5 +1,6 @@
 package model.generators;
 
+import controller.MazeController;
 import model.Cell;
 import model.Direction;
 import model.Maze;
@@ -11,8 +12,8 @@ import java.util.Random;
 import java.util.Stack;
 
 public class RecursiveBacktracker extends MazeGenerator {
-	public RecursiveBacktracker(Maze maze) {
-	    super(maze);
+	public RecursiveBacktracker(Maze maze, MazeController mazeController) {
+	    super(maze, mazeController);
 	}
 
 	@Override
@@ -30,6 +31,10 @@ public class RecursiveBacktracker extends MazeGenerator {
 	    Stack<Cell> searchStack = new Stack<>();
 
 	    while (current != null) {
+	    	if (!mazeController.run()) {
+	    		return;
+			}
+
 	        Cell unvisitedNeighbor = unvisitedNeighbor(current, rand);
 
 	        if (unvisitedNeighbor != null) {
