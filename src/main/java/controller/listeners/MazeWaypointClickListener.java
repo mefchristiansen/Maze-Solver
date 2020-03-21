@@ -5,11 +5,11 @@ import view.MazeSolverView;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MazeClickListener extends MouseAdapter {
+public class MazeWaypointClickListener extends MouseAdapter {
 	private MazeSolverView view;
 	private boolean enabled;
 
-	public MazeClickListener(MazeSolverView view) {
+	public MazeWaypointClickListener(MazeSolverView view) {
 		super();
 		this.view = view;
 		enabled = false;

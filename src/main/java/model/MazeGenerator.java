@@ -26,7 +26,6 @@ public abstract class MazeGenerator {
     }
 
     protected void fireStateChanged() {
-//	    System.out.println("FIRE");
         if (listenerList != null && listenerList.size() > 0) {
             ChangeEvent event = new ChangeEvent(this);
             for (ChangeListener listener : listenerList) {
@@ -34,6 +33,16 @@ public abstract class MazeGenerator {
             }
         }
     }
+
+//    public boolean isInterrupted() {
+//        // Check for interrupt
+//        try {
+//            Thread.sleep(15L);
+//        } catch (InterruptedException e) {
+//            return true;
+//        }
+//        return false;
+//    }
 
 	public abstract void generateMaze();
 }

@@ -13,7 +13,6 @@ import view.MazeSolverView;
 public class MazeController {
     // Model
     private Maze maze;
-
     private GeneratorType generatorType;
     private SolverType solverType;
 
@@ -21,8 +20,7 @@ public class MazeController {
     private MazeSolverView view;
 
     // Listeners
-    private MazeClickListener mazeClickListener;
-
+    private MazeWaypointClickListener mazeWaypointClickListener;
     private MazeGeneratorListener mazeGeneratorListener;
     private MazeSolverListener mazeSolverListener;
     private MazeSolverSelectionRadioListener mazeSolverSelectionRadioListener;
@@ -89,9 +87,9 @@ public class MazeController {
     }
 
     private void setEndpoints() {
-        this.mazeClickListener = new MazeClickListener(this.view);
-        this.view.mazePanel.addMouseListener(this.mazeClickListener);
-        this.mazeClickListener.enable();
+        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view);
+        this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
+        this.mazeWaypointClickListener.enable();
 
         synchronized (view) {
             while(maze.startingCell == null || maze.endingCell == null) {
@@ -101,7 +99,7 @@ public class MazeController {
                     System.out.println(e);
                 }
             }
-            this.view.mazePanel.removeMouseListener(this.mazeClickListener);
+            this.view.mazePanel.removeMouseListener(this.mazeWaypointClickListener);
         }
     }
 
@@ -123,6 +121,9 @@ public class MazeController {
     }
 
     public void resetMaze() {
+//        mazeGeneratorListener.stopGenerator();
+//        mazeSolverListener.cancelSolverThread();
+
         maze.resetMaze();
         view.repaintMaze();
     }
