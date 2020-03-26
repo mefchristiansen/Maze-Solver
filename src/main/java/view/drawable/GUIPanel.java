@@ -74,15 +74,6 @@ public class GUIPanel extends JPanel implements ActionListener {
             solveMethodRadioButtonGroup.add(solverTypeOption);
         }
 
-//        for (Enumeration<AbstractButton> buttons = solveMethodRadioButtonGroup.getElements(); buttons.hasMoreElements();) {
-//            AbstractButton button = buttons.nextElement();
-//
-//            if (button.getText() == mazeController.getSolverType().getName()) {
-//                button.setSelected(true);
-//                break;
-//            }
-//        }
-
         solveMethodRadioPanel.add(solveMethodRadioBox);
 
         return solveMethodRadioPanel;

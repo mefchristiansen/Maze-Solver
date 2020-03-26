@@ -1,5 +1,5 @@
 package model;
 
 public enum MazeState {
-    INIT, GENERATED, SOLVED;
+    INIT, GENERATING, GENERATED, SOLVING, SOLVED;
 }

@@ -1,6 +1,7 @@
 package view.drawable;
 
 import model.Cell;
+import model.MazeState;
 
 import java.awt.Graphics2D;
 import java.awt.Color;
@@ -23,70 +24,83 @@ public class CellDrawable {
     private static final Color VISITING = Color.red;
     private static final Color VISITED = Color.blue;
     private static final int SOLUTION_ROUTE_POINT_SCALING_FACTOR = 4;
+    private static final int CELL_SIZE = CellDrawableConstants.CELL_SIZE;
+    private static final int MARGIN = CellDrawableConstants.MARGIN;
 
-    public static void drawCell(Cell cell, Graphics2D g, int scale, int margin, String state) {
-        int cellX = cell.getCellX(margin, scale);
-        int cellY = cell.getCellY(margin, scale);
-        int xStart, yStart, xEnd, yEnd;
+    public static void drawCell(Cell cell, Graphics2D graphics2D, MazeState mazeState) {
+        int cellX = cell.getCellX(MARGIN, CELL_SIZE);
+        int cellY = cell.getCellY(MARGIN, CELL_SIZE);
 
-        g.setStroke(WALL_STROKE);
-        g.setColor(WALL);
-
-        for (Cell.Wall wall : cell.getWalls()) {
-            if (wall.isPresent()) {
-                xStart = cellX + (wall.xStart() * scale);
-                yStart = cellY + (wall.yStart() * scale);
-                xEnd = cellX + (wall.xEnd() * scale);
-                yEnd = cellY + (wall.yEnd() * scale);
-                g.draw(new Line2D.Double(xStart, yStart, xEnd, yEnd));
-            }
-        }
+        drawCellWalls(graphics2D, cell, cellX, cellY);
 
         if (cell.current()) {
-            g.setColor(CURRENT);
-            g.fill(new Rectangle2D.Double(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
+            graphics2D.setColor(CURRENT);
+            graphics2D.fill(fillCell(cellX, cellY));
         }
 
-        if (state.equals("solve")) {
+        if (mazeState == MazeState.SOLVING) {
             if (cell.visiting()) {
-                g.setColor(VISITING);
-                g.fill(new Rectangle2D.Double(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
+                graphics2D.setColor(VISITING);
+                graphics2D.fill(fillCell(cellX, cellY));
             } else if (cell.visited()) {
-                g.setColor(VISITED);
-                g.fill(new Rectangle2D.Double(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
+                graphics2D.setColor(VISITED);
+                graphics2D.fill(fillCell(cellX, cellY));
             }
-        } else if (state.equals("solution")) {
+        } else if (mazeState == MazeState.SOLVED) {
             if (cell.getSolution()) {
-                g.setColor(SOLUTION);
-
-                double solutionRoutePointSize = (scale - (WALL_STROKE_SIZE / 2)) / SOLUTION_ROUTE_POINT_SCALING_FACTOR;
-
-                // Extract this logic to function
-                double solutionRoutePointX = cellX + (WALL_STROKE_SIZE / 2) + (scale / 2) - (scale / (2 * SOLUTION_ROUTE_POINT_SCALING_FACTOR));
-                double solutionRoutePointY = cellY + (WALL_STROKE_SIZE / 2) + (scale / 2) - (scale / (2 * SOLUTION_ROUTE_POINT_SCALING_FACTOR));
-
-                Ellipse2D.Double solutionRoutePoint = new Ellipse2D.Double(solutionRoutePointX, solutionRoutePointY, solutionRoutePointSize, solutionRoutePointSize);
-                g.fill(solutionRoutePoint);
-
-                if (cell.parent() != null) {
-                    double solutionRoutePathPointStartX = cellX + (WALL_STROKE_SIZE / 2) + (scale / 2);
-                    double solutionRoutePathPointStartY = cellY + (WALL_STROKE_SIZE / 2) + (scale / 2);
-
-                    double solutionRoutePathPointEndX = cell.parent().getCellX(margin, scale) + (WALL_STROKE_SIZE / 2) + (scale / 2);
-                    double solutionRoutePathPointEndY = cell.parent().getCellY(margin, scale) + (WALL_STROKE_SIZE / 2) + (scale / 2);
-
-                    g.setStroke(SOLUTION_PATH_STROKE);
-                    g.draw(new Line2D.Double(solutionRoutePathPointStartX, solutionRoutePathPointStartY, solutionRoutePathPointEndX, solutionRoutePathPointEndY));
-                }
+                graphics2D.setColor(SOLUTION);
+                drawSolutionPathComponent(graphics2D, cell, cellX, cellY);
             }
         }
 
         if (cell.getStart()) {
-            g.setColor(START);
-            g.fill(new Rectangle2D.Double(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
+            graphics2D.setColor(START);
+            graphics2D.fill(fillCell(cellX, cellY));
         } else if (cell.getEnd()) {
-            g.setColor(END);
-            g.fill(new Rectangle2D.Double(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, scale - WALL_STROKE_SIZE, scale - WALL_STROKE_SIZE));
+            graphics2D.setColor(END);
+            graphics2D.fill(fillCell(cellX, cellY));
         }
+    }
+
+    private static void drawCellWalls(Graphics2D graphics2D, Cell cell, int cellX, int cellY) {
+        int xStart, yStart, xEnd, yEnd;
+
+        graphics2D.setStroke(WALL_STROKE);
+        graphics2D.setColor(WALL);
+
+        for (Cell.Wall wall : cell.getWalls()) {
+            if (wall.isPresent()) {
+                xStart = cellX + (wall.xStart() * CELL_SIZE);
+                yStart = cellY + (wall.yStart() * CELL_SIZE);
+                xEnd = cellX + (wall.xEnd() * CELL_SIZE);
+                yEnd = cellY + (wall.yEnd() * CELL_SIZE);
+                graphics2D.draw(new Line2D.Double(xStart, yStart, xEnd, yEnd));
+            }
+        }
+    }
+
+    private static void drawSolutionPathComponent(Graphics2D graphics2D, Cell cell, int cellX, int cellY) {
+        double solutionRoutePointSize = (CELL_SIZE - (WALL_STROKE_SIZE / 2)) / SOLUTION_ROUTE_POINT_SCALING_FACTOR;
+
+        double solutionRoutePointX = cellX + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2) - (CELL_SIZE / (2 * SOLUTION_ROUTE_POINT_SCALING_FACTOR));
+        double solutionRoutePointY = cellY + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2) - (CELL_SIZE / (2 * SOLUTION_ROUTE_POINT_SCALING_FACTOR));
+
+        Ellipse2D.Double solutionRoutePoint = new Ellipse2D.Double(solutionRoutePointX, solutionRoutePointY, solutionRoutePointSize, solutionRoutePointSize);
+        graphics2D.fill(solutionRoutePoint);
+
+        if (cell.parent() != null) {
+            double solutionRoutePathPointStartX = cellX + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2);
+            double solutionRoutePathPointStartY = cellY + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2);
+
+            double solutionRoutePathPointEndX = cell.parent().getCellX(MARGIN, CELL_SIZE) + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2);
+            double solutionRoutePathPointEndY = cell.parent().getCellY(MARGIN, CELL_SIZE) + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2);
+
+            graphics2D.setStroke(SOLUTION_PATH_STROKE);
+            graphics2D.draw(new Line2D.Double(solutionRoutePathPointStartX, solutionRoutePathPointStartY, solutionRoutePathPointEndX, solutionRoutePathPointEndY));
+        }
+    }
+
+    private static Rectangle2D.Double fillCell(int cellX, int cellY) {
+        return new Rectangle2D.Double(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, CELL_SIZE - WALL_STROKE_SIZE, CELL_SIZE - WALL_STROKE_SIZE);
     }
 }

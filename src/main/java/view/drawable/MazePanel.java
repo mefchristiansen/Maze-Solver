@@ -2,6 +2,7 @@ package view.drawable;
 
 import model.Cell;
 import model.Maze;
+import model.MazeState;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -9,24 +10,28 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class MazePanel extends JPanel implements ChangeListener {
+    private enum WaypointState {
+        START, END;
+    }
+
 	private static final Color BACKGROUND = new Color(55, 50, 55);
     private model.Maze maze;
     private MazeDrawable mazeDrawable;
-    private String displayState, initState;
+    private MazeState mazeState;
+    private WaypointState waypointState;
 
-    public MazePanel(Maze maze, String displayState) {
+    public MazePanel(Maze maze) {
     	this.maze = maze;
         this.mazeDrawable = new MazeDrawable(this.maze);
-
-    	this.displayState = displayState;
-        this.initState = "start";
+        this.mazeState = MazeState.INIT;
+        this.waypointState = WaypointState.START;
 
         initMazePanel();
     }
 
-    public void setDisplayState(String state) {
-        this.displayState = state;
-        this.mazeDrawable.setDisplayState(state);
+    public void setMazeState(MazeState mazeState) {
+        this.mazeState = mazeState;
+        mazeDrawable.setMazeState(mazeState);
     }
 
     @Override
@@ -41,7 +46,7 @@ public class MazePanel extends JPanel implements ChangeListener {
     }
 
     private void initMazePanel() {
-        Dimension size = new Dimension(maze.numCols() * MazeDrawableConstants.CELL_SIZE + MazeDrawableConstants.MARGIN * 2, maze.numRows() * MazeDrawableConstants.CELL_SIZE + MazeDrawableConstants.MARGIN * 2);
+        Dimension size = new Dimension(maze.numCols() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2, maze.numRows() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2);
         setMinimumSize(size);
         setPreferredSize(size);
         setBackground(BACKGROUND);
@@ -52,16 +57,16 @@ public class MazePanel extends JPanel implements ChangeListener {
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {
                 Cell cell = maze.mazeCell(r,c);
-                if (cell.pointInside(x, y, MazeDrawableConstants.CELL_SIZE, MazeDrawableConstants.MARGIN)) {
-                    if (initState.equals("start")) {
+                if (cell.pointInside(x, y, CellDrawableConstants.CELL_SIZE, CellDrawableConstants.MARGIN)) {
+                    if (waypointState == WaypointState.START) {
                         cell.setStart();
                         maze.startingCell = cell;
-                        initState = "end";
+                        waypointState = WaypointState.END;
                         repaint();
-                    } else if (initState.equals("end")) {
+                    } else if (waypointState == WaypointState.END) {
                         cell.setEnd();
                         maze.endingCell = cell;
-                        initState = "solve";
+                        waypointState = WaypointState.START;
                         repaint();
                     }
                 }
@@ -70,30 +75,27 @@ public class MazePanel extends JPanel implements ChangeListener {
     }
 
     public void animateMaze() {
+        long sleepTime;
+
+        switch (mazeState) {
+            case GENERATING:
+                sleepTime = MazeDrawableConstants.GENERATION_SLEEP_TIME;
+                break;
+            case SOLVING:
+                sleepTime = MazeDrawableConstants.SOLVE_SLEEP_TIME;
+                break;
+            case SOLVED:
+                sleepTime = MazeDrawableConstants.SOLUTION_SLEEP_TIME;
+                break;
+            default:
+                sleepTime = MazeDrawableConstants.ANIMATION_SLEEP;
+                break;
+        }
+
         try {
-//            System.out.println("PAINT");
-            Thread.sleep(MazeDrawableConstants.ANIMATION_SLEEP);
+            Thread.sleep(sleepTime);
         } catch (InterruptedException ignored) {
         }
         repaint();
     }
-
-//    public void solveAnimate() {
-//        try {
-//            Thread.sleep(solveSleep);
-//        } catch (InterruptedException ignored) {
-//        }
-//        repaint();
-//    }
-//
-//    public void solutionAnimate() {
-//        System.out.println("SOLUTION ANIMATION");
-//
-//
-//        try {
-//            Thread.sleep(solutionSleep);
-//        } catch (InterruptedException ignored) {
-//        }
-//        repaint();
-//    }
 }

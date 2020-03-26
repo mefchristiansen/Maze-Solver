@@ -1,6 +1,5 @@
 package controller.listeners;
 
-import model.Maze;
 import model.MazeState;
 import controller.MazeController;
 import controller.MazeActionListener;
@@ -21,7 +20,7 @@ public class MazeGeneratorListener extends MazeActionListener {
         }
 
         mazeController.resetMaze();
-        mazeController.initMaze();
+        mazeController.initGenerate();
         generatorThread = new Thread(() -> mazeController.generateMaze());
         generatorThread.start();
     }

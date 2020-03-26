@@ -87,14 +87,15 @@ public class MazeController {
         return mazeResetListener;
     }
 
-    private void setViewDisplayState(String displayState) {
-        view.setDisplayState(displayState);
+    private void updateMazeViewState() {
+        view.setMazeState(state);
     }
 
-    public void initMaze() {
+    public void initGenerate() {
         generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
         generator.addChangeListener(this.view.mazePanel);
-        setViewDisplayState("generate");
+        updateMazeViewState();
+        state = MazeState.GENERATING;
     }
 
     public void generateMaze() {
@@ -107,7 +108,8 @@ public class MazeController {
     public void initSolve() {
         solver = MazeSolverFactory.initMazeSolver(solverType, maze, this);
         solver.addChangeListener(this.view.mazePanel);
-        setViewDisplayState("solve");
+        state = MazeState.SOLVING;
+        updateMazeViewState();
     }
 
     public void solveMaze() {
@@ -117,9 +119,10 @@ public class MazeController {
 
         if(solver.solve()) {
             state = MazeState.SOLVED;
+            updateMazeViewState();
             mazeSolverListener.resetSolver();
 
-            setViewDisplayState("solution");
+            updateMazeViewState();
             solver.walkSolutionPath();
         }
     }

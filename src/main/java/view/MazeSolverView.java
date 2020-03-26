@@ -2,6 +2,7 @@ package view;
 
 import model.Maze;
 import controller.MazeController;
+import model.MazeState;
 import view.drawable.MazePanel;
 import view.drawable.GUIPanel;
 
@@ -14,7 +15,7 @@ public class MazeSolverView extends JFrame {
 
     public MazeSolverView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
-        this.mazePanel = new MazePanel(maze, "generate");
+        this.mazePanel = new MazePanel(maze);
         this.guiPanel = new GUIPanel(mazeController);
 
         initDisplay();
@@ -53,7 +54,7 @@ public class MazeSolverView extends JFrame {
         mazePanel.repaint();
     }
 
-    public void setDisplayState(String displayState) {
-        this.mazePanel.setDisplayState(displayState);
+    public void setMazeState(MazeState mazeState) {
+        this.mazePanel.setMazeState(mazeState);
     }
 }
