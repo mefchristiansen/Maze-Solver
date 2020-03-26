@@ -1,5 +1,6 @@
 package model.solvers;
 
+import controller.MazeController;
 import model.Cell;
 import model.Direction;
 import model.Maze;
@@ -8,12 +9,12 @@ import model.MazeSolver;
 import java.util.*;
 
 public class AStar extends MazeSolver {
-	public AStar(Maze maze) {
-		super(maze);
+	public AStar(Maze maze, MazeController mazeController) {
+		super(maze, mazeController);
 	}
 
 	@Override
-	public void solve() {
+	public boolean solve() {
 		int rowStart = maze.startingCell.row();
 		int colStart = maze.startingCell.col();
 		int rowEnd = maze.endingCell.row();
@@ -30,6 +31,10 @@ public class AStar extends MazeSolver {
 		openSet.add(start);
 
 		while (openSet.size() != 0) {
+			if (mazeController.isInterrupted()) {
+				return false;
+			}
+
 			currentIndex = lowestFIndex(openSet);
 			current = openSet.get(currentIndex);
 
@@ -39,7 +44,7 @@ public class AStar extends MazeSolver {
 
 			if (current.row() == rowEnd && current.col() == colEnd) {
 				goal = current;
-				return;
+				return true;
 			}
 
 			openSet.remove(currentIndex);
@@ -70,7 +75,7 @@ public class AStar extends MazeSolver {
 			current.setCurrent(false);
 		}
 
-		return;
+		return false;
 	}
 
 	private List<Cell> unvisitedNeighbors(Cell currCell) {

@@ -1,6 +1,7 @@
 package controller;
 
 import controller.listeners.*;
+import model.MazeState;
 import model.Maze;
 import model.MazeGenerator;
 import model.MazeGeneratorFactory;
@@ -13,10 +14,14 @@ import view.MazeSolverView;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MazeController {
+    private MazeState state;
+
     // Model
     private Maze maze;
     private GeneratorType generatorType;
+    private MazeGenerator generator;
     private SolverType solverType;
+    private MazeSolver solver;
 
     // View
     private MazeSolverView view;
@@ -28,13 +33,12 @@ public class MazeController {
     private MazeSolverSelectionRadioListener mazeSolverSelectionRadioListener;
     private MazeResetListener mazeResetListener;
 
-//    private MazeGUIListener mazeGUIListener;
-
-    private AtomicBoolean run;
+    private AtomicBoolean runState;
 
     public MazeController() {
-        this.maze = new Maze();
+        this.state = MazeState.INIT;
 
+        this.maze = new Maze();
         this.generatorType = GeneratorType.RECURSIVE_BACKTRACKER;
         this.solverType = SolverType.BFS;
 
@@ -43,12 +47,16 @@ public class MazeController {
         this.mazeSolverListener = new MazeSolverListener(this);
         this.mazeResetListener = new MazeResetListener(this);
 
-//        this.mazeGUIListener = new MazeGUIListener(this);
-
-        // Create view
         this.view = new MazeSolverView(maze, this);
 
-        this.run = new AtomicBoolean(false);
+        this.runState = new AtomicBoolean(true);
+
+        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
+        this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
+    }
+
+    public MazeState getState() {
+        return state;
     }
 
     public void setGeneratorType(GeneratorType generatorType) {
@@ -79,67 +87,79 @@ public class MazeController {
         return mazeResetListener;
     }
 
-//    public MazeGUIListener getMazeGUIListener() {
-//        return mazeGUIListener;
-//    }
-
     private void setViewDisplayState(String displayState) {
         view.setDisplayState(displayState);
     }
 
     public void initMaze() {
-        generateMaze();
-//        setEndpoints();
+        generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
+        generator.addChangeListener(this.view.mazePanel);
+        setViewDisplayState("generate");
     }
 
-    private void setEndpoints() {
-        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view);
-        this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
-        this.mazeWaypointClickListener.enable();
-
-        synchronized (view) {
-            while(maze.startingCell == null || maze.endingCell == null) {
-                try {
-                    view.wait();
-                } catch(InterruptedException e) {
-                    System.out.println(e);
-                }
-            }
-            this.view.mazePanel.removeMouseListener(this.mazeWaypointClickListener);
+    public void generateMaze() {
+        if (generator.generateMaze()) {
+            state = MazeState.GENERATED;
+            mazeGeneratorListener.resetGenerator();
         }
     }
 
-    private void generateMaze() {
-        MazeGenerator generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
-        generator.addChangeListener(this.view.mazePanel);
-        setViewDisplayState("generate");
-        setRun(true);
-        generator.generateMaze();
+    public void initSolve() {
+        solver = MazeSolverFactory.initMazeSolver(solverType, maze, this);
+        solver.addChangeListener(this.view.mazePanel);
+        setViewDisplayState("solve");
     }
 
     public void solveMaze() {
-        MazeSolver solver = MazeSolverFactory.initMazeSolver(solverType, maze);
-        solver.addChangeListener(this.view.mazePanel);
-        setViewDisplayState("solve");
-        setRun(true);
-        solver.solve();
+        if (!maze.waypointsSet()) {
+            maze.defaultWaypoints();
+        }
 
-        setViewDisplayState("solution");
-        solver.walkSolutionPath();
+        if(solver.solve()) {
+            state = MazeState.SOLVED;
+            mazeSolverListener.resetSolver();
+
+            setViewDisplayState("solution");
+            solver.walkSolutionPath();
+        }
     }
 
     public void resetMaze() {
-        setRun(false);
+        setRunState(false);
+
+        mazeGeneratorListener.resetGenerator();
+        mazeSolverListener.resetSolver();
+
+        maze.startingCell = null;
+        maze.endingCell = null;
 
         maze.resetMaze();
         view.repaintMaze();
+
+        state = MazeState.INIT;
+
+        setRunState(true);
     }
 
-    private void setRun(boolean runState) {
-        this.run.set(runState);
+    private void setRunState(boolean runState) {
+        this.runState.set(runState);
     }
 
-    public boolean run() {
-        return this.run.get();
+    public boolean isInterrupted() {
+        return !this.runState.get();
     }
+
+    /*
+        private void setEndpoints() {
+            synchronized (view) {
+                while(maze.startingCell == null || maze.endingCell == null) {
+                    try {
+                        view.wait();
+                    } catch(InterruptedException e) {
+                        System.out.println(e);
+                    }
+                }
+            }
+        }
+     */
 }

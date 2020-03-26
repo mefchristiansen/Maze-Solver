@@ -1,5 +1,8 @@
 package controller.listeners;
 
+import controller.MazeController;
+import model.Maze;
+import model.MazeState;
 import view.MazeSolverView;
 
 import java.awt.event.MouseAdapter;
@@ -7,26 +10,36 @@ import java.awt.event.MouseEvent;
 
 public class MazeWaypointClickListener extends MouseAdapter {
 	private MazeSolverView view;
+	private MazeController mazeController;
 	private boolean enabled;
 
-	public MazeWaypointClickListener(MazeSolverView view) {
+	public MazeWaypointClickListener(MazeSolverView view, MazeController mazeController) {
 		super();
 		this.view = view;
-		enabled = false;
+		this.mazeController = mazeController;
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		synchronized (view) {
-			if (enabled) {
-				this.view.mazePanel.setPoint(e.getX(), e.getY());
-			}
-		    view.notify();
+		if (canSet()) {
+			this.view.mazePanel.setPoint(e.getX(), e.getY());
 		}
+
+		return;
+
+		/*
+			synchronized (view) {
+				if (canSet()) {
+					this.view.mazePanel.setPoint(e.getX(), e.getY());
+				}
+				view.notify();
+			}
+		*/
 	}
 
-	public void enable() {
-		this.enabled = true;
+	private boolean canSet() {
+		MazeState mazeState = mazeController.getState();
+		return mazeState == MazeState.GENERATED;
 	}
 
 }

@@ -1,5 +1,6 @@
 package model.solvers;
 
+import controller.MazeController;
 import model.Cell;
 import model.Direction;
 import model.Maze;
@@ -8,12 +9,12 @@ import model.MazeSolver;
 import java.util.*;
 
 public class BFS extends MazeSolver {
-	public BFS(Maze maze) {
-		super(maze);
+	public BFS(Maze maze, MazeController mazeController) {
+		super(maze, mazeController);
 	}
 
 	@Override
-	public void solve() {
+	public boolean solve() {
 		int rowStart = maze.startingCell.row();
 		int colStart = maze.startingCell.col();
 		int rowEnd = maze.endingCell.row();
@@ -24,6 +25,10 @@ public class BFS extends MazeSolver {
 		searchQueue.add(maze.mazeCell(rowStart, colStart));
 
 		while (searchQueue.size() != 0) {
+			if (mazeController.isInterrupted()) {
+				return false;
+			}
+
 			current = searchQueue.remove();
 
 			current.setVisited(true);
@@ -33,7 +38,7 @@ public class BFS extends MazeSolver {
 
 			if (current.row() == rowEnd && current.col() == colEnd) {
 				goal = current;
-				return;
+				return true;
 			}
 
 			List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
@@ -52,7 +57,7 @@ public class BFS extends MazeSolver {
 			current.setCurrent(false);
 		}
 
-		return;
+		return false;
 	}
 
 	private List<Cell> unvisitedNeighbors(Cell currCell) {

@@ -11,7 +11,6 @@ import java.awt.Stroke;
 import java.awt.BasicStroke;
 
 public class CellDrawable {
-
     private static final Color WALL = Color.white;
     private static final int WALL_STROKE_SIZE = 2;
     private static final Stroke WALL_STROKE = new BasicStroke(WALL_STROKE_SIZE);

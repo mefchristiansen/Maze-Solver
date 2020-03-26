@@ -62,4 +62,18 @@ public class Maze {
             }
         }
     }
+
+    public boolean waypointsSet() {
+        return startingCell != null && endingCell != null;
+    }
+
+    public void defaultWaypoints() {
+        if (startingCell == null) {
+            startingCell = maze[0][0];
+        }
+
+        if (endingCell == null) {
+            endingCell = maze[numRows - 1][numCols - 1];
+        }
+    }
 }

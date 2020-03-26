@@ -17,7 +17,7 @@ public class RecursiveBacktracker extends MazeGenerator {
 	}
 
 	@Override
-	public void generateMaze() {
+	public boolean generateMaze() {
 	    Random rand = new Random();
 
 	    int startRow = rand.nextInt(maze.numRows() - 1);
@@ -31,8 +31,8 @@ public class RecursiveBacktracker extends MazeGenerator {
 	    Stack<Cell> searchStack = new Stack<>();
 
 	    while (current != null) {
-	    	if (!mazeController.run()) {
-	    		return;
+	    	if (mazeController.isInterrupted()) {
+	    		return false;
 			}
 
 	        Cell unvisitedNeighbor = unvisitedNeighbor(current, rand);
@@ -60,6 +60,7 @@ public class RecursiveBacktracker extends MazeGenerator {
 		}
 
 		maze.voidVisits();
+	    return true;
 	}
 
 	private Cell unvisitedNeighbor(Cell currCell, Random rand) {

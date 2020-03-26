@@ -38,15 +38,5 @@ public abstract class MazeGenerator {
         }
     }
 
-//    public boolean isInterrupted() {
-//        // Check for interrupt
-//        try {
-//            Thread.sleep(15L);
-//        } catch (InterruptedException e) {
-//            return true;
-//        }
-//        return false;
-//    }
-
-	public abstract void generateMaze();
+	public abstract boolean generateMaze();
 }

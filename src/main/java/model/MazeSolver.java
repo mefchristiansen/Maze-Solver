@@ -1,16 +1,20 @@
 package model;
 
+import controller.MazeController;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.*;
 
 public abstract class MazeSolver {
 	protected Maze maze;
+	protected MazeController mazeController;
 	protected Cell goal;
 	private List<ChangeListener> listenerList = new ArrayList<>();
 
-	public MazeSolver(Maze maze) {
+	public MazeSolver(Maze maze, MazeController mazeController) {
 		this.maze = maze;
+		this.mazeController = mazeController;
 	}
 
 	public synchronized void addChangeListener(ChangeListener listener) {
@@ -32,7 +36,7 @@ public abstract class MazeSolver {
 		}
 	}
 
-	public abstract void solve();
+	public abstract boolean solve();
 
 	public void walkSolutionPath() {
 		while (goal != null) {

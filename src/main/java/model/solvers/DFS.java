@@ -1,5 +1,6 @@
 package model.solvers;
 
+import controller.MazeController;
 import model.Cell;
 import model.Direction;
 import model.Maze;
@@ -8,12 +9,12 @@ import model.MazeSolver;
 import java.util.*;
 
 public class DFS extends MazeSolver {
-	public DFS(Maze maze) {
-		super(maze);
+	public DFS(Maze maze, MazeController mazeController) {
+		super(maze, mazeController);
 	}
 
 	@Override
-	public void solve() {
+	public boolean solve() {
 		int rowStart = maze.startingCell.row();
 		int colStart = maze.startingCell.col();
 		int rowEnd = maze.endingCell.row();
@@ -27,9 +28,13 @@ public class DFS extends MazeSolver {
 		Stack<Cell> searchStack = new Stack<>();
 
 		while (current != null) {
+			if (mazeController.isInterrupted()) {
+				return false;
+			}
+
 			if (current.row() == rowEnd && current.col() == colEnd) {
 				goal = current;
-				return;
+				return true;
 			}
 
 			fireStateChanged();
@@ -58,7 +63,7 @@ public class DFS extends MazeSolver {
 			}
 		}
 
-		return;
+		return false;
 	}
 
 	private Cell unvisitedNeighbor(Cell currCell) {
