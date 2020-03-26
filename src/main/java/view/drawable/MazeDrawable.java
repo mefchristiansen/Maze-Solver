@@ -8,18 +8,12 @@ import java.awt.*;
 
 public class MazeDrawable {
     private final Maze maze;
-    private MazeState mazeState;
 
     public MazeDrawable(Maze maze) {
         this.maze = maze;
-        this.mazeState = MazeState.INIT;
     }
 
-    public void setMazeState(MazeState mazeState) {
-        this.mazeState = mazeState;
-    }
-
-    public void drawMaze(Graphics graphics) {
+    public void drawMaze(Graphics graphics, MazeState mazeState) {
         Graphics2D graphics2D = (Graphics2D) graphics;
 
         for (int r = 0; r < maze.numRows(); r++) {

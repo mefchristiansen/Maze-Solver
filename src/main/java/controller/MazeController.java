@@ -101,6 +101,7 @@ public class MazeController {
     public void generateMaze() {
         if (generator.generateMaze()) {
             state = MazeState.GENERATED;
+            updateMazeViewState();
             mazeGeneratorListener.resetGenerator();
         }
     }
@@ -133,10 +134,10 @@ public class MazeController {
         mazeGeneratorListener.resetGenerator();
         mazeSolverListener.resetSolver();
 
-        maze.startingCell = null;
-        maze.endingCell = null;
+        maze.startingCell = maze.endingCell = null;
 
         maze.resetMaze();
+        view.resetWaypointSetterState();
         view.repaintMaze();
 
         state = MazeState.INIT;

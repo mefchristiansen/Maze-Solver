@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class MazePanel extends JPanel implements ChangeListener {
     private enum WaypointState {
-        START, END;
+        START, END, COMPLETE;
     }
 
 	private static final Color BACKGROUND = new Color(55, 50, 55);
@@ -31,7 +31,6 @@ public class MazePanel extends JPanel implements ChangeListener {
 
     public void setMazeState(MazeState mazeState) {
         this.mazeState = mazeState;
-        mazeDrawable.setMazeState(mazeState);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class MazePanel extends JPanel implements ChangeListener {
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        mazeDrawable.drawMaze(graphics);
+        mazeDrawable.drawMaze(graphics, mazeState);
     }
 
     private void initMazePanel() {
@@ -66,12 +65,16 @@ public class MazePanel extends JPanel implements ChangeListener {
                     } else if (waypointState == WaypointState.END) {
                         cell.setEnd();
                         maze.endingCell = cell;
-                        waypointState = WaypointState.START;
+                        waypointState = WaypointState.COMPLETE;
                         repaint();
                     }
                 }
             }
         }
+    }
+
+    public void resetWaypointSetterState() {
+        waypointState = WaypointState.START;
     }
 
     public void animateMaze() {

@@ -57,4 +57,8 @@ public class MazeSolverView extends JFrame {
     public void setMazeState(MazeState mazeState) {
         this.mazePanel.setMazeState(mazeState);
     }
+
+    public void resetWaypointSetterState() {
+        this.mazePanel.resetWaypointSetterState();
+    }
 }

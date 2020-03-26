@@ -38,7 +38,16 @@ public class CellDrawable {
             graphics2D.fill(fillCell(cellX, cellY));
         }
 
-        if (mazeState == MazeState.SOLVING) {
+        if (mazeState == MazeState.GENERATED) {
+            if (cell.getStart()) {
+                graphics2D.setColor(START);
+                graphics2D.fill(fillCell(cellX, cellY));
+            } else if (cell.getEnd()) {
+                graphics2D.setColor(END);
+                graphics2D.fill(fillCell(cellX, cellY));
+            }
+        }
+        else if (mazeState == MazeState.SOLVING) {
             if (cell.visiting()) {
                 graphics2D.setColor(VISITING);
                 graphics2D.fill(fillCell(cellX, cellY));
@@ -51,14 +60,6 @@ public class CellDrawable {
                 graphics2D.setColor(SOLUTION);
                 drawSolutionPathComponent(graphics2D, cell, cellX, cellY);
             }
-        }
-
-        if (cell.getStart()) {
-            graphics2D.setColor(START);
-            graphics2D.fill(fillCell(cellX, cellY));
-        } else if (cell.getEnd()) {
-            graphics2D.setColor(END);
-            graphics2D.fill(fillCell(cellX, cellY));
         }
     }
 
