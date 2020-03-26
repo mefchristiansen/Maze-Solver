@@ -19,45 +19,48 @@ public class GUIPanel extends JPanel implements ActionListener {
     }
 
     private void initGUIPanel() {
-        setLayout(new GridLayout(0,1));
-
-//        GridBagConstraints gbc = new GridBagConstraints();
+        setLayout(new GridBagLayout());
 
         // Generate Maze Button
         JButton generateMazeButton = new JButton("Generate");
         generateMazeButton.setActionCommand("generate");
         generateMazeButton.addActionListener(mazeController.getMazeGeneratorListener());
-        add(generateMazeButton);
+        addComponent(generateMazeButton, 0, 0, 1, 1, GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL);
 
         // Solve Method Radio
         JPanel solveMethodRadio = initSolveMethodRadio();
-        add(solveMethodRadio);
+        addComponent(solveMethodRadio, 0, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
 
         // Solve Maze Button
         JButton solveMazeButton = new JButton("Solve");
         solveMazeButton.setActionCommand("solve");
         solveMazeButton.addActionListener(mazeController.getMazeSolverListener());
-        add(solveMazeButton);
+        addComponent(solveMazeButton, 0, 2, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
 
         // Reset Maze Button
         JButton resetMazeButton = new JButton("Reset");
         resetMazeButton.setActionCommand("reset");
         resetMazeButton.addActionListener(mazeController.getMazeResetListener());
-        add(resetMazeButton);
+        addComponent(resetMazeButton, 0, 3, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
 
         // Exit Button
         JButton exitButton = new JButton("Exit");
         exitButton.setActionCommand("exit");
         exitButton.addActionListener(this);
-        add(exitButton);
+        addComponent(exitButton, 0, 4, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
+    }
+
+    private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor, int fill) {
+        Insets insets = new Insets(5, 0, 0, 0);
+        GridBagConstraints gbc = new GridBagConstraints(gridx, gridy, gridwidth, gridheight, 1.0, 1.0,
+                anchor, fill, insets, 0, 0);
+        this.add(component, gbc);
     }
 
     private JPanel initSolveMethodRadio() {
         JPanel solveMethodRadioPanel = new JPanel();
 
-        TitledBorder solveMethodTitledBorder = new TitledBorder("Solve Method");
-
-        solveMethodRadioPanel.setBorder(solveMethodTitledBorder);
+        solveMethodRadioPanel.setBorder(BorderFactory.createTitledBorder("Solve Method"));
 
         Box solveMethodRadioBox = Box.createVerticalBox();
         ButtonGroup solveMethodRadioButtonGroup = new ButtonGroup();
@@ -75,6 +78,10 @@ public class GUIPanel extends JPanel implements ActionListener {
         }
 
         solveMethodRadioPanel.add(solveMethodRadioBox);
+
+        Dimension guiDimension = new Dimension(125, 100);
+        solveMethodRadioPanel.setMinimumSize(guiDimension);
+        solveMethodRadioPanel.setPreferredSize(guiDimension);
 
         return solveMethodRadioPanel;
     }

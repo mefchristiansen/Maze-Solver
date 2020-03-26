@@ -26,24 +26,8 @@ public class MazeSolverView extends JFrame {
         setResizable(false);
         setLayout(new GridBagLayout());
 
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridheight = 1;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.VERTICAL;
-
-        getContentPane().add(this.mazePanel, gbc);
-
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.gridheight = 1;
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.VERTICAL;
-
-        getContentPane().add(this.guiPanel, gbc);
+        addComponent(this.mazePanel, 0, 0, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+        addComponent(this.guiPanel, 2, 0, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL);
 
         pack();
 
@@ -60,5 +44,12 @@ public class MazeSolverView extends JFrame {
 
     public void resetWaypointSetterState() {
         this.mazePanel.resetWaypointSetterState();
+    }
+
+    private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor, int fill) {
+        Insets insets = new Insets(5, 5, 5, 5);
+        GridBagConstraints gbc = new GridBagConstraints(gridx, gridy, gridwidth, gridheight, 1.0, 1.0,
+                anchor, fill, insets, 0, 0);
+        getContentPane().add(component, gbc);
     }
 }
