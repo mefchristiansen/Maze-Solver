@@ -7,7 +7,7 @@ public class Maze {
     public Cell startingCell, endingCell;
 
     public Maze() {
-        this(MazeConstants.NUM_ROWS, MazeConstants.NUM_COLS);
+        this(MazeConstants.DEFAULT_NUM_ROWS, MazeConstants.DEFAULT_NUM_COLS);
     }
 
 	public Maze(int numRows, int numCols) {
