@@ -6,12 +6,9 @@ import model.MazeConstants;
 import model.SolverType;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
-import java.util.concurrent.Flow;
 
 public class GUIPanel extends JPanel implements ActionListener {
     private final MazeController mazeController;
@@ -104,6 +101,7 @@ public class GUIPanel extends JPanel implements ActionListener {
     private JPanel initCustomMazeSizeInputs() {
         JPanel customMazeSizeInputsPanel = new JPanel(new GridLayout(0, 1));
 
+        JPanel numRowsPanel = new JPanel(new GridLayout(1,0));
         String numRowsSpinnerLabel = String.format("Num Rows (%d-%d):", MazeConstants.MIN_NUM_ROWS, MazeConstants.MAX_NUM_ROWS);
         SpinnerModel numRowsSpinner = new SpinnerNumberModel(
                 MazeConstants.DEFAULT_NUM_ROWS,
@@ -112,6 +110,7 @@ public class GUIPanel extends JPanel implements ActionListener {
                 1
         );
 
+        JPanel numColsPanel = new JPanel(new GridLayout(1,0));
         String numColsSpinnerLabel = String.format("Num Cols (%d-%d):", MazeConstants.MIN_NUM_COLS, MazeConstants.MAX_NUM_COLS);
         SpinnerModel numColsSpinner = new SpinnerNumberModel(
                 MazeConstants.DEFAULT_NUM_COLS,
@@ -120,8 +119,11 @@ public class GUIPanel extends JPanel implements ActionListener {
                 1
         );
 
-        addLabeledSpinner(customMazeSizeInputsPanel, numRowsSpinner, numRowsSpinnerLabel, mazeController.getMazeCustomNumRowsListener());
-        addLabeledSpinner(customMazeSizeInputsPanel, numColsSpinner, numColsSpinnerLabel, mazeController.getMazeCustomNumColsListener());
+        addLabeledSpinner(numRowsPanel, numRowsSpinner, numRowsSpinnerLabel, mazeController.getMazeCustomNumRowsListener());
+        addLabeledSpinner(numColsPanel, numColsSpinner, numColsSpinnerLabel, mazeController.getMazeCustomNumColsListener());
+
+        customMazeSizeInputsPanel.add(numRowsPanel);
+        customMazeSizeInputsPanel.add(numColsPanel);
 
         return customMazeSizeInputsPanel;
     }

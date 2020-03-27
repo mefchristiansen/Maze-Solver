@@ -54,14 +54,14 @@ public class MazeController {
         this.mazeSolverListener = new MazeSolverListener(this);
         this.mazeResetListener = new MazeResetListener(this);
 
-        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
-
         this.view = new MazeSolverView(maze, this);
 
         this.runState = new AtomicBoolean(true);
 
         this.numRows = MazeConstants.DEFAULT_NUM_ROWS;
         this.numCols = MazeConstants.DEFAULT_NUM_COLS;
+
+        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
 
         // TODO: Should this be moved?
         this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);

@@ -77,7 +77,7 @@ public class Maze {
         }
 
         if (endingCell == null) {
-            endingCell = maze[numRows - 1][numCols - 1];
+            endingCell = maze[maze.length - 1][maze[maze.length - 1].length - 1];
         }
     }
 }
