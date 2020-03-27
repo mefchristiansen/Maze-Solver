@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 
 public class GUIPanel extends JPanel implements ActionListener {
     private final MazeController mazeController;
+    private JSlider mazeAnimationSpeedSlider;
 
     public GUIPanel(MazeController mazeController) {
         this.mazeController = mazeController;
@@ -24,7 +25,7 @@ public class GUIPanel extends JPanel implements ActionListener {
         Insets insets = new Insets(5, 0, 0, 0);
 
         // Maze Size Inputs
-        JPanel customMazeSizeInputs = initCustomMazeSizeInputs();
+        JPanel customMazeSizeInputs = customMazeSizeInputs();
         addComponent(this, customMazeSizeInputs, 0, 0, 1, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets);
 
@@ -36,7 +37,7 @@ public class GUIPanel extends JPanel implements ActionListener {
                 GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL, insets);
 
         // Solve Method Radio
-        JPanel solveMethodRadio = initSolveMethodRadio();
+        JPanel solveMethodRadio = solveMethodRadio();
         addComponent(this, solveMethodRadio, 0, 2, 1, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets);
 
@@ -47,30 +48,28 @@ public class GUIPanel extends JPanel implements ActionListener {
         addComponent(this, solveMazeButton, 0, 3, 1, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets);
 
+        // Speed Slider
+        JPanel mazeAnimationSpeedSliderPanel = mazeAnimationSpeedSliderPanel();
+        addComponent(this, mazeAnimationSpeedSliderPanel, 0, 4, 1, 1,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets);
+
         // Reset Maze Button
         JButton resetMazeButton = new JButton("Reset");
         resetMazeButton.setActionCommand("reset");
         resetMazeButton.addActionListener(mazeController.getMazeResetListener());
-        addComponent(this, resetMazeButton, 0, 4, 1, 1,
+        addComponent(this, resetMazeButton, 0, 5, 1, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets);
 
         // Exit Button
         JButton exitButton = new JButton("Exit");
         exitButton.setActionCommand("exit");
         exitButton.addActionListener(this);
-        addComponent(this, exitButton, 0, 5, 1, 1,
+        addComponent(this, exitButton, 0, 6, 1, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets);
     }
 
-    private void addComponent(Container container, Component component, int gridx, int gridy, int gridwidth,
-                              int gridheight, int anchor, int fill, Insets insets) {
-        GridBagConstraints gbc = new GridBagConstraints(gridx, gridy, gridwidth, gridheight,
-                1.0, 1.0, anchor, fill, insets, 0, 0);
-        this.add(component, gbc);
-    }
-
-    private JPanel initSolveMethodRadio() {
-        JPanel solveMethodRadioPanel = new JPanel(new FlowLayout());
+    private JPanel solveMethodRadio() {
+        JPanel solveMethodRadioPanel = new JPanel(new GridBagLayout());
 
         solveMethodRadioPanel.setBorder(BorderFactory.createTitledBorder("Solve Method"));
 
@@ -89,7 +88,9 @@ public class GUIPanel extends JPanel implements ActionListener {
             solveMethodRadioButtonGroup.add(solverTypeOption);
         }
 
-        solveMethodRadioPanel.add(solveMethodRadioBox);
+        Insets insets = new Insets(2, 2, 2, 2);
+        addComponent(solveMethodRadioPanel, solveMethodRadioBox, 0, 0, 1, 1,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets);
 
         Dimension guiDimension = new Dimension(125, 100);
         solveMethodRadioPanel.setMinimumSize(guiDimension);
@@ -98,8 +99,8 @@ public class GUIPanel extends JPanel implements ActionListener {
         return solveMethodRadioPanel;
     }
 
-    private JPanel initCustomMazeSizeInputs() {
-        JPanel customMazeSizeInputsPanel = new JPanel(new GridLayout(0, 1));
+    private JPanel customMazeSizeInputs() {
+        JPanel customMazeSizeInputsPanel = new JPanel(new GridBagLayout());
 
         JPanel numRowsPanel = new JPanel(new GridLayout(1,0));
         String numRowsSpinnerLabel = String.format("Num Rows (%d-%d):", MazeConstants.MIN_NUM_ROWS, MazeConstants.MAX_NUM_ROWS);
@@ -122,13 +123,48 @@ public class GUIPanel extends JPanel implements ActionListener {
         addLabeledSpinner(numRowsPanel, numRowsSpinner, numRowsSpinnerLabel, mazeController.getMazeCustomNumRowsListener());
         addLabeledSpinner(numColsPanel, numColsSpinner, numColsSpinnerLabel, mazeController.getMazeCustomNumColsListener());
 
-        customMazeSizeInputsPanel.add(numRowsPanel);
-        customMazeSizeInputsPanel.add(numColsPanel);
+        Insets insets = new Insets(0, 0, 0, 0);
+        addComponent(customMazeSizeInputsPanel, numRowsPanel, 0, 0, 1, 1,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets);
+        addComponent(customMazeSizeInputsPanel, numColsPanel, 0, 1, 1, 1,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets);
 
         return customMazeSizeInputsPanel;
     }
 
-    static void addLabeledSpinner(Container container, SpinnerModel model, String label, MazeChangeListener mazeChangeListener) {
+    private JPanel mazeAnimationSpeedSliderPanel() {
+        JPanel mazeAnimationSpeedSliderPanel = new JPanel(new GridBagLayout());
+
+        mazeAnimationSpeedSlider = new JSlider(JSlider.HORIZONTAL, MazeDrawableConstants.MINIMUM_ANIMATION_SLEEP,
+                MazeDrawableConstants.MAXIMUM_ANIMATION_SLEEP, MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP);
+        mazeAnimationSpeedSlider.setInverted(true);
+        mazeAnimationSpeedSlider.addChangeListener(mazeController.getMazeAnimationSpeedSliderListener());
+
+        JLabel mazeAnimationSpeedSliderLabel = new JLabel("Animation Time");
+
+        Insets insets = new Insets(0, 0, 0, 0);
+
+        addComponent(mazeAnimationSpeedSliderPanel, mazeAnimationSpeedSliderLabel, 0, 0, 1, 1,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets);
+        mazeAnimationSpeedSliderLabel.setLabelFor(mazeAnimationSpeedSlider);
+        addComponent(mazeAnimationSpeedSliderPanel, mazeAnimationSpeedSlider, 0, 1, 1, 1,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets);
+
+        return mazeAnimationSpeedSliderPanel;
+    }
+
+    public void setMazeAnimationSpeedSliderValue(int animationSpeed) {
+        mazeAnimationSpeedSlider.setValue(animationSpeed);
+    }
+
+    private static void addComponent(Container container, Component component, int gridx, int gridy, int gridwidth,
+                                     int gridheight, int anchor, int fill, Insets insets) {
+        GridBagConstraints gbc = new GridBagConstraints(gridx, gridy, gridwidth, gridheight,
+                1.0, 1.0, anchor, fill, insets, 0, 0);
+        container.add(component, gbc);
+    }
+
+    private static void addLabeledSpinner(Container container, SpinnerModel model, String label, MazeChangeListener mazeChangeListener) {
         JLabel spinnerLabel = new JLabel(label);
         container.add(spinnerLabel);
 

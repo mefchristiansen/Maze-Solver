@@ -19,12 +19,14 @@ public class MazePanel extends JPanel implements ChangeListener {
     private MazeDrawable mazeDrawable;
     private MazeState mazeState;
     private WaypointState waypointState;
+    private int animationSpeed;
 
     public MazePanel(Maze maze) {
     	this.maze = maze;
         this.mazeDrawable = new MazeDrawable(this.maze);
         this.mazeState = MazeState.INIT;
         this.waypointState = WaypointState.START;
+        this.animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
 
         initMazePanel();
     }
@@ -90,28 +92,16 @@ public class MazePanel extends JPanel implements ChangeListener {
         waypointState = WaypointState.START;
     }
 
-    public void animateMaze() {
-        long sleepTime;
-
-        switch (mazeState) {
-            case GENERATING:
-                sleepTime = MazeDrawableConstants.GENERATION_SLEEP_TIME;
-                break;
-            case SOLVING:
-                sleepTime = MazeDrawableConstants.SOLVE_SLEEP_TIME;
-                break;
-            case SOLVED:
-                sleepTime = MazeDrawableConstants.SOLUTION_SLEEP_TIME;
-                break;
-            default:
-                sleepTime = MazeDrawableConstants.ANIMATION_SLEEP;
-                break;
-        }
-
+    private void animateMaze() {
         try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException ignored) {
+            Thread.sleep(animationSpeed);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         repaint();
+    }
+
+    public void setAnimationSpeed(int animationSpeed) {
+        this.animationSpeed = animationSpeed;
     }
 }

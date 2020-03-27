@@ -3,17 +3,18 @@ package view;
 import model.Maze;
 import controller.MazeController;
 import model.MazeState;
+import view.drawable.MazeDrawableConstants;
 import view.drawable.MazePanel;
 import view.drawable.GUIPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MazeSolverView extends JFrame {
+public class MazeView extends JFrame {
     public MazePanel mazePanel;
     public GUIPanel guiPanel;
 
-    public MazeSolverView(Maze maze, MazeController mazeController) {
+    public MazeView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
         this.mazePanel = new MazePanel(maze);
         this.guiPanel = new GUIPanel(mazeController);
@@ -45,6 +46,33 @@ public class MazeSolverView extends JFrame {
 
     public void setMazeState(MazeState mazeState) {
         this.mazePanel.setMazeState(mazeState);
+    }
+
+    public void setAnimationSpeed(int animationSpeed) { this.mazePanel.setAnimationSpeed(animationSpeed); }
+
+    public void defaultAnimationSpeedSlider(MazeState mazeState) {
+        int animationSpeed;
+
+        switch (mazeState) {
+            case INIT:
+                animationSpeed = MazeDrawableConstants.DEFAULT_GENERATION_SLEEP_TIME;
+                break;
+            case GENERATING:
+                animationSpeed = MazeDrawableConstants.DEFAULT_GENERATION_SLEEP_TIME;
+                break;
+            case SOLVING:
+                animationSpeed = MazeDrawableConstants.DEFAULT_SOLVE_SLEEP_TIME;
+                break;
+            case SOLVED:
+                animationSpeed = MazeDrawableConstants.DEFAULT_SOLUTION_SLEEP_TIME;
+                break;
+            default:
+                animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
+                break;
+        }
+
+        this.guiPanel.setMazeAnimationSpeedSliderValue(animationSpeed);
+        setAnimationSpeed(animationSpeed);
     }
 
     public void resetWaypointSetterState() {

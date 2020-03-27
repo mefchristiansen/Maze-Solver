@@ -2,7 +2,7 @@ package controller;
 
 import controller.listeners.*;
 import model.*;
-import view.MazeSolverView;
+import view.MazeView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -17,7 +17,7 @@ public class MazeController {
     private MazeSolver solver;
 
     // View
-    private MazeSolverView view;
+    private MazeView view;
 
     // Listeners
 
@@ -30,6 +30,9 @@ public class MazeController {
     private MazeSolverListener mazeSolverListener;
     private MazeSolverSelectionRadioListener mazeSolverSelectionRadioListener;
     private MazeResetListener mazeResetListener;
+
+    //// Speed Slider
+    private MazeAnimationSpeedSliderListener mazeAnimationSpeedSliderListener;
 
     //// Waypoints
     private MazeWaypointClickListener mazeWaypointClickListener;
@@ -54,17 +57,18 @@ public class MazeController {
         this.mazeSolverListener = new MazeSolverListener(this);
         this.mazeResetListener = new MazeResetListener(this);
 
-        this.view = new MazeSolverView(maze, this);
+        this.mazeAnimationSpeedSliderListener = new MazeAnimationSpeedSliderListener(this);
+
+        this.view = new MazeView(maze, this);
+
+        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
+        // TODO: Should this be moved?
+        this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
 
         this.runState = new AtomicBoolean(true);
 
         this.numRows = MazeConstants.DEFAULT_NUM_ROWS;
         this.numCols = MazeConstants.DEFAULT_NUM_COLS;
-
-        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
-
-        // TODO: Should this be moved?
-        this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
     }
 
     public MazeState getState() {
@@ -107,8 +111,8 @@ public class MazeController {
         return mazeCustomNumColsListener;
     }
 
-    private void updateMazeViewState() {
-        view.setMazeState(state);
+    public MazeAnimationSpeedSliderListener getMazeAnimationSpeedSliderListener() {
+        return mazeAnimationSpeedSliderListener;
     }
 
     public void setMazeNumRows(int numRows) {
@@ -119,20 +123,26 @@ public class MazeController {
         this.numCols = numCols;
     }
 
+    public void setAnimationSpeed(int animationSpeed) {
+        view.setAnimationSpeed(animationSpeed);
+    }
+
     public void initGenerate() {
         maze.initMaze(numRows, numCols);
         view.resize();
 
         generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
         generator.addChangeListener(this.view.mazePanel);
-        updateMazeViewState();
         state = MazeState.GENERATING;
+
+        view.setMazeState(state);
+        view.defaultAnimationSpeedSlider(state);
     }
 
     public void generateMaze() {
         if (generator.generateMaze()) {
             state = MazeState.GENERATED;
-            updateMazeViewState();
+            view.setMazeState(state);
             mazeGeneratorListener.resetGenerator();
         }
     }
@@ -141,7 +151,8 @@ public class MazeController {
         solver = MazeSolverFactory.initMazeSolver(solverType, maze, this);
         solver.addChangeListener(this.view.mazePanel);
         state = MazeState.SOLVING;
-        updateMazeViewState();
+        view.setMazeState(state);
+        view.defaultAnimationSpeedSlider(state);
     }
 
     public void solveMaze() {
@@ -151,10 +162,11 @@ public class MazeController {
 
         if(solver.solve()) {
             state = MazeState.SOLVED;
-            updateMazeViewState();
             mazeSolverListener.resetSolver();
 
-            updateMazeViewState();
+            view.setMazeState(state);
+            view.defaultAnimationSpeedSlider(state);
+
             solver.walkSolutionPath();
         }
     }
@@ -167,11 +179,12 @@ public class MazeController {
 
         maze.startingCell = maze.endingCell = null;
 
+        state = MazeState.INIT;
+
         maze.resetMaze();
         view.resetWaypointSetterState();
         view.repaintMaze();
-
-        state = MazeState.INIT;
+        view.defaultAnimationSpeedSlider(state);
 
         setRunState(true);
     }

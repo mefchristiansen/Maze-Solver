@@ -1,19 +1,18 @@
 package controller.listeners;
 
 import controller.MazeController;
-import model.Maze;
 import model.MazeState;
-import view.MazeSolverView;
+import view.MazeView;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class MazeWaypointClickListener extends MouseAdapter {
-	private MazeSolverView view;
+	private MazeView view;
 	private MazeController mazeController;
 	private boolean enabled;
 
-	public MazeWaypointClickListener(MazeSolverView view, MazeController mazeController) {
+	public MazeWaypointClickListener(MazeView view, MazeController mazeController) {
 		super();
 		this.view = view;
 		this.mazeController = mazeController;
