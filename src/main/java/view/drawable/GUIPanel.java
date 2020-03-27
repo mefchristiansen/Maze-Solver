@@ -1,5 +1,6 @@
 package view.drawable;
 
+import controller.MazeChangeListener;
 import controller.MazeController;
 import model.MazeConstants;
 import model.SolverType;
@@ -103,12 +104,15 @@ public class GUIPanel extends JPanel implements ActionListener {
     private JPanel initCustomMazeSizeInputs() {
         JPanel customMazeSizeInputsPanel = new JPanel(new GridLayout(0, 1));
 
+        String numRowsSpinnerLabel = "Num Rows (5-50):";
         SpinnerModel numRowsSpinner = new SpinnerNumberModel(
                 MazeConstants.DEFAULT_NUM_ROWS,
                 MazeConstants.MIN_NUM_ROWS,
                 MazeConstants.MAX_NUM_ROWS,
                 1
         );
+
+        String numColsSpinnerLabel = "Num Cols (5-50):";
         SpinnerModel numColsSpinner = new SpinnerNumberModel(
                 MazeConstants.DEFAULT_NUM_COLS,
                 MazeConstants.MIN_NUM_COLS,
@@ -116,21 +120,20 @@ public class GUIPanel extends JPanel implements ActionListener {
                 1
         );
 
-        addLabeledSpinner(customMazeSizeInputsPanel, "Num Rows (5-50):", numRowsSpinner);
-        addLabeledSpinner(customMazeSizeInputsPanel, "Num Cols (5-50):", numColsSpinner);
+        addLabeledSpinner(customMazeSizeInputsPanel, numRowsSpinner, numRowsSpinnerLabel, mazeController.getMazeCustomNumRowsListener());
+        addLabeledSpinner(customMazeSizeInputsPanel, numColsSpinner, numColsSpinnerLabel, mazeController.getMazeCustomNumColsListener());
 
         return customMazeSizeInputsPanel;
     }
 
-    static protected JSpinner addLabeledSpinner(Container c, String label, SpinnerModel model) {
-        JLabel l = new JLabel(label);
-        c.add(l);
+    static void addLabeledSpinner(Container container, SpinnerModel model, String label, MazeChangeListener mazeChangeListener) {
+        JLabel spinnerLabel = new JLabel(label);
+        container.add(spinnerLabel);
 
         JSpinner spinner = new JSpinner(model);
-        l.setLabelFor(spinner);
-        c.add(spinner);
-
-        return spinner;
+        spinner.addChangeListener(mazeChangeListener);
+        spinnerLabel.setLabelFor(spinner);
+        container.add(spinner);
     }
 
     @Override

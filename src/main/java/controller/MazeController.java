@@ -27,11 +27,19 @@ public class MazeController {
     private MazeSolverView view;
 
     // Listeners
-    private MazeWaypointClickListener mazeWaypointClickListener;
+
+    //// Custom Maze Dimensions
+    private MazeCustomNumRowsListener mazeCustomNumRowsListener;
+    private MazeCustomNumColsListener mazeCustomNumColsListener;
+
+    //// Buttons
     private MazeGeneratorListener mazeGeneratorListener;
     private MazeSolverListener mazeSolverListener;
     private MazeSolverSelectionRadioListener mazeSolverSelectionRadioListener;
     private MazeResetListener mazeResetListener;
+
+    //// Waypoints
+    private MazeWaypointClickListener mazeWaypointClickListener;
 
     private AtomicBoolean runState;
 
@@ -42,16 +50,20 @@ public class MazeController {
         this.generatorType = GeneratorType.RECURSIVE_BACKTRACKER;
         this.solverType = SolverType.BFS;
 
+        this.mazeCustomNumRowsListener = new MazeCustomNumRowsListener(this);
+        this.mazeCustomNumColsListener = new MazeCustomNumColsListener(this);
+
         this.mazeGeneratorListener = new MazeGeneratorListener(this);
         this.mazeSolverSelectionRadioListener = new MazeSolverSelectionRadioListener(this);
         this.mazeSolverListener = new MazeSolverListener(this);
         this.mazeResetListener = new MazeResetListener(this);
 
+        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
+
         this.view = new MazeSolverView(maze, this);
 
         this.runState = new AtomicBoolean(true);
 
-        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
         this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
     }
 
@@ -87,8 +99,24 @@ public class MazeController {
         return mazeResetListener;
     }
 
+    public MazeCustomNumRowsListener getMazeCustomNumRowsListener() {
+        return mazeCustomNumRowsListener;
+    }
+
+    public MazeCustomNumColsListener getMazeCustomNumColsListener() {
+        return mazeCustomNumColsListener;
+    }
+
     private void updateMazeViewState() {
         view.setMazeState(state);
+    }
+
+    public void setMazeNumRows(int numRows) {
+        return;
+    }
+
+    public void setMazeNumCols(int numCols) {
+        return;
     }
 
     public void initGenerate() {
