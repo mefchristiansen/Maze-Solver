@@ -33,11 +33,6 @@ public class CellDrawable {
 
         drawCellWalls(graphics2D, cell, cellX, cellY);
 
-        if (cell.current()) {
-            graphics2D.setColor(CURRENT);
-            graphics2D.fill(fillCell(cellX, cellY));
-        }
-
         if (mazeState == MazeState.GENERATED) {
             if (cell.getStart()) {
                 graphics2D.setColor(START);
@@ -60,6 +55,11 @@ public class CellDrawable {
                 graphics2D.setColor(SOLUTION);
                 drawSolutionPathComponent(graphics2D, cell, cellX, cellY);
             }
+        }
+
+        if (cell.current()) {
+            graphics2D.setColor(CURRENT);
+            graphics2D.fill(fillCell(cellX, cellY));
         }
     }
 
