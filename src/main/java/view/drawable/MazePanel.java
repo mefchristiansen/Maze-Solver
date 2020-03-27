@@ -55,6 +55,16 @@ public class MazePanel extends JPanel implements ChangeListener {
         repaint();
     }
 
+    public void resize() {
+        int mazeWidth = maze.numCols() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
+        int mazeHeight = maze.numRows() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
+
+        Dimension mazeDimension = new Dimension(mazeWidth, mazeHeight);
+        setMinimumSize(mazeDimension);
+        setPreferredSize(mazeDimension);
+        repaint();
+    }
+
     public void setPoint(int x, int y) {
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {

@@ -1,18 +1,22 @@
 package model;
 
 public class Maze {
-	private final int numRows;
-	private final int numCols;
+	private int numRows;
+	private int numCols;
 	private Cell[][] maze;
     public Cell startingCell, endingCell;
 
     public Maze() {
-        this(MazeConstants.NUM_ROWS, MazeConstants.NUM_COLS);
+        this(MazeConstants.DEFAULT_NUM_ROWS, MazeConstants.DEFAULT_NUM_COLS);
     }
 
 	public Maze(int numRows, int numCols) {
-		this.numRows = numRows;
-		this.numCols = numCols;
+        initMaze(numRows, numCols);
+	}
+
+	public void initMaze(int numRows, int numCols) {
+        this.numRows = numRows;
+        this.numCols = numCols;
 
         maze = new Cell[numRows][numCols];
         for (int r = 0; r < numRows; r++) {
@@ -20,7 +24,7 @@ public class Maze {
                 maze[r][c] = new Cell(r, c);
             }
         }
-	}
+    }
 
     public int numRows() {
         return numRows;
@@ -73,7 +77,7 @@ public class Maze {
         }
 
         if (endingCell == null) {
-            endingCell = maze[numRows - 1][numCols - 1];
+            endingCell = maze[maze.length - 1][maze[maze.length - 1].length - 1];
         }
     }
 }

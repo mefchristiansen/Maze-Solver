@@ -1,14 +1,7 @@
 package controller;
 
 import controller.listeners.*;
-import model.MazeState;
-import model.Maze;
-import model.MazeGenerator;
-import model.MazeGeneratorFactory;
-import model.MazeSolver;
-import model.MazeSolverFactory;
-import model.GeneratorType;
-import model.SolverType;
+import model.*;
 import view.MazeSolverView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,13 +20,24 @@ public class MazeController {
     private MazeSolverView view;
 
     // Listeners
-    private MazeWaypointClickListener mazeWaypointClickListener;
+
+    //// Custom Maze Dimensions
+    private MazeCustomNumRowsListener mazeCustomNumRowsListener;
+    private MazeCustomNumColsListener mazeCustomNumColsListener;
+
+    //// Buttons
     private MazeGeneratorListener mazeGeneratorListener;
     private MazeSolverListener mazeSolverListener;
     private MazeSolverSelectionRadioListener mazeSolverSelectionRadioListener;
     private MazeResetListener mazeResetListener;
 
+    //// Waypoints
+    private MazeWaypointClickListener mazeWaypointClickListener;
+
     private AtomicBoolean runState;
+
+    private int numRows;
+    private int numCols;
 
     public MazeController() {
         this.state = MazeState.INIT;
@@ -41,6 +45,9 @@ public class MazeController {
         this.maze = new Maze();
         this.generatorType = GeneratorType.RECURSIVE_BACKTRACKER;
         this.solverType = SolverType.BFS;
+
+        this.mazeCustomNumRowsListener = new MazeCustomNumRowsListener(this);
+        this.mazeCustomNumColsListener = new MazeCustomNumColsListener(this);
 
         this.mazeGeneratorListener = new MazeGeneratorListener(this);
         this.mazeSolverSelectionRadioListener = new MazeSolverSelectionRadioListener(this);
@@ -51,7 +58,12 @@ public class MazeController {
 
         this.runState = new AtomicBoolean(true);
 
+        this.numRows = MazeConstants.DEFAULT_NUM_ROWS;
+        this.numCols = MazeConstants.DEFAULT_NUM_COLS;
+
         this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
+
+        // TODO: Should this be moved?
         this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
     }
 
@@ -87,11 +99,30 @@ public class MazeController {
         return mazeResetListener;
     }
 
+    public MazeCustomNumRowsListener getMazeCustomNumRowsListener() {
+        return mazeCustomNumRowsListener;
+    }
+
+    public MazeCustomNumColsListener getMazeCustomNumColsListener() {
+        return mazeCustomNumColsListener;
+    }
+
     private void updateMazeViewState() {
         view.setMazeState(state);
     }
 
+    public void setMazeNumRows(int numRows) {
+        this.numRows = numRows;
+    }
+
+    public void setMazeNumCols(int numCols) {
+        this.numCols = numCols;
+    }
+
     public void initGenerate() {
+        maze.initMaze(numRows, numCols);
+        view.resize();
+
         generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
         generator.addChangeListener(this.view.mazePanel);
         updateMazeViewState();

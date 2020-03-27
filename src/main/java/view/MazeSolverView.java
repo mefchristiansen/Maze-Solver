@@ -34,6 +34,11 @@ public class MazeSolverView extends JFrame {
         setVisible(true);
     }
 
+    public void resize() {
+        mazePanel.resize();
+        pack();
+    }
+
     public void repaintMaze() {
         mazePanel.repaint();
     }
