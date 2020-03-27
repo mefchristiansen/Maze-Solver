@@ -1,14 +1,7 @@
 package controller;
 
 import controller.listeners.*;
-import model.MazeState;
-import model.Maze;
-import model.MazeGenerator;
-import model.MazeGeneratorFactory;
-import model.MazeSolver;
-import model.MazeSolverFactory;
-import model.GeneratorType;
-import model.SolverType;
+import model.*;
 import view.MazeSolverView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,6 +36,9 @@ public class MazeController {
 
     private AtomicBoolean runState;
 
+    private int numRows;
+    private int numCols;
+
     public MazeController() {
         this.state = MazeState.INIT;
 
@@ -64,6 +60,10 @@ public class MazeController {
 
         this.runState = new AtomicBoolean(true);
 
+        this.numRows = MazeConstants.DEFAULT_NUM_ROWS;
+        this.numCols = MazeConstants.DEFAULT_NUM_COLS;
+
+        // TODO: Should this be moved?
         this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
     }
 
@@ -112,14 +112,17 @@ public class MazeController {
     }
 
     public void setMazeNumRows(int numRows) {
-        return;
+        this.numRows = numRows;
     }
 
     public void setMazeNumCols(int numCols) {
-        return;
+        this.numCols = numCols;
     }
 
     public void initGenerate() {
+        maze.initMaze(numRows, numCols);
+        view.resize();
+
         generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
         generator.addChangeListener(this.view.mazePanel);
         updateMazeViewState();

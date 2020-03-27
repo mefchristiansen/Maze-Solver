@@ -6,5 +6,5 @@ public class MazeConstants {
     public static final int MIN_NUM_ROWS = 5;
     public static final int MIN_NUM_COLS = 5;
     public static final int MAX_NUM_ROWS = 30;
-    public static final int MAX_NUM_COLS = 30;
+    public static final int MAX_NUM_COLS = 50;
 }

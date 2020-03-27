@@ -104,7 +104,7 @@ public class GUIPanel extends JPanel implements ActionListener {
     private JPanel initCustomMazeSizeInputs() {
         JPanel customMazeSizeInputsPanel = new JPanel(new GridLayout(0, 1));
 
-        String numRowsSpinnerLabel = "Num Rows (5-50):";
+        String numRowsSpinnerLabel = String.format("Num Rows (%d-%d):", MazeConstants.MIN_NUM_ROWS, MazeConstants.MAX_NUM_ROWS);
         SpinnerModel numRowsSpinner = new SpinnerNumberModel(
                 MazeConstants.DEFAULT_NUM_ROWS,
                 MazeConstants.MIN_NUM_ROWS,
@@ -112,7 +112,7 @@ public class GUIPanel extends JPanel implements ActionListener {
                 1
         );
 
-        String numColsSpinnerLabel = "Num Cols (5-50):";
+        String numColsSpinnerLabel = String.format("Num Cols (%d-%d):", MazeConstants.MIN_NUM_COLS, MazeConstants.MAX_NUM_COLS);
         SpinnerModel numColsSpinner = new SpinnerNumberModel(
                 MazeConstants.DEFAULT_NUM_COLS,
                 MazeConstants.MIN_NUM_COLS,

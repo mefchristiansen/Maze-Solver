@@ -17,6 +17,6 @@ public class MazeCustomNumRowsListener extends MazeChangeListener {
         JSpinner rowsSpinner = (JSpinner) e.getSource();
         SpinnerNumberModel rowsSpinnerModel = (SpinnerNumberModel)(rowsSpinner.getModel());
         int numRows = (int) rowsSpinnerModel.getNumber();
-        mazeController.setMazeNumCols(numRows);
+        mazeController.setMazeNumRows(numRows);
     }
 }

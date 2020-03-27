@@ -1,8 +1,8 @@
 package model;
 
 public class Maze {
-	private final int numRows;
-	private final int numCols;
+	private int numRows;
+	private int numCols;
 	private Cell[][] maze;
     public Cell startingCell, endingCell;
 
@@ -11,8 +11,12 @@ public class Maze {
     }
 
 	public Maze(int numRows, int numCols) {
-		this.numRows = numRows;
-		this.numCols = numCols;
+        initMaze(numRows, numCols);
+	}
+
+	public void initMaze(int numRows, int numCols) {
+        this.numRows = numRows;
+        this.numCols = numCols;
 
         maze = new Cell[numRows][numCols];
         for (int r = 0; r < numRows; r++) {
@@ -20,7 +24,7 @@ public class Maze {
                 maze[r][c] = new Cell(r, c);
             }
         }
-	}
+    }
 
     public int numRows() {
         return numRows;
