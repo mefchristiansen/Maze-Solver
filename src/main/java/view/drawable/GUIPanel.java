@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 
 public class GUIPanel extends JPanel implements ActionListener {
     private final MazeController mazeController;
-    private JSlider mazeAnimationSpeedSlider;
 
     public GUIPanel(MazeController mazeController) {
         this.mazeController = mazeController;
@@ -135,7 +134,7 @@ public class GUIPanel extends JPanel implements ActionListener {
     private JPanel mazeAnimationSpeedSliderPanel() {
         JPanel mazeAnimationSpeedSliderPanel = new JPanel(new GridBagLayout());
 
-        mazeAnimationSpeedSlider = new JSlider(JSlider.HORIZONTAL, MazeDrawableConstants.MINIMUM_ANIMATION_SLEEP,
+        JSlider mazeAnimationSpeedSlider = new JSlider(JSlider.HORIZONTAL, MazeDrawableConstants.MINIMUM_ANIMATION_SLEEP,
                 MazeDrawableConstants.MAXIMUM_ANIMATION_SLEEP, MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP);
         mazeAnimationSpeedSlider.setInverted(true);
         mazeAnimationSpeedSlider.addChangeListener(mazeController.getMazeAnimationSpeedSliderListener());
@@ -151,10 +150,6 @@ public class GUIPanel extends JPanel implements ActionListener {
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets);
 
         return mazeAnimationSpeedSliderPanel;
-    }
-
-    public void setMazeAnimationSpeedSliderValue(int animationSpeed) {
-        mazeAnimationSpeedSlider.setValue(animationSpeed);
     }
 
     private static void addComponent(Container container, Component component, int gridx, int gridy, int gridwidth,

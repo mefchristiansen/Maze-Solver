@@ -47,35 +47,9 @@ public class MazeView extends JFrame {
     public void resetView() {
         mazePanel.resetWaypointSetterState();
         mazePanel.repaint();
-        defaultAnimationSpeedSlider();
     }
+
     public void setAnimationSpeed(int animationSpeed) { mazePanel.setAnimationSpeed(animationSpeed); }
-
-    public void defaultAnimationSpeedSlider() {
-        MazeState mazeState = mazeController.getState();
-        int animationSpeed;
-
-        switch (mazeState) {
-            case INIT:
-                animationSpeed = MazeDrawableConstants.DEFAULT_GENERATION_SLEEP_TIME;
-                break;
-            case GENERATING:
-                animationSpeed = MazeDrawableConstants.DEFAULT_GENERATION_SLEEP_TIME;
-                break;
-            case SOLVING:
-                animationSpeed = MazeDrawableConstants.DEFAULT_SOLVE_SLEEP_TIME;
-                break;
-            case SOLVED:
-                animationSpeed = MazeDrawableConstants.DEFAULT_SOLUTION_SLEEP_TIME;
-                break;
-            default:
-                animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
-                break;
-        }
-
-        guiPanel.setMazeAnimationSpeedSliderValue(animationSpeed);
-        setAnimationSpeed(animationSpeed);
-    }
 
     private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor, int fill) {
         Insets insets = new Insets(5, 5, 5, 5);

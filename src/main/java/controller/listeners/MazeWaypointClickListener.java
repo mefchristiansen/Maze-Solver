@@ -3,25 +3,25 @@ package controller.listeners;
 import controller.MazeController;
 import model.MazeState;
 import view.MazeView;
+import view.drawable.MazePanel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class MazeWaypointClickListener extends MouseAdapter {
-	private MazeView view;
+	private MazePanel mazePanel;
 	private MazeController mazeController;
-	private boolean enabled;
 
-	public MazeWaypointClickListener(MazeView view, MazeController mazeController) {
+	public MazeWaypointClickListener(MazePanel mazePanel, MazeController mazeController) {
 		super();
-		this.view = view;
+		this.mazePanel = mazePanel;
 		this.mazeController = mazeController;
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (canSet()) {
-			this.view.mazePanel.setWaypoint(e.getX(), e.getY());
+			mazePanel.setWaypoint(e.getX(), e.getY());
 		}
 
 		return;

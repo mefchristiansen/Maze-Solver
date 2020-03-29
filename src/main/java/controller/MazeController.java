@@ -34,9 +34,6 @@ public class MazeController {
     //// Speed Slider
     private MazeAnimationSpeedSliderListener mazeAnimationSpeedSliderListener;
 
-    //// Waypoints
-    private MazeWaypointClickListener mazeWaypointClickListener;
-
     private AtomicBoolean runState;
 
     private int numRows;
@@ -60,10 +57,6 @@ public class MazeController {
         this.mazeAnimationSpeedSliderListener = new MazeAnimationSpeedSliderListener(this);
 
         this.view = new MazeView(maze, this);
-
-        this.mazeWaypointClickListener = new MazeWaypointClickListener(this.view, this);
-        // TODO: Should this be moved?
-        this.view.mazePanel.addMouseListener(this.mazeWaypointClickListener);
 
         this.runState = new AtomicBoolean(true);
 
@@ -134,9 +127,6 @@ public class MazeController {
         generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
         generator.addChangeListener(this.view.mazePanel);
         state = MazeState.GENERATING;
-
-
-        view.defaultAnimationSpeedSlider();
     }
 
     public void generateMaze() {
@@ -150,7 +140,6 @@ public class MazeController {
         solver = MazeSolverFactory.initMazeSolver(solverType, maze, this);
         solver.addChangeListener(this.view.mazePanel);
         state = MazeState.SOLVING;
-        view.defaultAnimationSpeedSlider();
     }
 
     public void solveMaze() {
@@ -161,9 +150,6 @@ public class MazeController {
         if(solver.solve()) {
             state = MazeState.SOLVED;
             mazeSolverListener.resetSolver();
-
-            view.defaultAnimationSpeedSlider();
-
             solver.walkSolutionPath();
         }
     }

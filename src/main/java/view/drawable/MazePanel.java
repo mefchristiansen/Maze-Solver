@@ -1,6 +1,7 @@
 package view.drawable;
 
 import controller.MazeController;
+import controller.listeners.MazeWaypointClickListener;
 import model.Cell;
 import model.Maze;
 import model.MazeConstants;
@@ -33,6 +34,20 @@ public class MazePanel extends JPanel implements ChangeListener {
         initMazePanel();
     }
 
+    private void initMazePanel() {
+        int mazeWidth = maze.numCols() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
+        int mazeHeight = maze.numRows() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
+
+        Dimension mazeDimension = new Dimension(mazeWidth, mazeHeight);
+        setMinimumSize(mazeDimension);
+        setPreferredSize(mazeDimension);
+        setBackground(BACKGROUND);
+
+        addMouseListener(new MazeWaypointClickListener(this, mazeController));
+
+        repaint();
+    }
+
     @Override
     public void stateChanged(ChangeEvent event) {
         animateMaze();
@@ -43,17 +58,6 @@ public class MazePanel extends JPanel implements ChangeListener {
         super.paintComponent(graphics);
         MazeState mazeState = mazeController.getState();
         mazeDrawable.drawMaze(graphics, mazeState);
-    }
-
-    private void initMazePanel() {
-        int mazeWidth = maze.numCols() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
-        int mazeHeight = maze.numRows() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
-
-        Dimension mazeDimension = new Dimension(mazeWidth, mazeHeight);
-        setMinimumSize(mazeDimension);
-        setPreferredSize(mazeDimension);
-        setBackground(BACKGROUND);
-        repaint();
     }
 
     public void resize() {
@@ -92,8 +96,26 @@ public class MazePanel extends JPanel implements ChangeListener {
     }
 
     private void animateMaze() {
+        MazeState mazeState = mazeController.getState();
+        double animationSpeedMultipler;
+
+        switch (mazeState) {
+            case GENERATING:
+                animationSpeedMultipler = MazeDrawableConstants.GENERATION_SLEEP_TIME_MULTIPLER;
+                break;
+            case SOLVING:
+                animationSpeedMultipler = MazeDrawableConstants.SOLVE_SLEEP_TIME_MULTIPLER;
+                break;
+            case SOLVED:
+                animationSpeedMultipler = MazeDrawableConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;
+                break;
+            default:
+                animationSpeedMultipler = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
+                break;
+        }
+
         try {
-            Thread.sleep(animationSpeed);
+            Thread.sleep((long)(animationSpeed * animationSpeedMultipler));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
