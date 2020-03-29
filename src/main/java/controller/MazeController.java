@@ -135,14 +135,13 @@ public class MazeController {
         generator.addChangeListener(this.view.mazePanel);
         state = MazeState.GENERATING;
 
-        view.setMazeState(state);
+
         view.defaultAnimationSpeedSlider(state);
     }
 
     public void generateMaze() {
         if (generator.generateMaze()) {
             state = MazeState.GENERATED;
-            view.setMazeState(state);
             mazeGeneratorListener.resetGenerator();
         }
     }
@@ -151,7 +150,6 @@ public class MazeController {
         solver = MazeSolverFactory.initMazeSolver(solverType, maze, this);
         solver.addChangeListener(this.view.mazePanel);
         state = MazeState.SOLVING;
-        view.setMazeState(state);
         view.defaultAnimationSpeedSlider(state);
     }
 
@@ -164,7 +162,6 @@ public class MazeController {
             state = MazeState.SOLVED;
             mazeSolverListener.resetSolver();
 
-            view.setMazeState(state);
             view.defaultAnimationSpeedSlider(state);
 
             solver.walkSolutionPath();
@@ -177,14 +174,10 @@ public class MazeController {
         mazeGeneratorListener.resetGenerator();
         mazeSolverListener.resetSolver();
 
-        maze.startingCell = maze.endingCell = null;
-
         state = MazeState.INIT;
 
         maze.resetMaze();
-        view.resetWaypointSetterState();
-        view.repaintMaze();
-        view.defaultAnimationSpeedSlider(state);
+        view.resetView();
 
         setRunState(true);
     }
