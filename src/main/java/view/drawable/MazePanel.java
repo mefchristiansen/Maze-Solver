@@ -12,7 +12,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
-public class MazePanel extends JPanel implements ChangeListener {
+public class MazePanel extends JPanel {
     private enum WaypointState {
         START, END, COMPLETE;
     }
@@ -46,11 +46,6 @@ public class MazePanel extends JPanel implements ChangeListener {
         addMouseListener(new MazeWaypointClickListener(this, mazeController));
 
         repaint();
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent event) {
-        animateMaze();
     }
 
     @Override
@@ -95,27 +90,27 @@ public class MazePanel extends JPanel implements ChangeListener {
         waypointState = WaypointState.START;
     }
 
-    private void animateMaze() {
+    public void animateMaze() {
         MazeState mazeState = mazeController.getState();
-        double animationSpeedMultipler;
+        double animationSpeedMultiplier;
 
         switch (mazeState) {
             case GENERATING:
-                animationSpeedMultipler = MazeDrawableConstants.GENERATION_SLEEP_TIME_MULTIPLER;
+                animationSpeedMultiplier = MazeDrawableConstants.GENERATION_SLEEP_TIME_MULTIPLER;
                 break;
             case SOLVING:
-                animationSpeedMultipler = MazeDrawableConstants.SOLVE_SLEEP_TIME_MULTIPLER;
+                animationSpeedMultiplier = MazeDrawableConstants.SOLVE_SLEEP_TIME_MULTIPLER;
                 break;
             case SOLVED:
-                animationSpeedMultipler = MazeDrawableConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;
+                animationSpeedMultiplier = MazeDrawableConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;
                 break;
             default:
-                animationSpeedMultipler = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
+                animationSpeedMultiplier = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
                 break;
         }
 
         try {
-            Thread.sleep((long)(animationSpeed * animationSpeedMultipler));
+            Thread.sleep((long)(animationSpeed * animationSpeedMultiplier));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

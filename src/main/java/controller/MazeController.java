@@ -125,7 +125,7 @@ public class MazeController {
         view.resize();
 
         generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
-        generator.addChangeListener(this.view.mazePanel);
+        generator.addChangeListener(view);
         state = MazeState.GENERATING;
     }
 
@@ -138,7 +138,7 @@ public class MazeController {
 
     public void initSolve() {
         solver = MazeSolverFactory.initMazeSolver(solverType, maze, this);
-        solver.addChangeListener(this.view.mazePanel);
+        solver.addChangeListener(view);
         state = MazeState.SOLVING;
     }
 

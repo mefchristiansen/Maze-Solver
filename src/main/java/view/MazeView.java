@@ -9,13 +9,15 @@ import view.drawable.MazePanel;
 import view.drawable.GUIPanel;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
-public class MazeView extends JFrame {
+public class MazeView extends JFrame implements ChangeListener {
     public MazeController mazeController;
 
-    public MazePanel mazePanel;
-    public GUIPanel guiPanel;
+    private MazePanel mazePanel;
+    private GUIPanel guiPanel;
 
     public MazeView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
@@ -37,6 +39,11 @@ public class MazeView extends JFrame {
         pack();
 
         setVisible(true);
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent event) {
+        mazePanel.animateMaze();
     }
 
     public void resize() {
