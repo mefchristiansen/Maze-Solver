@@ -136,7 +136,7 @@ public class MazeController {
         state = MazeState.GENERATING;
 
 
-        view.defaultAnimationSpeedSlider(state);
+        view.defaultAnimationSpeedSlider();
     }
 
     public void generateMaze() {
@@ -150,7 +150,7 @@ public class MazeController {
         solver = MazeSolverFactory.initMazeSolver(solverType, maze, this);
         solver.addChangeListener(this.view.mazePanel);
         state = MazeState.SOLVING;
-        view.defaultAnimationSpeedSlider(state);
+        view.defaultAnimationSpeedSlider();
     }
 
     public void solveMaze() {
@@ -162,7 +162,7 @@ public class MazeController {
             state = MazeState.SOLVED;
             mazeSolverListener.resetSolver();
 
-            view.defaultAnimationSpeedSlider(state);
+            view.defaultAnimationSpeedSlider();
 
             solver.walkSolutionPath();
         }

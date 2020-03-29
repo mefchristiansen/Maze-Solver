@@ -21,7 +21,7 @@ public class MazeWaypointClickListener extends MouseAdapter {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (canSet()) {
-			this.view.mazePanel.setPoint(e.getX(), e.getY());
+			this.view.mazePanel.setWaypoint(e.getX(), e.getY());
 		}
 
 		return;
@@ -29,7 +29,7 @@ public class MazeWaypointClickListener extends MouseAdapter {
 		/*
 			synchronized (view) {
 				if (canSet()) {
-					this.view.mazePanel.setPoint(e.getX(), e.getY());
+					this.view.mazePanel.setWaypoint(e.getX(), e.getY());
 				}
 				view.notify();
 			}

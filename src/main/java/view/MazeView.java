@@ -19,10 +19,8 @@ public class MazeView extends JFrame {
 
     public MazeView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
-
         this.mazeController = mazeController;
-
-        this.mazePanel = new MazePanel(maze);
+        this.mazePanel = new MazePanel(maze, mazeController);
         this.guiPanel = new GUIPanel(mazeController);
 
         initDisplay();
@@ -33,7 +31,7 @@ public class MazeView extends JFrame {
         setResizable(false);
         setLayout(new GridBagLayout());
 
-        addComponent(mazePanel, 0, 0, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+        addComponent(mazePanel, 0, 0, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
         addComponent(guiPanel, 2, 0, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL);
 
         pack();
@@ -49,11 +47,12 @@ public class MazeView extends JFrame {
     public void resetView() {
         mazePanel.resetWaypointSetterState();
         mazePanel.repaint();
-        defaultAnimationSpeedSlider(mazeController.getState());
+        defaultAnimationSpeedSlider();
     }
     public void setAnimationSpeed(int animationSpeed) { mazePanel.setAnimationSpeed(animationSpeed); }
 
-    public void defaultAnimationSpeedSlider(MazeState mazeState) {
+    public void defaultAnimationSpeedSlider() {
+        MazeState mazeState = mazeController.getState();
         int animationSpeed;
 
         switch (mazeState) {

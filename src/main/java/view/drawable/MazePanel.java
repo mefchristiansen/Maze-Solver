@@ -1,7 +1,9 @@
 package view.drawable;
 
+import controller.MazeController;
 import model.Cell;
 import model.Maze;
+import model.MazeConstants;
 import model.MazeState;
 
 import javax.swing.*;
@@ -15,24 +17,20 @@ public class MazePanel extends JPanel implements ChangeListener {
     }
 
 	private static final Color BACKGROUND = new Color(55, 50, 55);
-    private model.Maze maze;
+    private Maze maze;
+    private MazeController mazeController;
     private MazeDrawable mazeDrawable;
-    private MazeState mazeState;
     private WaypointState waypointState;
     private int animationSpeed;
 
-    public MazePanel(Maze maze) {
+    public MazePanel(Maze maze, MazeController mazeController) {
     	this.maze = maze;
+    	this.mazeController = mazeController;
         this.mazeDrawable = new MazeDrawable(this.maze);
-        this.mazeState = MazeState.INIT;
         this.waypointState = WaypointState.START;
         this.animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
 
         initMazePanel();
-    }
-
-    public void setMazeState(MazeState mazeState) {
-        this.mazeState = mazeState;
     }
 
     @Override
@@ -43,6 +41,7 @@ public class MazePanel extends JPanel implements ChangeListener {
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        MazeState mazeState = mazeController.getState();
         mazeDrawable.drawMaze(graphics, mazeState);
     }
 
@@ -67,7 +66,7 @@ public class MazePanel extends JPanel implements ChangeListener {
         repaint();
     }
 
-    public void setPoint(int x, int y) {
+    public void setWaypoint(int x, int y) {
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {
                 Cell cell = maze.mazeCell(r,c);
