@@ -27,8 +27,8 @@ public class MazeView extends JFrame {
         setResizable(false);
         setLayout(new GridBagLayout());
 
-        addComponent(this.mazePanel, 0, 0, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
-        addComponent(this.guiPanel, 2, 0, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL);
+        addComponent(mazePanel, 0, 0, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+        addComponent(guiPanel, 2, 0, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL);
 
         pack();
 
@@ -45,10 +45,10 @@ public class MazeView extends JFrame {
     }
 
     public void setMazeState(MazeState mazeState) {
-        this.mazePanel.setMazeState(mazeState);
+        mazePanel.setMazeState(mazeState);
     }
 
-    public void setAnimationSpeed(int animationSpeed) { this.mazePanel.setAnimationSpeed(animationSpeed); }
+    public void setAnimationSpeed(int animationSpeed) { mazePanel.setAnimationSpeed(animationSpeed); }
 
     public void defaultAnimationSpeedSlider(MazeState mazeState) {
         int animationSpeed;
@@ -71,12 +71,12 @@ public class MazeView extends JFrame {
                 break;
         }
 
-        this.guiPanel.setMazeAnimationSpeedSliderValue(animationSpeed);
+        guiPanel.setMazeAnimationSpeedSliderValue(animationSpeed);
         setAnimationSpeed(animationSpeed);
     }
 
     public void resetWaypointSetterState() {
-        this.mazePanel.resetWaypointSetterState();
+        mazePanel.resetWaypointSetterState();
     }
 
     private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor, int fill) {
