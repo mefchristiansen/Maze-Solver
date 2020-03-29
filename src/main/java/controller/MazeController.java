@@ -133,6 +133,7 @@ public class MazeController {
         if (generator.generateMaze()) {
             state = MazeState.GENERATED;
             mazeGeneratorListener.resetGenerator();
+            maze.defaultWaypoints();
         }
     }
 
@@ -143,10 +144,6 @@ public class MazeController {
     }
 
     public void solveMaze() {
-        if (!maze.waypointsSet()) {
-            maze.defaultWaypoints();
-        }
-
         if(solver.solve()) {
             state = MazeState.SOLVED;
             mazeSolverListener.resetSolver();

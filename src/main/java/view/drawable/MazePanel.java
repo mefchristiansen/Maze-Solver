@@ -14,7 +14,7 @@ import java.awt.*;
 
 public class MazePanel extends JPanel {
     private enum WaypointState {
-        START, END, COMPLETE;
+        START, END
     }
 
 	private static final Color BACKGROUND = new Color(55, 50, 55);
@@ -65,21 +65,21 @@ public class MazePanel extends JPanel {
         repaint();
     }
 
-    public void setWaypoint(int x, int y) {
+    public void setWaypoint(int mouseClickX, int mouseClickY) {
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {
                 Cell cell = maze.mazeCell(r,c);
-                if (cell.pointInside(x, y, CellDrawableConstants.CELL_SIZE, CellDrawableConstants.MARGIN)) {
+                if (cell.pointInside(mouseClickX, mouseClickY, CellDrawableConstants.CELL_SIZE, CellDrawableConstants.MARGIN)) {
                     if (waypointState == WaypointState.START) {
-                        cell.setStart();
-                        maze.startingCell = cell;
+                        maze.setStartingCell(cell);
                         waypointState = WaypointState.END;
                         repaint();
                     } else if (waypointState == WaypointState.END) {
-                        cell.setEnd();
-                        maze.endingCell = cell;
-                        waypointState = WaypointState.COMPLETE;
-                        repaint();
+                        if (!cell.getStart()) {
+                            maze.setEndingCell(cell);
+                            waypointState = WaypointState.START;
+                            repaint();
+                        }
                     }
                 }
             }

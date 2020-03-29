@@ -43,7 +43,10 @@ public class Cell {
 	public Cell(int row, int col) {
 		this.row = row;
 		this.col = col;
-		walls = new Wall[] { new Wall(0,0,1,0), new Wall(0,1,1,1), new Wall(0,0,0,1), new Wall(1,0,1,1) }; // TOP, BOTTOM, LEFT, RIGHT.
+		walls = new Wall[] { new Wall(0,0,1,0),
+				new Wall(0,1,1,1),
+				new Wall(0,0,0,1),
+				new Wall(1,0,1,1) }; // TOP, BOTTOM, LEFT, RIGHT.
 		current = visiting = visited = end = solution = false;
 		parent = null;
 		f = g = Integer.MAX_VALUE;
@@ -63,7 +66,6 @@ public class Cell {
 
 	public int getCellY(int margin, int scale) {
 		return margin + row * scale;
-
 	}
 
 	public Wall[] getWalls() {
@@ -110,14 +112,14 @@ public class Cell {
 		return visiting;
 	}
 
-	public void setStart() {
-		this.start = true;
+	public void setStart(boolean state) {
+		this.start = state;
 	}
 
 	public boolean getStart() { return start; }
 
-	public void setEnd() {
-		this.end = true;
+	public void setEnd(boolean state) {
+		this.end = state;
 	}
 
 	public boolean getEnd() { return end; }

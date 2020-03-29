@@ -19,9 +19,9 @@ public class MazeWaypointClickListener extends MouseAdapter {
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseReleased(MouseEvent mouseEvent) {
 		if (canSet()) {
-			mazePanel.setWaypoint(e.getX(), e.getY());
+			mazePanel.setWaypoint(mouseEvent.getX(), mouseEvent.getY());
 		}
 
 		return;

@@ -67,17 +67,20 @@ public class Maze {
         }
     }
 
-    public boolean waypointsSet() {
-        return startingCell != null && endingCell != null;
+    public void setStartingCell(Cell cell) {
+        startingCell.setStart(false);
+        startingCell = cell;
+        startingCell.setStart(true);
+    }
+
+    public void setEndingCell(Cell cell) {
+        endingCell.setEnd(false);
+        endingCell = cell;
+        endingCell.setEnd(true);
     }
 
     public void defaultWaypoints() {
-        if (startingCell == null) {
-            startingCell = maze[0][0];
-        }
-
-        if (endingCell == null) {
-            endingCell = maze[maze.length - 1][maze[maze.length - 1].length - 1];
-        }
+        startingCell = maze[0][0];
+        endingCell = maze[maze.length - 1][maze[maze.length - 1].length - 1];
     }
 }
