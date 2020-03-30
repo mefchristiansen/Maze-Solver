@@ -6,10 +6,7 @@ import model.Maze;
 import model.MazeSolver;
 import controller.MazeController;
 
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class DFS extends MazeSolver {
 	public DFS(Maze maze, MazeController mazeController) {
@@ -18,11 +15,13 @@ public class DFS extends MazeSolver {
 
 	@Override
 	public boolean solve() {
-		Cell current, next;
+		Cell current, next, end;
 
-		current = maze.startingCell;
+		current = maze.getStartingCell();
 		current.setVisited(true);
 		current.setCurrent(true);
+
+		end = maze.getEndingCell();
 
 		Stack<Cell> searchStack = new Stack<>();
 
@@ -31,7 +30,7 @@ public class DFS extends MazeSolver {
 				return false;
 			}
 
-			if (current == maze.endingCell) {
+			if (current == end) {
 				goal = current;
 				return true;
 			}
@@ -83,7 +82,7 @@ public class DFS extends MazeSolver {
 
 	        nextCell = maze.mazeCell(newRow, newCol);
 
-	        if (!nextCell.visited() && !currCell.wallPresent(direction)) {
+	        if (!nextCell.visited() && currCell.wallMissing(direction)) {
 	            unvisitedNeighbors.add(nextCell);
 	        }
 	    }

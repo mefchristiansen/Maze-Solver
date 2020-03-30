@@ -3,9 +3,9 @@ package controller;
 import java.awt.event.ActionListener;
 
 public abstract class MazeActionListener implements ActionListener {
-    protected MazeController mazeController;
+    protected final MazeController mazeController;
 
-    public MazeActionListener(MazeController mazeController) {
+    protected MazeActionListener(MazeController mazeController) {
         this.mazeController = mazeController;
     }
 }

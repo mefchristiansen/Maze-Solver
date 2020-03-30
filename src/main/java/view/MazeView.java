@@ -2,26 +2,20 @@ package view;
 
 import model.Maze;
 import controller.MazeController;
-import model.MazeConstants;
-import model.MazeState;
-import view.drawable.MazeDrawableConstants;
 import view.drawable.MazePanel;
 import view.drawable.GUIPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 
 public class MazeView extends JFrame implements ChangeListener {
-    public MazeController mazeController;
-
-    private MazePanel mazePanel;
-    private GUIPanel guiPanel;
+    private final MazePanel mazePanel;
+    private final GUIPanel guiPanel;
 
     public MazeView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
-        this.mazeController = mazeController;
         this.mazePanel = new MazePanel(maze, mazeController);
         this.guiPanel = new GUIPanel(mazeController);
 
@@ -49,10 +43,6 @@ public class MazeView extends JFrame implements ChangeListener {
     public void resize() {
         mazePanel.resize();
         pack();
-    }
-
-    public void repaintMaze() {
-        mazePanel.repaint();
     }
 
     public void resetView() {

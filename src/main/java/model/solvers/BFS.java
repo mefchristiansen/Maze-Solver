@@ -6,10 +6,7 @@ import model.Maze;
 import model.MazeSolver;
 import controller.MazeController;
 
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 public class BFS extends MazeSolver {
 	public BFS(Maze maze, MazeController mazeController) {
@@ -19,8 +16,9 @@ public class BFS extends MazeSolver {
 	@Override
 	public boolean solve() {
 		Cell current;
+		Cell end = maze.getEndingCell();
 		Queue<Cell> searchQueue = new LinkedList<>();
-		searchQueue.add(maze.startingCell);
+		searchQueue.add(maze.getStartingCell());
 
 		while (searchQueue.size() != 0) {
 			if (mazeController.isInterrupted()) {
@@ -34,7 +32,7 @@ public class BFS extends MazeSolver {
 
 			fireStateChanged();
 
-			if (current == maze.endingCell) {
+			if (current == end) {
 				goal = current;
 				return true;
 			}
@@ -75,7 +73,7 @@ public class BFS extends MazeSolver {
 
 	        nextCell = maze.mazeCell(newRow, newCol);
 
-	        if (!nextCell.visited() && !currCell.wallPresent(direction)) {
+	        if (!nextCell.visited() && currCell.wallMissing(direction)) {
 	            unvisitedNeighbors.add(nextCell);
 	        }
 	    }

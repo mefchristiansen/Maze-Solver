@@ -4,7 +4,7 @@ public class Maze {
 	private int numRows;
 	private int numCols;
 	private Cell[][] maze;
-    public Cell startingCell, endingCell;
+    private Cell startingCell, endingCell;
 
     public Maze() {
         this(MazeConstants.DEFAULT_NUM_ROWS, MazeConstants.DEFAULT_NUM_COLS);
@@ -26,13 +26,15 @@ public class Maze {
         }
     }
 
+    public Cell getStartingCell() { return startingCell; }
+
+    public Cell getEndingCell() { return endingCell; }
+
     public int numRows() {
         return numRows;
     }
 
-    public int numCols() {
-        return numCols;
-    }
+    public int numCols() { return numCols; }
 
     public Cell mazeCell(int r, int c) {
         if (inBounds(r, c)) {

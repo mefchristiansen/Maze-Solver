@@ -20,31 +20,31 @@ public class MazeController {
     private MazeState state;
 
     // Model
-    private Maze maze;
+    private final Maze maze;
     private GeneratorType generatorType;
     private MazeGenerator generator;
     private SolverType solverType;
     private MazeSolver solver;
 
     // View
-    private MazeView view;
+    private final MazeView view;
 
     // Listeners
 
     //// Custom Maze Dimensions
-    private MazeCustomNumRowsListener mazeCustomNumRowsListener;
-    private MazeCustomNumColsListener mazeCustomNumColsListener;
+    private final MazeCustomNumRowsListener mazeCustomNumRowsListener;
+    private final MazeCustomNumColsListener mazeCustomNumColsListener;
 
     //// Buttons
-    private MazeGeneratorListener mazeGeneratorListener;
-    private MazeSolverListener mazeSolverListener;
-    private MazeSolverSelectionRadioListener mazeSolverSelectionRadioListener;
-    private MazeResetListener mazeResetListener;
+    private final MazeGeneratorListener mazeGeneratorListener;
+    private final MazeSolverListener mazeSolverListener;
+    private final MazeSolverSelectionRadioListener mazeSolverSelectionRadioListener;
+    private final MazeResetListener mazeResetListener;
 
     //// Speed Slider
-    private MazeAnimationSpeedSliderListener mazeAnimationSpeedSliderListener;
+    private final MazeAnimationSpeedSliderListener mazeAnimationSpeedSliderListener;
 
-    private AtomicBoolean runState;
+    private final AtomicBoolean runState;
 
     private int numRows;
     private int numCols;
@@ -145,6 +145,8 @@ public class MazeController {
             mazeGeneratorListener.resetGenerator();
             maze.defaultWaypoints();
         }
+
+        generator.removeChangeListener(view);
     }
 
     public void initSolve() {
@@ -159,6 +161,8 @@ public class MazeController {
             mazeSolverListener.resetSolver();
             solver.walkSolutionPath();
         }
+
+        solver.removeChangeListener(view);
     }
 
     public void resetMaze() {

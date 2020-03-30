@@ -1,17 +1,15 @@
 package view.drawable;
 
 import model.Cell;
+import model.Cell.Wall;
 import model.MazeState;
 
-import java.awt.Graphics2D;
-import java.awt.Color;
-import java.awt.geom.Rectangle2D;
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.Stroke;
-import java.awt.BasicStroke;
+import java.awt.geom.Rectangle2D;
 
-public class CellDrawable {
+class CellDrawable {
     private static final Color WALL = Color.white;
     private static final int WALL_STROKE_SIZE = 2;
     private static final Stroke WALL_STROKE = new BasicStroke(WALL_STROKE_SIZE);
@@ -33,41 +31,56 @@ public class CellDrawable {
 
         drawCellWalls(graphics2D, cell, cellX, cellY);
 
-        if (mazeState == MazeState.GENERATED) {
-            if (cell.getStart()) {
-                graphics2D.setColor(START);
-                graphics2D.fill(fillCell(cellX, cellY));
-            } else if (cell.getEnd()) {
-                graphics2D.setColor(END);
-                graphics2D.fill(fillCell(cellX, cellY));
-            }
-        }
-        else if (mazeState == MazeState.SOLVING) {
-            if (cell.visiting()) {
-                graphics2D.setColor(VISITING);
-                graphics2D.fill(fillCell(cellX, cellY));
-            } else if (cell.visited()) {
-                graphics2D.setColor(VISITED);
-                graphics2D.fill(fillCell(cellX, cellY));
-            }
-
-            if (cell.getStart()) {
-                graphics2D.setColor(START);
-                graphics2D.fill(fillCell(cellX, cellY));
-            } else if (cell.getEnd()) {
-                graphics2D.setColor(END);
-                graphics2D.fill(fillCell(cellX, cellY));
-            }
-        } else if (mazeState == MazeState.SOLVED) {
-            if (cell.getSolution()) {
-                graphics2D.setColor(SOLUTION);
-                drawSolutionPathComponent(graphics2D, cell, cellX, cellY);
-            }
+        switch (mazeState) {
+            case GENERATED:
+                generatedCellDraw(graphics2D, cell, cellX, cellY);
+                break;
+            case SOLVING:
+                solvingCellDraw(graphics2D, cell, cellX, cellY);
+                break;
+            case SOLVED:
+                solvedCellDraw(graphics2D, cell, cellX, cellY);
+                break;
         }
 
         if (cell.current()) {
             graphics2D.setColor(CURRENT);
             graphics2D.fill(fillCell(cellX, cellY));
+        }
+    }
+
+    private static void generatedCellDraw(Graphics2D graphics2D, Cell cell, int cellX, int cellY) {
+        if (cell.getStart()) {
+            graphics2D.setColor(START);
+            graphics2D.fill(fillCell(cellX, cellY));
+        } else if (cell.getEnd()) {
+            graphics2D.setColor(END);
+            graphics2D.fill(fillCell(cellX, cellY));
+        }
+    }
+
+    private static void solvingCellDraw(Graphics2D graphics2D, Cell cell, int cellX, int cellY) {
+        if (cell.visiting()) {
+            graphics2D.setColor(VISITING);
+            graphics2D.fill(fillCell(cellX, cellY));
+        } else if (cell.visited()) {
+            graphics2D.setColor(VISITED);
+            graphics2D.fill(fillCell(cellX, cellY));
+        }
+
+        if (cell.getStart()) {
+            graphics2D.setColor(START);
+            graphics2D.fill(fillCell(cellX, cellY));
+        } else if (cell.getEnd()) {
+            graphics2D.setColor(END);
+            graphics2D.fill(fillCell(cellX, cellY));
+        }
+    }
+
+    private static void solvedCellDraw(Graphics2D graphics2D, Cell cell, int cellX, int cellY) {
+        if (cell.getSolution()) {
+            graphics2D.setColor(SOLUTION);
+            drawSolutionPathComponent(graphics2D, cell, cellX, cellY);
         }
     }
 
@@ -77,7 +90,7 @@ public class CellDrawable {
         graphics2D.setStroke(WALL_STROKE);
         graphics2D.setColor(WALL);
 
-        for (Cell.Wall wall : cell.getWalls()) {
+        for (Wall wall : cell.getWalls()) {
             if (wall.isPresent()) {
                 xStart = cellX + (wall.xStart() * CELL_SIZE);
                 yStart = cellY + (wall.yStart() * CELL_SIZE);

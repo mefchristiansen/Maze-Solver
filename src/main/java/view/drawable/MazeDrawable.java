@@ -6,7 +6,7 @@ import model.MazeState;
 
 import java.awt.*;
 
-public class MazeDrawable {
+class MazeDrawable {
     private final Maze maze;
 
     public MazeDrawable(Maze maze) {

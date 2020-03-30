@@ -173,7 +173,7 @@ public class GUIPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent mazeGuiButtonClick) {
         String buttonIntention = mazeGuiButtonClick.getActionCommand();
 
-        if (buttonIntention == "exit") {
+        if (buttonIntention.equals("exit")) {
             System.exit(0);
         }
     }

@@ -5,7 +5,7 @@ public enum SolverType {
     DFS("DFS"),
     AStar("A*");
 
-    private String name;
+    private final String name;
 
     SolverType(String name) {
         this.name = name;

@@ -4,12 +4,9 @@ import controller.MazeController;
 import controller.listeners.MazeWaypointClickListener;
 import model.Cell;
 import model.Maze;
-import model.MazeConstants;
 import model.MazeState;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class MazePanel extends JPanel {
@@ -18,9 +15,9 @@ public class MazePanel extends JPanel {
     }
 
 	private static final Color BACKGROUND = new Color(55, 50, 55);
-    private Maze maze;
-    private MazeController mazeController;
-    private MazeDrawable mazeDrawable;
+    private final Maze maze;
+    private final MazeController mazeController;
+    private final MazeDrawable mazeDrawable;
     private WaypointState waypointState;
     private int animationSpeed;
 
@@ -96,10 +93,10 @@ public class MazePanel extends JPanel {
 
         switch (mazeState) {
             case GENERATING:
-                animationSpeedMultiplier = MazeDrawableConstants.GENERATION_SLEEP_TIME_MULTIPLER;
+                animationSpeedMultiplier = MazeDrawableConstants.GENERATION_SLEEP_TIME_MULTIPLIER;
                 break;
             case SOLVING:
-                animationSpeedMultiplier = MazeDrawableConstants.SOLVE_SLEEP_TIME_MULTIPLER;
+                animationSpeedMultiplier = MazeDrawableConstants.SOLVE_SLEEP_TIME_MULTIPLIER;
                 break;
             case SOLVED:
                 animationSpeedMultiplier = MazeDrawableConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;

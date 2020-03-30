@@ -8,8 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class MazeWaypointClickListener extends MouseAdapter {
-	private MazePanel mazePanel;
-	private MazeController mazeController;
+	private final MazePanel mazePanel;
+	private final MazeController mazeController;
 
 	public MazeWaypointClickListener(MazePanel mazePanel, MazeController mazeController) {
 		super();

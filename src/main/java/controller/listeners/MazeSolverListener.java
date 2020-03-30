@@ -20,7 +20,7 @@ public class MazeSolverListener extends MazeActionListener {
         }
 
         mazeController.initSolve();
-        solverThread = new Thread(() -> mazeController.solveMaze());
+        solverThread = new Thread(mazeController::solveMaze);
         solverThread.start();
     }
 

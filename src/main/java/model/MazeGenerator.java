@@ -2,19 +2,16 @@ package model;
 
 import controller.MazeController;
 
+import java.util.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class MazeGenerator {
-    private List<ChangeListener> listenerList = new ArrayList<>();
-	protected Maze maze;
-    protected MazeController mazeController;
+    private final List<ChangeListener> listenerList = new ArrayList<>();
+	protected final Maze maze;
+    protected final MazeController mazeController;
 
-	public MazeGenerator(Maze maze, MazeController mazeController) {
+	protected MazeGenerator(Maze maze, MazeController mazeController) {
 		this.maze = maze;
 		this.mazeController = mazeController;
 	}
@@ -30,7 +27,7 @@ public abstract class MazeGenerator {
     }
 
     protected void fireStateChanged() {
-        if (listenerList != null && listenerList.size() > 0) {
+        if (listenerList.size() > 0) {
             ChangeEvent event = new ChangeEvent(this);
             for (ChangeListener listener : listenerList) {
                 listener.stateChanged(event);

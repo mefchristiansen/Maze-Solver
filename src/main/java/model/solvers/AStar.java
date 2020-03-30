@@ -6,8 +6,7 @@ import model.Maze;
 import model.MazeSolver;
 import controller.MazeController;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 public class AStar extends MazeSolver {
 	public AStar(Maze maze, MazeController mazeController) {
@@ -17,8 +16,8 @@ public class AStar extends MazeSolver {
 	@Override
 	public boolean solve() {
 		List<Cell> openSet = new ArrayList<>();
-		Cell start = maze.startingCell;
-		Cell end = maze.endingCell;
+		Cell start = maze.getStartingCell();
+		Cell end = maze.getEndingCell();
 		Cell current;
 		int currentIndex, tentativeG;
 
@@ -92,7 +91,7 @@ public class AStar extends MazeSolver {
 
 	        nextCell = maze.mazeCell(newRow, newCol);
 
-	        if (!nextCell.visited() && !currCell.wallPresent(direction)) {
+	        if (!nextCell.visited() && currCell.wallMissing(direction)) {
 	            unvisitedNeighbors.add(nextCell);
 	        }
 	    }

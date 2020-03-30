@@ -2,17 +2,17 @@ package model;
 
 import controller.MazeController;
 
+import java.util.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.util.*;
 
 public abstract class MazeSolver {
-	protected Maze maze;
-	protected MazeController mazeController;
+	protected final Maze maze;
+	protected final MazeController mazeController;
 	protected Cell goal;
-	private List<ChangeListener> listenerList = new ArrayList<>();
+	private final List<ChangeListener> listenerList = new ArrayList<>();
 
-	public MazeSolver(Maze maze, MazeController mazeController) {
+	protected MazeSolver(Maze maze, MazeController mazeController) {
 		this.maze = maze;
 		this.mazeController = mazeController;
 	}
@@ -28,7 +28,7 @@ public abstract class MazeSolver {
 	}
 
 	protected void fireStateChanged() {
-		if (listenerList != null && listenerList.size() > 0) {
+		if (listenerList.size() > 0) {
 			ChangeEvent event = new ChangeEvent(this);
 			for (ChangeListener listener : listenerList) {
 				listener.stateChanged(event);

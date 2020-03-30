@@ -3,8 +3,8 @@ package controller.listeners;
 import controller.MazeChangeListener;
 import controller.MazeController;
 
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import javax.swing.JSlider;
 
 public class MazeAnimationSpeedSliderListener extends MazeChangeListener {
 

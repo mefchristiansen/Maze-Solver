@@ -1,12 +1,11 @@
 package model;
 
-import java.util.Collection;
-import java.util.EnumMap;
+import java.util.*;
 
 public class Cell {
 
 	public class Wall {
-	    private int xStart, yStart, xEnd, yEnd;
+	    private final int xStart, yStart, xEnd, yEnd;
 	    private boolean present;
 
 	    private Wall(int xStart, int yStart, int xEnd, int yEnd) {
@@ -38,9 +37,10 @@ public class Cell {
 	    }
 	}
 
-	private int row, col, f, g;
+	private final int row, col;
+    private int f, g;
 //	private Wall[] walls;
-    private EnumMap<Direction, Wall> walls;
+    private final EnumMap<Direction, Wall> walls;
 	private boolean current, visiting, visited, start, end, solution;
 	private Cell parent;
 
@@ -79,8 +79,8 @@ public class Cell {
 		return walls.values();
 	}
 
-	public boolean wallPresent(Direction direction) {
-		return walls.get(direction).present;
+	public boolean wallMissing(Direction direction) {
+		return !walls.get(direction).present;
 	}
 
 	public void removeWall(Direction direction) {
@@ -162,8 +162,8 @@ public class Cell {
 		return (x >= cellXStart && x <= cellXEnd) && (y >= cellYStart && y <= cellYEnd);
 	}
 
-	public Direction directionToCell(Cell toCell) {
-        int x_diff = toCell.col() - this.col();
+	public Direction directionToCell(Cell cell) {
+        int x_diff = cell.col() - this.col();
 
         if (x_diff > 0) {
             return Direction.RIGHT;
@@ -171,7 +171,7 @@ public class Cell {
             return Direction.LEFT;
         }
 
-        int y_diff = toCell.row() - this.row();
+        int y_diff = cell.row() - this.row();
 
         if (y_diff > 0) {
             return Direction.DOWN;
