@@ -50,6 +50,14 @@ public class CellDrawable {
                 graphics2D.setColor(VISITED);
                 graphics2D.fill(fillCell(cellX, cellY));
             }
+
+            if (cell.getStart()) {
+                graphics2D.setColor(START);
+                graphics2D.fill(fillCell(cellX, cellY));
+            } else if (cell.getEnd()) {
+                graphics2D.setColor(END);
+                graphics2D.fill(fillCell(cellX, cellY));
+            }
         } else if (mazeState == MazeState.SOLVED) {
             if (cell.getSolution()) {
                 graphics2D.setColor(SOLUTION);

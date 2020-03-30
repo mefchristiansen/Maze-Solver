@@ -1,7 +1,7 @@
 package view.drawable;
 
 public class MazeDrawableConstants {
-    public static final int DEFAULT_ANIMATION_SLEEP = 15;
+    public static final int DEFAULT_ANIMATION_SLEEP = 50;
     public static final int MINIMUM_ANIMATION_SLEEP = 5;
     public static final int MAXIMUM_ANIMATION_SLEEP = 100;
     public static final double GENERATION_SLEEP_TIME_MULTIPLER = 1;
