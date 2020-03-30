@@ -1,7 +1,17 @@
 package controller;
 
 import controller.listeners.*;
-import model.*;
+
+import model.Maze;
+import model.MazeState;
+import model.GeneratorType;
+import model.MazeGenerator;
+import model.SolverType;
+import model.MazeSolver;
+import model.MazeConstants;
+import model.MazeGeneratorFactory;
+import model.MazeSolverFactory;
+
 import view.MazeView;
 
 import java.util.concurrent.atomic.AtomicBoolean;

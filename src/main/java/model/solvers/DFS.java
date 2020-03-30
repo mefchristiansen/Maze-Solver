@@ -1,12 +1,15 @@
 package model.solvers;
 
-import controller.MazeController;
 import model.Cell;
 import model.Direction;
 import model.Maze;
 import model.MazeSolver;
+import controller.MazeController;
 
-import java.util.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class DFS extends MazeSolver {
 	public DFS(Maze maze, MazeController mazeController) {
@@ -15,13 +18,9 @@ public class DFS extends MazeSolver {
 
 	@Override
 	public boolean solve() {
-		int rowStart = maze.startingCell.row();
-		int colStart = maze.startingCell.col();
-		int rowEnd = maze.endingCell.row();
-		int colEnd = maze.endingCell.col();
 		Cell current, next;
 
-		current = maze.mazeCell(rowStart, colStart);
+		current = maze.startingCell;
 		current.setVisited(true);
 		current.setCurrent(true);
 
@@ -32,7 +31,7 @@ public class DFS extends MazeSolver {
 				return false;
 			}
 
-			if (current.row() == rowEnd && current.col() == colEnd) {
+			if (current == maze.endingCell) {
 				goal = current;
 				return true;
 			}
@@ -74,13 +73,17 @@ public class DFS extends MazeSolver {
 	    Cell nextCell;
 	    Random rand = new Random();
 
-	    for (Direction dir : Direction.values()) {
-	        newRow = currRow + dir.dy;
-	        newCol = currCol + dir.dx;
+	    for (Direction direction : Direction.values()) {
+	        newRow = currRow + direction.dy;
+	        newCol = currCol + direction.dx;
+
+            if (!maze.inBounds(newRow, newCol)) {
+                continue;
+            }
 
 	        nextCell = maze.mazeCell(newRow, newCol);
 
-	        if (maze.inBounds(newRow, newCol) && !nextCell.visited() && !currCell.wallPresent(dir.dx, dir.dy)) {
+	        if (!nextCell.visited() && !currCell.wallPresent(direction)) {
 	            unvisitedNeighbors.add(nextCell);
 	        }
 	    }

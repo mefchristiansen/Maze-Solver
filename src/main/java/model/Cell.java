@@ -1,5 +1,8 @@
 package model;
 
+import java.util.Collection;
+import java.util.EnumMap;
+
 public class Cell {
 
 	public class Wall {
@@ -36,17 +39,21 @@ public class Cell {
 	}
 
 	private int row, col, f, g;
-	private Wall[] walls;
+//	private Wall[] walls;
+    private EnumMap<Direction, Wall> walls;
 	private boolean current, visiting, visited, start, end, solution;
 	private Cell parent;
 
 	public Cell(int row, int col) {
 		this.row = row;
 		this.col = col;
-		walls = new Wall[] { new Wall(0,0,1,0),
-				new Wall(0,1,1,1),
-				new Wall(0,0,0,1),
-				new Wall(1,0,1,1) }; // TOP, BOTTOM, LEFT, RIGHT.
+        walls = new EnumMap<Direction, Wall>(Direction.class) {{
+            put(Direction.UP, new Wall(0,0,1,0));
+            put(Direction.DOWN, new Wall(0,1,1,1));
+            put(Direction.LEFT, new Wall(0,0,0,1));
+            put(Direction.RIGHT, new Wall(1,0,1,1));
+        }};
+
 		current = visiting = visited = end = solution = false;
 		parent = null;
 		f = g = Integer.MAX_VALUE;
@@ -68,24 +75,16 @@ public class Cell {
 		return margin + row * scale;
 	}
 
-	public Wall[] getWalls() {
-		return walls;
+	public Collection<Wall> getWalls() {
+		return walls.values();
 	}
 
-	public boolean wallPresent(int dx, int dy) {
-		if (dx == 1) {
-			return walls[3].present;
-		} else if (dx == -1) {
-			return walls[2].present;
-		} else if (dy == 1) {
-			return walls[1].present;
-		} else {
-			return walls[0].present;
-		}
+	public boolean wallPresent(Direction direction) {
+		return walls.get(direction).present;
 	}
 
-	public void removeWall(int direction) {
-		walls[direction].present = false;
+	public void removeWall(Direction direction) {
+        walls.get(direction).present = false;
 	}
 
 	public boolean visited() {
@@ -162,4 +161,24 @@ public class Cell {
 
 		return (x >= cellXStart && x <= cellXEnd) && (y >= cellYStart && y <= cellYEnd);
 	}
+
+	public Direction directionToCell(Cell toCell) {
+        int x_diff = toCell.col() - this.col();
+
+        if (x_diff > 0) {
+            return Direction.RIGHT;
+        } else if (x_diff < 0) {
+            return Direction.LEFT;
+        }
+
+        int y_diff = toCell.row() - this.row();
+
+        if (y_diff > 0) {
+            return Direction.DOWN;
+        } else if (y_diff < 0) {
+            return Direction.UP;
+        }
+
+        return null;
+    }
 }

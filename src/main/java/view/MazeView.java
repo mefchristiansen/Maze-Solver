@@ -51,6 +51,10 @@ public class MazeView extends JFrame implements ChangeListener {
         pack();
     }
 
+    public void repaintMaze() {
+        mazePanel.repaint();
+    }
+
     public void resetView() {
         mazePanel.resetWaypointSetterState();
         mazePanel.repaint();

@@ -1,12 +1,15 @@
 package model.solvers;
 
-import controller.MazeController;
 import model.Cell;
 import model.Direction;
 import model.Maze;
 import model.MazeSolver;
+import controller.MazeController;
 
-import java.util.*;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
 
 public class BFS extends MazeSolver {
 	public BFS(Maze maze, MazeController mazeController) {
@@ -15,14 +18,9 @@ public class BFS extends MazeSolver {
 
 	@Override
 	public boolean solve() {
-		int rowStart = maze.startingCell.row();
-		int colStart = maze.startingCell.col();
-		int rowEnd = maze.endingCell.row();
-		int colEnd = maze.endingCell.col();
 		Cell current;
-
 		Queue<Cell> searchQueue = new LinkedList<>();
-		searchQueue.add(maze.mazeCell(rowStart, colStart));
+		searchQueue.add(maze.startingCell);
 
 		while (searchQueue.size() != 0) {
 			if (mazeController.isInterrupted()) {
@@ -36,7 +34,7 @@ public class BFS extends MazeSolver {
 
 			fireStateChanged();
 
-			if (current.row() == rowEnd && current.col() == colEnd) {
+			if (current == maze.endingCell) {
 				goal = current;
 				return true;
 			}
@@ -67,13 +65,17 @@ public class BFS extends MazeSolver {
 	    int newRow, newCol;
 	    Cell nextCell;
 
-	    for (Direction dir : Direction.values()) {
-	        newRow = currRow + dir.dy;
-	        newCol = currCol + dir.dx;
+	    for (Direction direction : Direction.values()) {
+            newCol = currCol + direction.dx;
+	        newRow = currRow + direction.dy;
+
+	        if (!maze.inBounds(newRow, newCol)) {
+	            continue;
+            }
 
 	        nextCell = maze.mazeCell(newRow, newCol);
 
-	        if (maze.inBounds(newRow, newCol) && !nextCell.visited() && !currCell.wallPresent(dir.dx, dir.dy)) {
+	        if (!nextCell.visited() && !currCell.wallPresent(direction)) {
 	            unvisitedNeighbors.add(nextCell);
 	        }
 	    }

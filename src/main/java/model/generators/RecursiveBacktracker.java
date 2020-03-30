@@ -1,10 +1,10 @@
 package model.generators;
 
-import controller.MazeController;
 import model.Cell;
 import model.Direction;
 import model.Maze;
 import model.MazeGenerator;
+import controller.MazeController;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -86,29 +86,8 @@ public class RecursiveBacktracker extends MazeGenerator {
 	}
 
 	private void removeWalls(Cell current, Cell next) {
-	    int x = current.col() - next.col();
-
-	    if (x == 1) {
-	        current.removeWall(2);
-	        next.removeWall(3);
-	        return;
-	    } else if (x == -1) {
-	        current.removeWall(3);
-	        next.removeWall(2);
-	        return;
-	    }
-
-	    int y = current.row() - next.row();
-
-	    if (y == 1) {
-	        current.removeWall(0);
-	        next.removeWall(1);
-	        return;
-	    } else if (y == -1) {
-	        current.removeWall(1);
-	        next.removeWall(0);
-	        return;
-	    }
+	    Direction direction = current.directionToCell(next);
+        current.removeWall(direction);
+        next.removeWall(direction.oppositeDirection());
 	}
-
 }

@@ -1,8 +1,5 @@
 package controller;
 
-
-import controller.MazeController;
-
 import java.awt.event.ActionListener;
 
 public abstract class MazeActionListener implements ActionListener {

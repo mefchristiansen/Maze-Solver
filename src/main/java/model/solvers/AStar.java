@@ -1,12 +1,13 @@
 package model.solvers;
 
-import controller.MazeController;
 import model.Cell;
 import model.Direction;
 import model.Maze;
 import model.MazeSolver;
+import controller.MazeController;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class AStar extends MazeSolver {
 	public AStar(Maze maze, MazeController mazeController) {
@@ -15,13 +16,9 @@ public class AStar extends MazeSolver {
 
 	@Override
 	public boolean solve() {
-		int rowStart = maze.startingCell.row();
-		int colStart = maze.startingCell.col();
-		int rowEnd = maze.endingCell.row();
-		int colEnd = maze.endingCell.col();
 		List<Cell> openSet = new ArrayList<>();
-		Cell start = maze.mazeCell(rowStart, colStart);
-		Cell end = maze.mazeCell(rowEnd, colEnd);
+		Cell start = maze.startingCell;
+		Cell end = maze.endingCell;
 		Cell current;
 		int currentIndex, tentativeG;
 
@@ -42,7 +39,7 @@ public class AStar extends MazeSolver {
 
 			fireStateChanged();
 
-			if (current.row() == rowEnd && current.col() == colEnd) {
+			if (current == end) {
 				goal = current;
 				return true;
 			}
@@ -85,13 +82,17 @@ public class AStar extends MazeSolver {
 	    int newRow, newCol;
 	    Cell nextCell;
 
-	    for (Direction dir : Direction.values()) {
-	        newRow = currRow + dir.dy;
-	        newCol = currCol + dir.dx;
+	    for (Direction direction : Direction.values()) {
+	        newRow = currRow + direction.dy;
+	        newCol = currCol + direction.dx;
+
+	        if (!maze.inBounds(newRow, newCol)) {
+	            continue;
+            }
 
 	        nextCell = maze.mazeCell(newRow, newCol);
 
-	        if (maze.inBounds(newRow, newCol) && !nextCell.visited() && !currCell.wallPresent(dir.dx, dir.dy)) {
+	        if (!nextCell.visited() && !currCell.wallPresent(direction)) {
 	            unvisitedNeighbors.add(nextCell);
 	        }
 	    }
