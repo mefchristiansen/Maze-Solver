@@ -2,7 +2,6 @@ package controller.listeners;
 
 import controller.MazeController;
 import model.MazeState;
-import view.MazeView;
 import view.drawable.MazePanel;
 
 import java.awt.event.MouseAdapter;
@@ -23,8 +22,6 @@ public class MazeWaypointClickListener extends MouseAdapter {
 		if (canSet()) {
 			mazePanel.setWaypoint(mouseEvent.getX(), mouseEvent.getY());
 		}
-
-		return;
 
 		/*
 			synchronized (view) {

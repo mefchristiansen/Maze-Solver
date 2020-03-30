@@ -1,7 +1,7 @@
 package controller.listeners;
 
-import controller.MazeController;
 import controller.MazeActionListener;
+import controller.MazeController;
 import model.MazeState;
 
 import java.awt.event.ActionEvent;
