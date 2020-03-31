@@ -15,7 +15,7 @@ public class MazePanel extends JPanel {
     }
 
 	private static final Color BACKGROUND = new Color(55, 50, 55);
-    private final Maze maze;
+    private Maze maze;
     private final MazeController mazeController;
     private final MazeDrawable mazeDrawable;
     private WaypointState waypointState;
@@ -24,7 +24,7 @@ public class MazePanel extends JPanel {
     public MazePanel(Maze maze, MazeController mazeController) {
     	this.maze = maze;
     	this.mazeController = mazeController;
-        this.mazeDrawable = new MazeDrawable(this.maze);
+        this.mazeDrawable = new MazeDrawable();
         this.waypointState = WaypointState.START;
         this.animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
 
@@ -45,11 +45,16 @@ public class MazePanel extends JPanel {
         repaint();
     }
 
+    public void repaintMaze(Maze maze) {
+        this.maze = maze;
+        animateMaze();
+    }
+
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         MazeState mazeState = mazeController.getState();
-        mazeDrawable.drawMaze(graphics, mazeState);
+        mazeDrawable.drawMaze(maze, graphics, mazeState);
     }
 
     public void resize() {
@@ -106,11 +111,11 @@ public class MazePanel extends JPanel {
                 break;
         }
 
-        try {
-            Thread.sleep((long)(animationSpeed * animationSpeedMultiplier));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep((long)(animationSpeed * animationSpeedMultiplier));
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         repaint();
     }
 

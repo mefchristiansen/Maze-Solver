@@ -50,6 +50,10 @@ public class MazeView extends JFrame implements ChangeListener {
         mazePanel.repaint();
     }
 
+    public void repaintMaze(Maze maze) {
+        mazePanel.repaintMaze(maze);
+    }
+
     public void setAnimationSpeed(int animationSpeed) { mazePanel.setAnimationSpeed(animationSpeed); }
 
     private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor, int fill) {

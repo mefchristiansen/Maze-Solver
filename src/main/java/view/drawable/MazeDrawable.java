@@ -7,13 +7,9 @@ import model.MazeState;
 import java.awt.*;
 
 class MazeDrawable {
-    private final Maze maze;
+//    private final Maze maze;
 
-    public MazeDrawable(Maze maze) {
-        this.maze = maze;
-    }
-
-    public void drawMaze(Graphics graphics, MazeState mazeState) {
+    public void drawMaze(Maze maze, Graphics graphics, MazeState mazeState) {
         Graphics2D graphics2D = (Graphics2D) graphics;
 
         for (int r = 0; r < maze.numRows(); r++) {

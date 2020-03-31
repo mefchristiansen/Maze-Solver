@@ -13,7 +13,9 @@ import model.MazeGeneratorFactory;
 import model.MazeSolverFactory;
 
 import view.MazeView;
+import view.drawable.MazeDrawableConstants;
 
+import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MazeController {
@@ -46,6 +48,8 @@ public class MazeController {
 
     private final AtomicBoolean runState;
 
+    private int animationSpeed;
+
     private int numRows;
     private int numCols;
 
@@ -69,6 +73,8 @@ public class MazeController {
         this.view = new MazeView(maze, this);
 
         this.runState = new AtomicBoolean(true);
+
+        this.animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
 
         this.numRows = MazeConstants.DEFAULT_NUM_ROWS;
         this.numCols = MazeConstants.DEFAULT_NUM_COLS;
@@ -127,7 +133,12 @@ public class MazeController {
     }
 
     public void setAnimationSpeed(int animationSpeed) {
-        view.setAnimationSpeed(animationSpeed);
+//        view.setAnimationSpeed(animationSpeed);
+        this.animationSpeed = animationSpeed;
+    }
+
+    public int getAnimationSpeed() {
+        return animationSpeed;
     }
 
     public void initGenerate() {
@@ -135,18 +146,31 @@ public class MazeController {
         view.resize();
 
         generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
-        generator.addChangeListener(view);
+//        generator.addChangeListener(view);
         state = MazeState.GENERATING;
+        generateMaze();
     }
 
     public void generateMaze() {
-        if (generator.generateMaze()) {
-            state = MazeState.GENERATED;
-            mazeGeneratorListener.resetGenerator();
-            maze.defaultWaypoints();
-        }
+        generator.execute();
 
-        generator.removeChangeListener(view);
+
+//        if (generator.generateMaze()) {
+//
+//
+//        }
+
+//        generator.removeChangeListener(view);
+    }
+
+    public void repaintMaze(Maze newMaze) {
+        view.repaintMaze(newMaze);
+    }
+
+    public void generateMazeSuccess() {
+        state = MazeState.GENERATED;
+        mazeGeneratorListener.resetGenerator();
+        maze.defaultWaypoints();
     }
 
     public void initSolve() {
@@ -166,9 +190,12 @@ public class MazeController {
     }
 
     public void resetMaze() {
-        setRunState(false);
+//        setRunState(false);
 
-        mazeGeneratorListener.resetGenerator();
+        if (generator != null) {
+            generator.cancel(true);
+        }
+
         mazeSolverListener.resetSolver();
 
         state = MazeState.INIT;
@@ -176,7 +203,7 @@ public class MazeController {
         maze.resetMaze();
         view.resetView();
 
-        setRunState(true);
+//        setRunState(true);
     }
 
     private void setRunState(boolean runState) {

@@ -39,7 +39,6 @@ public class Cell {
 
 	private final int row, col;
     private int f, g;
-//	private Wall[] walls;
     private final EnumMap<Direction, Wall> walls;
 	private boolean current, visiting, visited, start, end, solution;
 	private Cell parent;

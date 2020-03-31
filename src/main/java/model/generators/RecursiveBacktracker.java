@@ -7,6 +7,8 @@ import model.MazeGenerator;
 import controller.MazeController;
 
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
 public class RecursiveBacktracker extends MazeGenerator {
 	public RecursiveBacktracker(Maze maze, MazeController mazeController) {
@@ -14,7 +16,7 @@ public class RecursiveBacktracker extends MazeGenerator {
 	}
 
 	@Override
-	public boolean generateMaze() {
+	public Boolean doInBackground() throws Exception {
 	    Random rand = new Random();
 
 	    int startRow = rand.nextInt(maze.numRows() - 1);
@@ -28,9 +30,9 @@ public class RecursiveBacktracker extends MazeGenerator {
 	    Stack<Cell> searchStack = new Stack<>();
 
 	    while (current != null) {
-	    	if (mazeController.isInterrupted()) {
-	    		return false;
-			}
+//	    	if (mazeController.isInterrupted()) {
+//	    		return null;
+//			}
 
 	        Cell unvisitedNeighbor = unvisitedNeighbor(current, rand);
 
@@ -52,15 +54,44 @@ public class RecursiveBacktracker extends MazeGenerator {
 	            current = null;
 	        }
 
+	        publish(maze);
+
+            Thread.sleep(mazeController.getAnimationSpeed());
+
             // Send event to observers that the maze has been updated.
-            fireStateChanged();
+//            fireStateChanged();
 		}
 
 		maze.voidVisits();
 	    return true;
 	}
 
-	private Cell unvisitedNeighbor(Cell currCell, Random rand) {
+    @Override
+    protected void process(List<Maze> chunks) {
+        for (Maze maze : chunks) {
+            mazeController.repaintMaze(maze);
+        }
+    }
+
+    @Override
+    protected void done() {
+	    try {
+            Boolean status = get();
+
+            if (status.booleanValue()) {
+                mazeController.generateMazeSuccess();
+            }
+
+        } catch (CancellationException e) {
+//            mazeController.resetMaze();
+        } catch (InterruptedException e) {
+//            mazeController.resetMaze();
+        } catch (ExecutionException e) {
+//            mazeController.resetMaze();
+        }
+    }
+
+    private Cell unvisitedNeighbor(Cell currCell, Random rand) {
 	    List<Cell> unvisitedNeighbors = new ArrayList<>();
 	    int currRow = currCell.row();
 	    int currCol = currCell.col();

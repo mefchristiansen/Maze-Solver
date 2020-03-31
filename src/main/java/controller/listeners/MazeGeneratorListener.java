@@ -21,8 +21,8 @@ public class MazeGeneratorListener extends MazeActionListener {
 
         mazeController.resetMaze();
         mazeController.initGenerate();
-        generatorThread = new Thread(mazeController::generateMaze);
-        generatorThread.start();
+//        generatorThread = new Thread(mazeController::generateMaze);
+//        generatorThread.start();
     }
 
     public void resetGenerator() {
