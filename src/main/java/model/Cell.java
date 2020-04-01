@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Cell {
 
-	public class Wall {
+	public static class Wall {
 	    private final int xStart, yStart, xEnd, yEnd;
 	    private boolean present;
 
@@ -46,12 +46,12 @@ public class Cell {
 	public Cell(int row, int col) {
 		this.row = row;
 		this.col = col;
-        walls = new EnumMap<Direction, Wall>(Direction.class) {{
-            put(Direction.UP, new Wall(0,0,1,0));
-            put(Direction.DOWN, new Wall(0,1,1,1));
-            put(Direction.LEFT, new Wall(0,0,0,1));
-            put(Direction.RIGHT, new Wall(1,0,1,1));
-        }};
+        walls = new EnumMap<>(Direction.class) {{
+			put(Direction.UP, new Wall(0, 0, 1, 0));
+			put(Direction.DOWN, new Wall(0, 1, 1, 1));
+			put(Direction.LEFT, new Wall(0, 0, 0, 1));
+			put(Direction.RIGHT, new Wall(1, 0, 1, 1));
+		}};
 
 		current = visiting = visited = end = solution = false;
 		parent = null;
