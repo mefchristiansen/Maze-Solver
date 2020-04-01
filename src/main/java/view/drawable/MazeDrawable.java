@@ -7,8 +7,6 @@ import model.MazeState;
 import java.awt.*;
 
 class MazeDrawable {
-//    private final Maze maze;
-
     public void drawMaze(Maze maze, Graphics graphics, MazeState mazeState) {
         Graphics2D graphics2D = (Graphics2D) graphics;
 

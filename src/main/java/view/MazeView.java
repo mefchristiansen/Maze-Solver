@@ -7,17 +7,23 @@ import view.drawable.GUIPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-public class MazeView extends JFrame implements ChangeListener {
+public class MazeView extends JFrame {
+    private final Maze maze;
+    private final MazeController mazeController;
+
     private final MazePanel mazePanel;
     private final GUIPanel guiPanel;
+//    private final JLabel instructions;
 
-    public MazeView(Maze maze, MazeController mazeController) {
+    public MazeView() {
         super("Maze Solver - Marcus Christiansen");
+        this.maze = new Maze();
+        this.mazeController = new MazeController(this, maze);
+
         this.mazePanel = new MazePanel(maze, mazeController);
         this.guiPanel = new GUIPanel(mazeController);
+//        this.instructions = new JLabel();
 
         initDisplay();
     }
@@ -27,18 +33,20 @@ public class MazeView extends JFrame implements ChangeListener {
         setResizable(false);
         setLayout(new GridBagLayout());
 
+//        instructions.setText("Generate a maze");
+
         addComponent(mazePanel, 0, 0, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
         addComponent(guiPanel, 2, 0, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL);
+//        addComponent(instructions, 0, 1, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
 
         pack();
 
         setVisible(true);
     }
 
-    @Override
-    public void stateChanged(ChangeEvent event) {
-        mazePanel.animateMaze();
-    }
+//    public void setInstructions(String instruction) {
+//        instructions.setText(instruction);
+//    }
 
     public void resize() {
         mazePanel.resize();
@@ -53,8 +61,6 @@ public class MazeView extends JFrame implements ChangeListener {
     public void repaintMaze(Maze maze) {
         mazePanel.repaintMaze(maze);
     }
-
-    public void setAnimationSpeed(int animationSpeed) { mazePanel.setAnimationSpeed(animationSpeed); }
 
     private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor, int fill) {
         Insets insets = new Insets(5, 5, 5, 5);

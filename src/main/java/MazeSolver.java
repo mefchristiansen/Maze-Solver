@@ -1,14 +1,9 @@
-import controller.MazeController;
+import view.MazeView;
 
 import javax.swing.*;
 
 public class MazeSolver {
 	public static void main(String[] args) {
-
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				new MazeController();
-			}
-		});
+		SwingUtilities.invokeLater(MazeView::new);
 	}
 }

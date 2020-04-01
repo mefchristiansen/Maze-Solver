@@ -5,6 +5,7 @@ public class Maze {
 	private int numCols;
 	private Cell[][] maze;
     private Cell startingCell, endingCell;
+    private Cell goal;
 
     public Maze() {
         this(MazeConstants.DEFAULT_NUM_ROWS, MazeConstants.DEFAULT_NUM_COLS);
@@ -60,7 +61,7 @@ public class Maze {
     }
 
     public void resetMaze() {
-        startingCell = endingCell = null;
+        startingCell = endingCell = goal = null;
 
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {
@@ -84,5 +85,13 @@ public class Maze {
     public void defaultWaypoints() {
         startingCell = maze[0][0];
         endingCell = maze[maze.length - 1][maze[maze.length - 1].length - 1];
+    }
+
+    public void setGoal(Cell goal) {
+        this.goal = goal;
+    }
+
+    public Cell getGoal() {
+        return goal;
     }
 }

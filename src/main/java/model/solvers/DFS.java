@@ -3,18 +3,20 @@ package model.solvers;
 import model.Cell;
 import model.Direction;
 import model.Maze;
-import model.MazeSolver;
+import model.MazeSolverWorker;
 import controller.MazeController;
 
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
-public class DFS extends MazeSolver {
+public class DFS extends MazeSolverWorker {
 	public DFS(Maze maze, MazeController mazeController) {
 		super(maze, mazeController);
 	}
 
 	@Override
-	public boolean solve() {
+	protected Boolean doInBackground() throws Exception {
 		Cell current, next, end;
 
 		current = maze.getStartingCell();
@@ -26,42 +28,68 @@ public class DFS extends MazeSolver {
 		Stack<Cell> searchStack = new Stack<>();
 
 		while (current != null) {
-			if (mazeController.isInterrupted()) {
-				return false;
-			}
-
 			if (current == end) {
-				goal = current;
+                maze.setGoal(current);
 				return true;
 			}
 
-			fireStateChanged();
+            publish(maze);
+
+			Thread.sleep(mazeController.getAnimationSpeed());
 
 			Cell unvisitedNeighbor = unvisitedNeighbor(current);
 
 			if (unvisitedNeighbor != null) {
-			    searchStack.push(current);
-			    current.setVisiting(true);
-			    current.setCurrent(false);
-			    next = unvisitedNeighbor;
-			    next.setParent(current);
-			    current = next;
-			    current.setVisited(true);
-			    current.setCurrent(true);
+				searchStack.push(current);
+				current.setVisiting(true);
+				current.setCurrent(false);
+				next = unvisitedNeighbor;
+				next.setParent(current);
+				current = next;
+				current.setVisited(true);
+				current.setCurrent(true);
 			} else if (!searchStack.empty()) {
 				current.setCurrent(false);
 				current.setVisiting(false);
 				current.setParent(null);
-			    current = searchStack.pop();
-			    current.setCurrent(true);
+				current = searchStack.pop();
+				current.setCurrent(true);
 			} else {
 				current.setCurrent(false);
 				current.setVisiting(false);
-			    current = null;
+				current = null;
 			}
 		}
 
 		return false;
+	}
+
+	@Override
+	protected void process(List<Maze> chunks) {
+		for (Maze maze : chunks) {
+			mazeController.repaintMaze(maze);
+		}
+	}
+
+	@Override
+	protected void done() {
+		try {
+			Boolean status = get();
+
+			if (status) {
+				mazeController.solveMazeSuccess();
+			} else {
+				mazeController.reset();
+			}
+
+		} catch (CancellationException e) {
+//            mazeController.setInstructions("Generate a new Maze");
+//            mazeController.reset();
+		} catch (InterruptedException e) {
+//            mazeController.reset();
+		} catch (ExecutionException e) {
+//            mazeController.reset();
+		}
 	}
 
 	private Cell unvisitedNeighbor(Cell currCell) {

@@ -2,21 +2,10 @@ package controller;
 
 import controller.listeners.*;
 
-import model.Maze;
-import model.MazeState;
-import model.GeneratorType;
-import model.MazeGenerator;
-import model.SolverType;
-import model.MazeSolver;
-import model.MazeConstants;
-import model.MazeGeneratorFactory;
-import model.MazeSolverFactory;
+import model.*;
 
 import view.MazeView;
 import view.drawable.MazeDrawableConstants;
-
-import javax.swing.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MazeController {
     private MazeState state;
@@ -24,9 +13,10 @@ public class MazeController {
     // Model
     private final Maze maze;
     private GeneratorType generatorType;
-    private MazeGenerator generator;
+    private MazeGeneratorWorker generator;
     private SolverType solverType;
-    private MazeSolver solver;
+    private MazeSolverWorker solver;
+    private MazeSolutionWalkerWorker solutionWalker;
 
     // View
     private final MazeView view;
@@ -46,17 +36,15 @@ public class MazeController {
     //// Speed Slider
     private final MazeAnimationSpeedSliderListener mazeAnimationSpeedSliderListener;
 
-    private final AtomicBoolean runState;
-
     private int animationSpeed;
 
     private int numRows;
     private int numCols;
 
-    public MazeController() {
+    public MazeController(MazeView view, Maze maze) {
         this.state = MazeState.INIT;
 
-        this.maze = new Maze();
+        this.maze = maze;
         this.generatorType = GeneratorType.RECURSIVE_BACKTRACKER;
         this.solverType = SolverType.BFS;
 
@@ -70,9 +58,7 @@ public class MazeController {
 
         this.mazeAnimationSpeedSliderListener = new MazeAnimationSpeedSliderListener(this);
 
-        this.view = new MazeView(maze, this);
-
-        this.runState = new AtomicBoolean(true);
+        this.view = view;
 
         this.animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
 
@@ -133,86 +119,105 @@ public class MazeController {
     }
 
     public void setAnimationSpeed(int animationSpeed) {
-//        view.setAnimationSpeed(animationSpeed);
         this.animationSpeed = animationSpeed;
     }
 
-    public int getAnimationSpeed() {
-        return animationSpeed;
+    public long getAnimationSpeed() {
+        double animationSpeedMultiplier;
+
+        switch (state) {
+            case GENERATING:
+                animationSpeedMultiplier = MazeDrawableConstants.GENERATION_SLEEP_TIME_MULTIPLIER;
+                break;
+            case SOLVING:
+                animationSpeedMultiplier = MazeDrawableConstants.SOLVE_SLEEP_TIME_MULTIPLIER;
+                break;
+            case SOLVED:
+                animationSpeedMultiplier = MazeDrawableConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;
+                break;
+            default:
+                animationSpeedMultiplier = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
+                break;
+        }
+
+        return (long)(animationSpeed * animationSpeedMultiplier);
     }
 
-    public void initGenerate() {
+    public void generate() {
+       initGenerate();
+       generateMaze();
+    }
+
+    private void initGenerate() {
         maze.initMaze(numRows, numCols);
         view.resize();
-
-        generator = MazeGeneratorFactory.initMazeGenerator(generatorType, maze, this);
-//        generator.addChangeListener(view);
-        state = MazeState.GENERATING;
-        generateMaze();
+        generator = MazeGeneratorWorkerFactory.initMazeGenerator(generatorType, maze, this);
     }
 
-    public void generateMaze() {
+    private void generateMaze() {
+        state = MazeState.GENERATING;
         generator.execute();
+    }
 
+    public void generateMazeSuccess() {
+        state = MazeState.GENERATED;
+        maze.defaultWaypoints();
+    }
 
-//        if (generator.generateMaze()) {
-//
-//
-//        }
+    public void solve() {
+        initSolve();
+        solveMaze();
+    }
 
-//        generator.removeChangeListener(view);
+    private void initSolve() {
+        solver = MazeSolverWorkerFactory.initMazeSolver(solverType, maze, this);
+    }
+
+    private void solveMaze() {
+        state = MazeState.SOLVING;
+        solver.execute();
+    }
+
+    public void solveMazeSuccess() {
+        state = MazeState.SOLVED;
+        walkSolutionPath();
+    }
+
+    private void walkSolutionPath() {
+        solutionWalker = new MazeSolutionWalkerWorker(maze, this);
+        solutionWalker.execute();
+    }
+
+    public void reset() {
+        resetThreads();
+
+        state = MazeState.INIT;
+
+        maze.resetMaze();
+        view.resetView();
+    }
+
+    private void resetThreads() {
+        if (generator != null) {
+            generator.cancel(true);
+        }
+
+        if (solver != null) {
+            solver.cancel(true);
+        }
+
+        if (solutionWalker != null) {
+            solutionWalker.cancel(true);
+        }
     }
 
     public void repaintMaze(Maze newMaze) {
         view.repaintMaze(newMaze);
     }
 
-    public void generateMazeSuccess() {
-        state = MazeState.GENERATED;
-        mazeGeneratorListener.resetGenerator();
-        maze.defaultWaypoints();
-    }
-
-    public void initSolve() {
-        solver = MazeSolverFactory.initMazeSolver(solverType, maze, this);
-        solver.addChangeListener(view);
-        state = MazeState.SOLVING;
-    }
-
-    public void solveMaze() {
-        if(solver.solve()) {
-            state = MazeState.SOLVED;
-            mazeSolverListener.resetSolver();
-            solver.walkSolutionPath();
-        }
-
-        solver.removeChangeListener(view);
-    }
-
-    public void resetMaze() {
-//        setRunState(false);
-
-        if (generator != null) {
-            generator.cancel(true);
-        }
-
-        mazeSolverListener.resetSolver();
-
-        state = MazeState.INIT;
-
-        maze.resetMaze();
-        view.resetView();
-
-//        setRunState(true);
-    }
-
-    private void setRunState(boolean runState) {
-        this.runState.set(runState);
-    }
-
-    public boolean isInterrupted() {
-        return !this.runState.get();
-    }
+//    public void setInstructions(String instruction) {
+//        view.setInstructions(instruction);
+//    }
 
     /*
         private void setEndpoints() {

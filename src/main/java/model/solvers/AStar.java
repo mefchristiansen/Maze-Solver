@@ -3,18 +3,20 @@ package model.solvers;
 import model.Cell;
 import model.Direction;
 import model.Maze;
-import model.MazeSolver;
+import model.MazeSolverWorker;
 import controller.MazeController;
 
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
-public class AStar extends MazeSolver {
+public class AStar extends MazeSolverWorker {
 	public AStar(Maze maze, MazeController mazeController) {
 		super(maze, mazeController);
 	}
 
 	@Override
-	public boolean solve() {
+	protected Boolean doInBackground() throws Exception {
 		List<Cell> openSet = new ArrayList<>();
 		Cell start = maze.getStartingCell();
 		Cell end = maze.getEndingCell();
@@ -27,19 +29,17 @@ public class AStar extends MazeSolver {
 		openSet.add(start);
 
 		while (openSet.size() != 0) {
-			if (mazeController.isInterrupted()) {
-				return false;
-			}
-
 			currentIndex = lowestFIndex(openSet);
 			current = openSet.get(currentIndex);
 
 			current.setCurrent(true);
 
-			fireStateChanged();
+            publish(maze);
+
+			Thread.sleep(mazeController.getAnimationSpeed());
 
 			if (current == end) {
-				goal = current;
+				maze.setGoal(current);
 				return true;
 			}
 
@@ -72,6 +72,34 @@ public class AStar extends MazeSolver {
 		}
 
 		return false;
+	}
+
+	@Override
+	protected void process(List<Maze> chunks) {
+		for (Maze maze : chunks) {
+			mazeController.repaintMaze(maze);
+		}
+	}
+
+	@Override
+	protected void done() {
+		try {
+			Boolean status = get();
+
+			if (status) {
+				mazeController.solveMazeSuccess();
+			} else {
+				mazeController.reset();
+			}
+
+		} catch (CancellationException e) {
+//            mazeController.setInstructions("Generate a new Maze");
+//            mazeController.reset();
+		} catch (InterruptedException e) {
+//            mazeController.reset();
+		} catch (ExecutionException e) {
+//            mazeController.reset();
+		}
 	}
 
 	private List<Cell> unvisitedNeighbors(Cell currCell) {

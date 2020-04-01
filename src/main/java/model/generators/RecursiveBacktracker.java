@@ -3,20 +3,20 @@ package model.generators;
 import model.Cell;
 import model.Direction;
 import model.Maze;
-import model.MazeGenerator;
+import model.MazeGeneratorWorker;
 import controller.MazeController;
 
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
-public class RecursiveBacktracker extends MazeGenerator {
+public class RecursiveBacktracker extends MazeGeneratorWorker {
 	public RecursiveBacktracker(Maze maze, MazeController mazeController) {
 	    super(maze, mazeController);
 	}
 
 	@Override
-	public Boolean doInBackground() throws Exception {
+	protected Boolean doInBackground() throws Exception {
 	    Random rand = new Random();
 
 	    int startRow = rand.nextInt(maze.numRows() - 1);
@@ -30,10 +30,6 @@ public class RecursiveBacktracker extends MazeGenerator {
 	    Stack<Cell> searchStack = new Stack<>();
 
 	    while (current != null) {
-//	    	if (mazeController.isInterrupted()) {
-//	    		return null;
-//			}
-
 	        Cell unvisitedNeighbor = unvisitedNeighbor(current, rand);
 
 	        if (unvisitedNeighbor != null) {
@@ -57,9 +53,6 @@ public class RecursiveBacktracker extends MazeGenerator {
 	        publish(maze);
 
             Thread.sleep(mazeController.getAnimationSpeed());
-
-            // Send event to observers that the maze has been updated.
-//            fireStateChanged();
 		}
 
 		maze.voidVisits();
@@ -78,16 +71,19 @@ public class RecursiveBacktracker extends MazeGenerator {
 	    try {
             Boolean status = get();
 
-            if (status.booleanValue()) {
+            if (status) {
                 mazeController.generateMazeSuccess();
+            } else {
+                mazeController.reset();
             }
 
         } catch (CancellationException e) {
-//            mazeController.resetMaze();
+//            mazeController.setInstructions("Generate a new Maze");
+//            mazeController.reset();
         } catch (InterruptedException e) {
-//            mazeController.resetMaze();
+//            mazeController.reset();
         } catch (ExecutionException e) {
-//            mazeController.resetMaze();
+//            mazeController.reset();
         }
     }
 
