@@ -7,6 +7,10 @@ import view.drawable.MazePanel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * A MouseAdapter that listens for clicks on a generated maze to set the start and end points for the maze solver.
+ * Checks that the state of the maze is viable for setting the start and end points.
+ */
 public class MazeWaypointClickListener extends MouseAdapter {
 	private final MazePanel mazePanel;
 	private final MazeController mazeController;
@@ -33,6 +37,10 @@ public class MazeWaypointClickListener extends MouseAdapter {
 		*/
 	}
 
+	/**
+	 * Determines if setting the start and end points can be set. The waypoints can only be set if the maze is in the
+	 * GENERATED state (after a maze has been generated but not being solved or already solved).
+	 */
 	private boolean canSet() {
 		MazeState mazeState = mazeController.getState();
 		return mazeState == MazeState.GENERATED;

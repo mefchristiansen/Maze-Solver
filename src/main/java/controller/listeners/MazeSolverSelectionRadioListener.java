@@ -6,6 +6,10 @@ import model.SolverType;
 
 import java.awt.event.ActionEvent;
 
+/**
+ * An ActionListener (extending MazeActionListener) that is registered and listens for changes in the maze solve method
+ * radio, and updates the maze solve selection accordingly on change.
+ */
 public class MazeSolverSelectionRadioListener extends MazeActionListener {
     public MazeSolverSelectionRadioListener(MazeController mazeController) {
         super(mazeController);
@@ -14,7 +18,7 @@ public class MazeSolverSelectionRadioListener extends MazeActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        SolverType solverTypeChoice = SolverType.fromString(command);
+        SolverType solverTypeChoice = SolverType.fromString(command); // Determines which solver type has been selected.
 
         if (solverTypeChoice == null) {
             return;

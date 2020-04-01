@@ -7,4 +7,4 @@ javadoc {
     classpath = configurations.compile
 }
 
-mainClassName = "MazeRunner"
+mainClassName = "MazeSolver"
