@@ -9,18 +9,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MazeView extends JFrame {
-    private final Maze maze;
-    private final MazeController mazeController;
-
     private final MazePanel mazePanel;
     private final GUIPanel guiPanel;
 //    private final JLabel instructions;
 
-    public MazeView() {
+    public MazeView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
-        this.maze = new Maze();
-        this.mazeController = new MazeController(this, maze);
-
         this.mazePanel = new MazePanel(maze, mazeController);
         this.guiPanel = new GUIPanel(mazeController);
 //        this.instructions = new JLabel();

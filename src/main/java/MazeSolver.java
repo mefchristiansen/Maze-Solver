@@ -1,5 +1,4 @@
-import view.MazeView;
-import javax.swing.*;
+import controller.MazeController;
 
 /**
  * MazeSolver --- A maze solver application that automatically generates a random maze, and then proceeds to traverse
@@ -10,6 +9,6 @@ import javax.swing.*;
  */
 public class MazeSolver {
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(MazeView::new);
+		new MazeController();
 	}
 }

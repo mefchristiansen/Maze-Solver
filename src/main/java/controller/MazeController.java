@@ -9,6 +9,9 @@ import view.drawable.MazeDrawableConstants;
 
 public class MazeController {
     private MazeState state;
+	private int animationSpeed;
+	private int numRows;
+	private int numCols;
 
     // Model
     private final Maze maze;
@@ -36,15 +39,10 @@ public class MazeController {
     //// Speed Slider
     private final MazeAnimationSpeedSliderListener mazeAnimationSpeedSliderListener;
 
-    private int animationSpeed;
-
-    private int numRows;
-    private int numCols;
-
-    public MazeController(MazeView view, Maze maze) {
+    public MazeController() {
         this.state = MazeState.INIT;
 
-        this.maze = maze;
+        this.maze = new Maze();
         this.generatorType = GeneratorType.RECURSIVE_BACKTRACKER;
         this.solverType = SolverType.BFS;
 
@@ -58,7 +56,7 @@ public class MazeController {
 
         this.mazeAnimationSpeedSliderListener = new MazeAnimationSpeedSliderListener(this);
 
-        this.view = view;
+        this.view = new MazeView(maze, this);
 
         this.animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
 
@@ -200,14 +198,17 @@ public class MazeController {
     private void resetThreads() {
         if (generator != null) {
             generator.cancel(true);
+            generator = null;
         }
 
         if (solver != null) {
             solver.cancel(true);
+            solver = null;
         }
 
         if (solutionWalker != null) {
             solutionWalker.cancel(true);
+            solutionWalker = null;
         }
     }
 

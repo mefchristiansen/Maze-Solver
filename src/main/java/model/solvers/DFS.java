@@ -7,8 +7,6 @@ import model.MazeSolverWorker;
 import controller.MazeController;
 
 import java.util.*;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 
 public class DFS extends MazeSolverWorker {
 	public DFS(Maze maze, MazeController mazeController) {
@@ -81,14 +79,9 @@ public class DFS extends MazeSolverWorker {
 			} else {
 				mazeController.reset();
 			}
-
-		} catch (CancellationException e) {
-//            mazeController.setInstructions("Generate a new Maze");
-//            mazeController.reset();
-		} catch (InterruptedException e) {
-//            mazeController.reset();
-		} catch (ExecutionException e) {
-//            mazeController.reset();
+		} catch (Exception e) {
+			// LOG
+			return;
 		}
 	}
 

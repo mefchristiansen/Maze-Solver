@@ -11,19 +11,24 @@ import java.awt.geom.Rectangle2D;
 
 class CellDrawable {
     private static final Color WALL = Color.white;
-    private static final int WALL_STROKE_SIZE = 2;
+	private static final Color CURRENT = Color.green;
+	private static final Color START = Color.cyan;
+	private static final Color END = Color.magenta;
+	private static final Color SOLUTION = Color.green;
+	private static final Color VISITING = Color.red;
+	private static final Color VISITED = Color.blue;
+
+    private static final int WALL_STROKE_SIZE = CellDrawableConstants.WALL_STROKE_SIZE;
     private static final Stroke WALL_STROKE = new BasicStroke(WALL_STROKE_SIZE);
-    private static final int SOLUTION_PATH_STROKE_SIZE = 1;
+    private static final int SOLUTION_PATH_STROKE_SIZE = CellDrawableConstants.SOLUTION_PATH_STROKE_SIZE;
     private static final Stroke SOLUTION_PATH_STROKE = new BasicStroke(SOLUTION_PATH_STROKE_SIZE);
-    private static final Color CURRENT = Color.green;
-    private static final Color START = Color.cyan;
-    private static final Color END = Color.magenta;
-    private static final Color SOLUTION = Color.green;
-    private static final Color VISITING = Color.red;
-    private static final Color VISITED = Color.blue;
-    private static final int SOLUTION_ROUTE_POINT_SCALING_FACTOR = 4;
+
     private static final int CELL_SIZE = CellDrawableConstants.CELL_SIZE;
     private static final int MARGIN = CellDrawableConstants.MARGIN;
+	private static final double SOLUTION_ROUTE_POINT_SIZE = CellDrawableConstants.SOLUTION_ROUTE_POINT_SIZE;
+	private static final double SOLUTION_ROUTE_POINT_OFFSET = CellDrawableConstants.SOLUTION_ROUTE_POINT_OFFSET;
+	private static final double SOLUTION_ROUTE_PATH_OFFSET = CellDrawableConstants.SOLUTION_ROUTE_PATH_OFFSET;
+	private static final double CELL_OFFSET = CellDrawableConstants.CELL_OFFSET;
 
     public static void drawCell(Cell cell, Graphics2D graphics2D, MazeState mazeState) {
         int cellX = cell.getCellX(MARGIN, CELL_SIZE);
@@ -102,27 +107,28 @@ class CellDrawable {
     }
 
     private static void drawSolutionPathComponent(Graphics2D graphics2D, Cell cell, int cellX, int cellY) {
-        double solutionRoutePointSize = (CELL_SIZE - (WALL_STROKE_SIZE / 2)) / SOLUTION_ROUTE_POINT_SCALING_FACTOR;
+        double solutionRoutePointX = cellX + SOLUTION_ROUTE_POINT_OFFSET;
+        double solutionRoutePointY = cellY + SOLUTION_ROUTE_POINT_OFFSET;
 
-        double solutionRoutePointX = cellX + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2) - (CELL_SIZE / (2 * SOLUTION_ROUTE_POINT_SCALING_FACTOR));
-        double solutionRoutePointY = cellY + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2) - (CELL_SIZE / (2 * SOLUTION_ROUTE_POINT_SCALING_FACTOR));
-
-        Ellipse2D.Double solutionRoutePoint = new Ellipse2D.Double(solutionRoutePointX, solutionRoutePointY, solutionRoutePointSize, solutionRoutePointSize);
+        Ellipse2D.Double solutionRoutePoint = new Ellipse2D.Double(solutionRoutePointX, solutionRoutePointY,
+				SOLUTION_ROUTE_POINT_SIZE, SOLUTION_ROUTE_POINT_SIZE);
         graphics2D.fill(solutionRoutePoint);
 
         if (cell.parent() != null) {
-            double solutionRoutePathPointStartX = cellX + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2);
-            double solutionRoutePathPointStartY = cellY + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2);
+            double solutionRoutePathPointStartX = cellX + SOLUTION_ROUTE_PATH_OFFSET;
+            double solutionRoutePathPointStartY = cellY + SOLUTION_ROUTE_PATH_OFFSET;
 
-            double solutionRoutePathPointEndX = cell.parent().getCellX(MARGIN, CELL_SIZE) + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2);
-            double solutionRoutePathPointEndY = cell.parent().getCellY(MARGIN, CELL_SIZE) + (WALL_STROKE_SIZE / 2) + (CELL_SIZE / 2);
+            double solutionRoutePathPointEndX = cell.parent().getCellX(MARGIN, CELL_SIZE) + SOLUTION_ROUTE_PATH_OFFSET;
+            double solutionRoutePathPointEndY = cell.parent().getCellY(MARGIN, CELL_SIZE) + SOLUTION_ROUTE_PATH_OFFSET;
 
             graphics2D.setStroke(SOLUTION_PATH_STROKE);
-            graphics2D.draw(new Line2D.Double(solutionRoutePathPointStartX, solutionRoutePathPointStartY, solutionRoutePathPointEndX, solutionRoutePathPointEndY));
+            graphics2D.draw(new Line2D.Double(solutionRoutePathPointStartX, solutionRoutePathPointStartY,
+					solutionRoutePathPointEndX, solutionRoutePathPointEndY));
         }
     }
 
     private static Rectangle2D.Double fillCell(int cellX, int cellY) {
-        return new Rectangle2D.Double(cellX + WALL_STROKE_SIZE / 2, cellY + WALL_STROKE_SIZE / 2, CELL_SIZE - WALL_STROKE_SIZE, CELL_SIZE - WALL_STROKE_SIZE);
+        return new Rectangle2D.Double(cellX + CELL_OFFSET, cellY + CELL_OFFSET,
+				CELL_SIZE - WALL_STROKE_SIZE, CELL_SIZE - WALL_STROKE_SIZE);
     }
 }
