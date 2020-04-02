@@ -5,13 +5,14 @@ import controller.listeners.*;
 import model.*;
 
 import view.MazeView;
-import view.drawable.MazeDrawableConstants;
 
 /**
- *
+ * The controller of the maze (i.e. the controller in the MVC design pattern). This is the main orchestrator of the
+ * application, initializing and controlling the maze and the maze view, handling GUI interactions, and managing the
+ * SwingWorker threads for maze generation, solving, and solution path drawing.
  */
 public class MazeController {
-    private MazeState state;
+    private MazeState state; // Stores the current state of the maze.
 	private int animationSpeed;
 	private int numRows;
 	private int numCols;
@@ -61,7 +62,7 @@ public class MazeController {
 
         this.view = new MazeView(maze, this);
 
-        this.animationSpeed = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
+        this.animationSpeed = MazeConstants.DEFAULT_ANIMATION_SLEEP;
 
         this.numRows = MazeConstants.DEFAULT_NUM_ROWS;
         this.numCols = MazeConstants.DEFAULT_NUM_COLS;
@@ -123,21 +124,29 @@ public class MazeController {
         this.animationSpeed = animationSpeed;
     }
 
+	/**
+	 * Returns the thread sleep time for animation based on the current animation speed (set by the speed slider) and
+	 * maze state. In an effort to limit the maximum speed of animation, the animation speed is scaled by a scaling
+	 * factor corresponding to the current maze state. As some stages are more interesting to visualize than others,
+	 * each stage has an individual scaling factor.
+	 *
+	 * @return the thread sleep time for animation
+	 */
     public long getAnimationSpeed() {
         double animationSpeedMultiplier;
 
         switch (state) {
             case GENERATING:
-                animationSpeedMultiplier = MazeDrawableConstants.GENERATION_SLEEP_TIME_MULTIPLIER;
+                animationSpeedMultiplier = MazeConstants.GENERATION_SLEEP_TIME_MULTIPLIER;
                 break;
             case SOLVING:
-                animationSpeedMultiplier = MazeDrawableConstants.SOLVE_SLEEP_TIME_MULTIPLIER;
+                animationSpeedMultiplier = MazeConstants.SOLVE_SLEEP_TIME_MULTIPLIER;
                 break;
             case SOLVED:
-                animationSpeedMultiplier = MazeDrawableConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;
+                animationSpeedMultiplier = MazeConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;
                 break;
             default:
-                animationSpeedMultiplier = MazeDrawableConstants.DEFAULT_ANIMATION_SLEEP;
+                animationSpeedMultiplier = MazeConstants.DEFAULT_ANIMATION_SLEEP;
                 break;
         }
 
@@ -160,6 +169,10 @@ public class MazeController {
         generator.execute();
     }
 
+	/**
+	 * Function called on maze generation success to update the maze state, and to default the starting and ending cell
+	 * for solving the maze.
+	 */
     public void generateMazeSuccess() {
         state = MazeState.GENERATED;
         maze.defaultWaypoints();
@@ -179,16 +192,26 @@ public class MazeController {
         solver.execute();
     }
 
+	/**
+	 * Function called on maze generation success to update the maze state, and to trigger the solution path walker.
+	 */
     public void solveMazeSuccess() {
         state = MazeState.SOLVED;
         walkSolutionPath();
     }
 
+	/**
+	 * Executes the solution path walker to draw the solution path from the starting cell to the ending cell.
+	 */
     private void walkSolutionPath() {
         solutionWalker = new MazeSolutionWalkerWorker(maze, this);
         solutionWalker.execute();
     }
 
+	/**
+	 * Resets the maze to its initial state, ready to generate a new maze. This includes cancelling all currently
+	 * running threads, resetting the maze cells, and repainting the view.
+	 */
     public void reset() {
         resetThreads();
 
@@ -198,6 +221,9 @@ public class MazeController {
         view.resetView();
     }
 
+	/**
+	 * Cancels any currently running SwingWorker.
+	 */
     private void resetThreads() {
         if (generator != null) {
             generator.cancel(true);
@@ -220,11 +246,16 @@ public class MazeController {
     }
 
 //    public void setInstructions(String instruction) {
-//        view.setInstructions(instruction);
+//		SwingUtilities.invokeLater(new Runnable() {
+//        	view.setInstructions(instruction);
+//		});
 //    }
 
-    /*
-        private void setEndpoints() {
+	/*
+		* Old function to force the user to select the start and end points for maze solving. In the current version,
+		* the user has a choice as to whether or not to set the start and end points.
+
+        private void setWaypoints() {
             synchronized (view) {
                 while(maze.startingCell == null || maze.endingCell == null) {
                     try {
@@ -235,5 +266,5 @@ public class MazeController {
                 }
             }
         }
-     */
+	 */
 }

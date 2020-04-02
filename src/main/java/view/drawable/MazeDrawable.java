@@ -6,6 +6,10 @@ import model.MazeState;
 
 import java.awt.*;
 
+/**
+ * Class responsible for the drawing of the maze. The maze is drawn by iterating through each cell, and drawing each
+ * cell.
+ */
 class MazeDrawable {
     public void drawMaze(Maze maze, Graphics graphics, MazeState mazeState) {
         Graphics2D graphics2D = (Graphics2D) graphics;

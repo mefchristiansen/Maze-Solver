@@ -7,8 +7,21 @@ import model.MazeSolverWorker;
 import controller.MazeController;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CancellationException;
 
+// TODO Comments
+
+/**
+ * A SwingWorker class (extending MazeGeneratorWorker) that implements the A* graph traversal and path finding
+ * algorithm. A* aims to find the path to the end point with the smallest cost (in this case, the shortest distance).
+ * At each iteration, the algorithm chooses the path that minimizes a cost function: f(n) = g(n) + h(n), where g(n) is
+ * the cost to the current node from the start node and h(n) is the estimate of the remaining cost to the end node using a heuristic. In
+ * this case, the heuristic (i.e. estimated cost), is the Manhattan Distance between the current and end node. Unlike
+ * BFS and DFS, A* is an informed search algorithm, meaning that it knows where the end node is, and uses this knowledge
+ * to make an informed guess as to which path is most efficient.
+ *
+ * https://en.wikipedia.org/wiki/A*_search_algorithm
+ */
 public class AStar extends MazeSolverWorker {
 	public AStar(Maze maze, MazeController mazeController) {
 		super(maze, mazeController);
@@ -16,38 +29,46 @@ public class AStar extends MazeSolverWorker {
 
 	@Override
 	protected Boolean doInBackground() throws Exception {
+		/*
+			The open set is the list of nodes that the algorithm can choose to traverse next
+		 */
 		List<Cell> openSet = new ArrayList<>();
 		Cell start = maze.getStartingCell();
 		Cell end = maze.getEndingCell();
 		Cell current;
-		int currentIndex, tentativeG;
+		int tentativeG;
 
-		start.setG(0);
-		start.setF(heuristic(start, end));
+		start.setGCost(0);
+		start.setHCost(manhattan_distance(start, end));
+		start.setFCost(start.getGCost() + start.getHCost());
 		start.setVisiting(true);
 		openSet.add(start);
 
 		while (!openSet.isEmpty()) {
-			currentIndex = lowestFIndex(openSet);
-			current = openSet.get(currentIndex);
+			current = lowestFScoreCell(openSet); // Pick the node with the lowest estimated cost
 
 			current.setCurrent(true);
 
-            publish(maze);
+            publish(maze); // Publish the current maze state to be repainted on the event dispatch thread
 
 			Thread.sleep(mazeController.getAnimationSpeed());
 
-			if (current == end) {
+			if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
 				maze.setGoal(current);
 				return true;
 			}
 
-			openSet.remove(currentIndex);
+			openSet.remove(current);
 			current.setVisiting(false);
 			current.setVisited(true);
 
 			List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
 
+			/*
+            	Add each valid unvisited neighbouring cell to the open set list to be visited later, and calculate its
+            	g (the cost to the current node from the start node) and h (the estimate of the remaining cost to the
+            	end node) cost to calculate f (the path's estimated total cost).
+             */
 			for (Cell neighbor : unvisitedNeighbors) {
 				if (!neighbor.visiting()) {
 					openSet.add(neighbor);
@@ -55,14 +76,19 @@ public class AStar extends MazeSolverWorker {
 					neighbor.setParent(current);
 				}
 
-				tentativeG = current.getG() + 1;
+				tentativeG = current.getGCost() + 1;
 
-				if (tentativeG >= neighbor.getG()) {
+				/*
+					If the cost to the neighbor via this path is greater then a previously traversed path,
+					then the previous path was better and we can ignore this new path.
+				 */
+				if (tentativeG >= neighbor.getGCost()) {
 					continue;
 				}
 
-				neighbor.setG(tentativeG);
-				neighbor.setF(neighbor.getG() + heuristic(neighbor, end));
+				neighbor.setGCost(tentativeG);
+				neighbor.setHCost(manhattan_distance(neighbor, end));
+				neighbor.setFCost(neighbor.getGCost() + neighbor.getHCost());
 			}
 
 			current.setCurrent(false);
@@ -71,6 +97,10 @@ public class AStar extends MazeSolverWorker {
 		return false;
 	}
 
+	/**
+	 * Override of the SwingWorker process function, which repaints the maze at every iteration of maze solving
+	 * asynchronously on the event dispatch thread.
+	 */
 	@Override
 	protected void process(List<Maze> chunks) {
 		for (Maze maze : chunks) {
@@ -78,27 +108,42 @@ public class AStar extends MazeSolverWorker {
 		}
 	}
 
+	/**
+	 * Override of the SwingWorker done function (run after the thread is completed). If the maze was successfully
+	 * solved, this will call the solveMazeSuccess method defined in the controller, which will trigger the walking of
+	 * the solution path. In the case of this SwingWorker being interrupted or cancelled, it will have been done by the
+	 * maze reset function in the controller, and any clean-up will be handled there. For other exceptions, these will
+	 * not have been triggered by the maze reset function, so that will trigger the maze reset function to clean up.
+	 */
 	@Override
 	protected void done() {
+		Boolean status;
+
 		try {
-			Boolean status = get();
+			status = get();
 
 			if (status) {
 				mazeController.solveMazeSuccess();
 			} else {
 				mazeController.reset();
 			}
-		} catch (ExecutionException e) {
+		} catch (CancellationException ignore) {
+		} catch (Exception e) {
 			mazeController.reset();
-		}
-		catch (Exception ignored) {
 		}
 	}
 
-	private List<Cell> unvisitedNeighbors(Cell currCell) {
+	/**
+	 * Iterates through all neighbours of the currently visited cell (up, down left, right), and returns all of the
+	 * valid neighbouring cells that have not already been visited.
+	 *
+	 * @param current The current cell
+	 * @return A list of valid (i.e. in bounds) neighbouring cells that have not already been visited
+	 */
+	private List<Cell> unvisitedNeighbors(Cell current) {
 	    List<Cell> unvisitedNeighbors = new ArrayList<>();
-	    int currRow = currCell.row();
-	    int currCol = currCell.col();
+	    int currRow = current.row();
+	    int currCol = current.col();
 	    int newRow, newCol;
 	    Cell nextCell;
 
@@ -112,7 +157,7 @@ public class AStar extends MazeSolverWorker {
 
 	        nextCell = maze.mazeCell(newRow, newCol);
 
-	        if (!nextCell.visited() && currCell.wallMissing(direction)) {
+	        if (!nextCell.visited() && current.wallMissing(direction)) {
 	            unvisitedNeighbors.add(nextCell);
 	        }
 	    }
@@ -120,25 +165,40 @@ public class AStar extends MazeSolverWorker {
 	    return unvisitedNeighbors;
 	}
 
-	private int lowestFIndex(List<Cell> openSet) {
-		int cellFValue;
-		int lowestFIndex = 0;
-		int lowestFValue = openSet.get(0).getF();
+	/**
+	 * Returns the cell from the open set with the lowest f score (the path's estimated total cost)
+	 *
+	 * @param openSet The current open set
+	 * @return The cell from the open set with the lowest f cost
+	 */
+	private Cell lowestFScoreCell(List<Cell> openSet) {
+		Cell lowestFScoreCell = openSet.get(0);
+		int lowestFScore = lowestFScoreCell.getFCost();
+		Cell cell;
+		int cellFScore;
 
 		for (int i = 1; i < openSet.size(); i++) {
-			cellFValue = openSet.get(i).getF();
+			cell = openSet.get(i);
+			cellFScore = cell.getFCost();
 
-			if (cellFValue < lowestFValue) {
-				lowestFIndex = i;
-				lowestFValue = cellFValue;
+			if (cellFScore < lowestFScore) {
+				lowestFScoreCell = cell;
+				lowestFScore = cellFScore;
 			}
 		}
 
-		return lowestFIndex;
+		return lowestFScoreCell;
 	}
 
-	// Manhattan Distance
-	private int heuristic(Cell neighbor, Cell end) {
-		return Math.abs(neighbor.row() - end.row()) + Math.abs(neighbor.col() - end.col());
+	/**
+	 * Calculates the Manhattan Distance (https://en.wikipedia.org/wiki/Taxicab_geometry) between a cell and the maze
+	 * ending cell
+	 *
+	 * @param cell A cell
+	 * @param end The maze ending
+	 * @return The Manhattan Distance between the two cells
+	 */
+	private int manhattan_distance(Cell cell, Cell end) {
+		return Math.abs(cell.row() - end.row()) + Math.abs(cell.col() - end.col());
 	}
 }

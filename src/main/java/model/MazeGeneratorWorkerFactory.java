@@ -3,9 +3,12 @@ package model;
 import controller.MazeController;
 import model.generators.*;
 
+/**
+ * The MazeGeneratorWorker factory.
+ */
 public class MazeGeneratorWorkerFactory {
-
-	public static MazeGeneratorWorker initMazeGenerator(GeneratorType generatorType, Maze maze, MazeController mazeController) {
+	public static MazeGeneratorWorker initMazeGenerator(GeneratorType generatorType, Maze maze,
+														MazeController mazeController) {
         if (maze == null || mazeController == null) {
             return null;
         }

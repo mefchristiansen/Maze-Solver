@@ -2,8 +2,15 @@ package model;
 
 import java.util.*;
 
+/**
+ * This class represents the cells in a maze. A maze consists of a 2D array of cells.
+ */
 public class Cell {
-
+	/**
+	 * This class represents the walls for a cell. Each cell has 4 walls, one in each direction (up, down, left, right).
+	 * A wall instance stores the coordinates of the wall in the maze, and a boolean indicating whether that wall is
+	 * present or not.
+	 */
 	public static class Wall {
 	    private final int xStart, yStart, xEnd, yEnd;
 	    private boolean present;
@@ -38,9 +45,19 @@ public class Cell {
 	}
 
 	private final int row, col;
-    private int f, g;
-    private final EnumMap<Direction, Wall> walls;
+	/**
+	 * The f and g scores used by the A* algorithm
+	 */
+    private int fCost, gCost, hCost;
+
+	/**
+	 * An EnumMap storing the walls for each direction for a cell
+	 */
+	private final EnumMap<Direction, Wall> walls;
 	private boolean current, visiting, visited, start, end, solution;
+	/**
+	 * The parent of the cell for walking the solution path
+	 */
 	private Cell parent;
 
 	public Cell(int row, int col) {
@@ -55,7 +72,7 @@ public class Cell {
 
 		current = visiting = visited = end = solution = false;
 		parent = null;
-		f = g = Integer.MAX_VALUE;
+		fCost = gCost = hCost = Integer.MAX_VALUE;
 	}
 
 	public int col() {
@@ -136,33 +153,53 @@ public class Cell {
 
 	public boolean getSolution() { return solution; }
 
-	public void setF(int f) {
-		this.f = f;
+	public void setFCost(int fCost) {
+		this.fCost = fCost;
 	}
 
-	public int getF() {
-		return f;
+	public int getFCost() {
+		return fCost;
 	}
 
-	public void setG(int g) {
-		this.g = g;
+	public void setGCost(int gCost) {
+		this.gCost = gCost;
 	}
 
-	public int getG() {
-		return g;
+	public int getGCost() {
+		return gCost;
 	}
 
-	public boolean pointInside(int x, int y, int scale, int margin) {
+	public int getHCost() { return hCost; }
+
+	public void setHCost(int hCost) { this.hCost = hCost; }
+
+	/**
+	 * Returns a boolean indicating whether a mouse click is inside the cell.
+	 *
+	 * @param mouseClickX The x coordinate of a mouse click
+	 * @param mouseClickY The y coordinate of a mouse click
+	 * @param scale The maze scale constant
+	 * @param margin The maze margin constant
+	 * @return Boolean indicating whether a mouse click is inside the cell.
+	 */
+	public boolean pointInside(int mouseClickX, int mouseClickY, int scale, int margin) {
 		int cellXStart = margin + col * scale;
 		int cellYStart = margin + row * scale;
 		int cellXEnd = cellXStart + scale;
 		int cellYEnd = cellYStart + scale;
 
-		return (x >= cellXStart && x <= cellXEnd) && (y >= cellYStart && y <= cellYEnd);
+		return (mouseClickX >= cellXStart && mouseClickX <= cellXEnd) &&
+				(mouseClickY >= cellYStart && mouseClickY <= cellYEnd);
 	}
 
-	public Direction directionToCell(Cell cell) {
-        int x_diff = cell.col() - this.col();
+	/**
+	 * Calculates the direction from a starting cell to a neighbouring cell.
+	 *
+	 * @param neighbour The neighbouring cell
+	 * @return The direction from the cell to the neighbouring cell
+	 */
+	public Direction directionToCell(Cell neighbour) {
+        int x_diff = neighbour.col() - this.col();
 
         if (x_diff > 0) {
             return Direction.RIGHT;
@@ -170,7 +207,7 @@ public class Cell {
             return Direction.LEFT;
         }
 
-        int y_diff = cell.row() - this.row();
+        int y_diff = neighbour.row() - this.row();
 
         if (y_diff > 0) {
             return Direction.DOWN;

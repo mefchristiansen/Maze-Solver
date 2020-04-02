@@ -3,6 +3,9 @@ package model;
 import controller.MazeController;
 import model.solvers.*;
 
+/**
+ * The MazeSolverWorker factory.
+ */
 public class MazeSolverWorkerFactory {
 
 	public static MazeSolverWorker initMazeSolver(SolverType solverType, Maze maze, MazeController mazeController) {
