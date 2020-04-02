@@ -7,6 +7,7 @@ import model.MazeSolverWorker;
 import controller.MazeController;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class BFS extends MazeSolverWorker {
 	public BFS(Maze maze, MazeController mazeController) {
@@ -37,15 +38,13 @@ public class BFS extends MazeSolverWorker {
 
             List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
 
-            if (unvisitedNeighbors != null) {
-                for (Cell neighbor : unvisitedNeighbors) {
-                    if (!neighbor.visiting()) {
-                        searchQueue.add(neighbor);
-                        neighbor.setVisiting(true);
-                        neighbor.setParent(current);
-                    }
-                }
-            }
+			for (Cell neighbor : unvisitedNeighbors) {
+				if (!neighbor.visiting()) {
+					searchQueue.add(neighbor);
+					neighbor.setVisiting(true);
+					neighbor.setParent(current);
+				}
+			}
 
             current.setVisiting(false);
             current.setCurrent(false);
@@ -71,9 +70,10 @@ public class BFS extends MazeSolverWorker {
             } else {
                 mazeController.reset();
             }
-		} catch (Exception e) {
-			// LOG
-			return;
+		} catch (ExecutionException e) {
+			mazeController.reset();
+		}
+		catch (Exception ignored) {
 		}
     }
 
@@ -99,6 +99,6 @@ public class BFS extends MazeSolverWorker {
 	        }
 	    }
 
-	    return unvisitedNeighbors.size() == 0 ? null : unvisitedNeighbors;
+	    return unvisitedNeighbors;
 	}
 }

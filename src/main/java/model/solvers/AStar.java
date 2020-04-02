@@ -7,6 +7,7 @@ import model.MazeSolverWorker;
 import controller.MazeController;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class AStar extends MazeSolverWorker {
 	public AStar(Maze maze, MazeController mazeController) {
@@ -26,7 +27,7 @@ public class AStar extends MazeSolverWorker {
 		start.setVisiting(true);
 		openSet.add(start);
 
-		while (openSet.size() != 0) {
+		while (!openSet.isEmpty()) {
 			currentIndex = lowestFIndex(openSet);
 			current = openSet.get(currentIndex);
 
@@ -47,23 +48,21 @@ public class AStar extends MazeSolverWorker {
 
 			List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
 
-			if (unvisitedNeighbors != null) {
-				for (Cell neighbor : unvisitedNeighbors) {
-					if (!neighbor.visiting()) {
-						openSet.add(neighbor);
-						neighbor.setVisiting(true);
-						neighbor.setParent(current);
-					}
-
-					tentativeG = current.getG() + 1;
-
-					if (tentativeG >= neighbor.getG()) {
-						continue;
-					}
-
-					neighbor.setG(tentativeG);
-					neighbor.setF(neighbor.getG() + heuristic(neighbor, end));
+			for (Cell neighbor : unvisitedNeighbors) {
+				if (!neighbor.visiting()) {
+					openSet.add(neighbor);
+					neighbor.setVisiting(true);
+					neighbor.setParent(current);
 				}
+
+				tentativeG = current.getG() + 1;
+
+				if (tentativeG >= neighbor.getG()) {
+					continue;
+				}
+
+				neighbor.setG(tentativeG);
+				neighbor.setF(neighbor.getG() + heuristic(neighbor, end));
 			}
 
 			current.setCurrent(false);
@@ -89,9 +88,10 @@ public class AStar extends MazeSolverWorker {
 			} else {
 				mazeController.reset();
 			}
-		} catch (Exception e) {
-			// LOG
-			return;
+		} catch (ExecutionException e) {
+			mazeController.reset();
+		}
+		catch (Exception ignored) {
 		}
 	}
 
@@ -117,19 +117,24 @@ public class AStar extends MazeSolverWorker {
 	        }
 	    }
 
-	    return unvisitedNeighbors.size() == 0 ? null : unvisitedNeighbors;
+	    return unvisitedNeighbors;
 	}
 
 	private int lowestFIndex(List<Cell> openSet) {
-		int lowestIndex = 0;
+		int cellFValue;
+		int lowestFIndex = 0;
+		int lowestFValue = openSet.get(0).getF();
 
 		for (int i = 1; i < openSet.size(); i++) {
-			if (openSet.get(i).getF() < openSet.get(lowestIndex).getF()) {
-				lowestIndex = i;
+			cellFValue = openSet.get(i).getF();
+
+			if (cellFValue < lowestFValue) {
+				lowestFIndex = i;
+				lowestFValue = cellFValue;
 			}
 		}
 
-		return lowestIndex;
+		return lowestFIndex;
 	}
 
 	// Manhattan Distance

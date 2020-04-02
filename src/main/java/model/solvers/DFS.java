@@ -7,6 +7,7 @@ import model.MazeSolverWorker;
 import controller.MazeController;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class DFS extends MazeSolverWorker {
 	public DFS(Maze maze, MazeController mazeController) {
@@ -79,9 +80,10 @@ public class DFS extends MazeSolverWorker {
 			} else {
 				mazeController.reset();
 			}
-		} catch (Exception e) {
-			// LOG
-			return;
+		} catch (ExecutionException e) {
+			mazeController.reset();
+		}
+		catch (Exception ignored) {
 		}
 	}
 

@@ -7,6 +7,9 @@ import model.*;
 import view.MazeView;
 import view.drawable.MazeDrawableConstants;
 
+/**
+ *
+ */
 public class MazeController {
     private MazeState state;
 	private int animationSpeed;

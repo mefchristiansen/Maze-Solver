@@ -7,6 +7,7 @@ import model.MazeGeneratorWorker;
 import controller.MazeController;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class RecursiveBacktracker extends MazeGeneratorWorker {
 	public RecursiveBacktracker(Maze maze, MazeController mazeController) {
@@ -64,7 +65,7 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
         }
     }
 
-    @Override
+	    @Override
     protected void done() {
 	    try {
             Boolean status = get();
@@ -74,9 +75,10 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
             } else {
                 mazeController.reset();
             }
-        } catch (Exception e) {
-	    	// LOG
-	    	return;
+        } catch (ExecutionException e) {
+			mazeController.reset();
+		}
+	    catch (Exception ignored) {
         }
     }
 
