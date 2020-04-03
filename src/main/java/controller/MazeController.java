@@ -6,6 +6,8 @@ import model.*;
 
 import view.MazeView;
 
+import javax.swing.*;
+
 /**
  * The controller of the maze (i.e. the controller in the MVC design pattern). This is the main orchestrator of the
  * application, initializing and controlling the maze and the maze view, handling GUI interactions, and managing the
@@ -166,6 +168,7 @@ public class MazeController {
 
     private void generateMaze() {
         state = MazeState.GENERATING;
+		setInstructions();
         generator.execute();
     }
 
@@ -176,6 +179,7 @@ public class MazeController {
     public void generateMazeSuccess() {
         state = MazeState.GENERATED;
         maze.defaultWaypoints();
+		setInstructions();
     }
 
     public void solve() {
@@ -189,6 +193,7 @@ public class MazeController {
 
     private void solveMaze() {
         state = MazeState.SOLVING;
+		setInstructions();
         solver.execute();
     }
 
@@ -198,6 +203,7 @@ public class MazeController {
     public void solveMazeSuccess() {
         state = MazeState.SOLVED;
         walkSolutionPath();
+		setInstructions();
     }
 
 	/**
@@ -216,6 +222,7 @@ public class MazeController {
         resetThreads();
 
         state = MazeState.INIT;
+		setInstructions();
 
         maze.resetMaze();
         view.resetView();
@@ -245,11 +252,11 @@ public class MazeController {
         view.repaintMaze(newMaze);
     }
 
-//    public void setInstructions(String instruction) {
-//		SwingUtilities.invokeLater(new Runnable() {
-//        	view.setInstructions(instruction);
-//		});
-//    }
+    public void setInstructions() {
+    	String instruction = state.getInstruction();
+
+		SwingUtilities.invokeLater(() -> view.setInstructions(instruction));
+    }
 }
 
 /*

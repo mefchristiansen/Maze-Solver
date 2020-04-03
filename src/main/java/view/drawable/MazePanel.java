@@ -26,7 +26,7 @@ public class MazePanel extends JPanel {
     private final MazeController mazeController;
     private final MazeDrawable mazeDrawable;
     private WaypointState waypointState;
-    private int yOffset;
+    private int yOffset, xOffset;
     private Dimension mazeDimension;
 
     public MazePanel(Maze maze, MazeController mazeController) {
@@ -34,24 +34,11 @@ public class MazePanel extends JPanel {
     	this.mazeController = mazeController;
         this.mazeDrawable = new MazeDrawable();
         this.waypointState = WaypointState.START;
-        this.yOffset = 0;
+        this.yOffset = this.xOffset = 0;
         this.mazeDimension = new Dimension();
 
         initMazePanel();
     }
-
-	/**
-	 * @param panelHeight
-	 */
-    public void setYOffset(int panelHeight) {
-    	int heightDifference = (int)(panelHeight - mazeDimension.getHeight());
-
-    	if (heightDifference > 0) {
-    		yOffset = heightDifference / 2;
-		} else {
-			yOffset = 0;
-		}
-	}
 
     private void initMazePanel() {
         int mazeWidth = maze.numCols() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
@@ -67,6 +54,29 @@ public class MazePanel extends JPanel {
         repaint();
     }
 
+	/**
+	 * Calculate the x and y offsets to account for a change in the number of rows and columns.
+	 *
+	 * @param panelWidth The maze panel width
+	 * @param panelHeight The maze panel height
+	 */
+	public void setOffset(int panelWidth, int panelHeight) {
+		int widthDifference = (int)(panelWidth - mazeDimension.getWidth());
+		int heightDifference = (int)(panelHeight - mazeDimension.getHeight());
+
+		if (widthDifference > 0) {
+			xOffset = widthDifference / 2;
+		} else {
+			xOffset = 0;
+		}
+
+		if (heightDifference > 0) {
+			yOffset = heightDifference / 2;
+		} else {
+			yOffset = 0;
+		}
+	}
+
     public void repaintMaze(Maze maze) {
         this.maze = maze;
         repaint();
@@ -76,7 +86,7 @@ public class MazePanel extends JPanel {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         MazeState mazeState = mazeController.getState();
-        mazeDrawable.drawMaze(maze, graphics, mazeState, yOffset);
+        mazeDrawable.drawMaze(maze, graphics, mazeState, xOffset, yOffset);
     }
 
 	/**
@@ -103,18 +113,24 @@ public class MazePanel extends JPanel {
     public void setWaypoint(int mouseClickX, int mouseClickY) {
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {
-                Cell cell = maze.mazeCell(r,c);
+                Cell cell = maze.mazeCell(r, c);
                 if (cell.pointInside(mouseClickX, mouseClickY, CellDrawableConstants.CELL_SIZE,
-						CellDrawableConstants.MARGIN)) { // Check if the click is in the specific cell
-                    if (waypointState == WaypointState.START) {
+						CellDrawableConstants.MARGIN, xOffset, yOffset)) { // Check if the click is in the specific cell
+
+					// Ensure that the start and end point can't be the same cells
+                    if (waypointState == WaypointState.START && !cell.getEnd()) {
                         maze.setStartingCell(cell);
                         waypointState = WaypointState.END; // Switch to setting end point
                         repaint();
-					// Ensure that the start and endpoint can't be the same cells
+
+                        return;
+					// Ensure that the start and end point can't be the same cells
                     } else if (waypointState == WaypointState.END && !cell.getStart()) {
                         maze.setEndingCell(cell);
                         waypointState = WaypointState.START; // Switch to setting start point
                         repaint();
+
+                        return;
                     }
                 }
             }

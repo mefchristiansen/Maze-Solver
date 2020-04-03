@@ -14,15 +14,17 @@ import java.awt.*;
  * as an intermediary between the controller and between each of the its child panels.
  */
 public class MazeView extends JFrame {
+	private final MazeController mazeController;
     private final MazePanel mazePanel;
     private final GUIPanel guiPanel;
-//    private final JLabel instructions;
+    private final JLabel instructions;
 
     public MazeView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
+        this.mazeController = mazeController;
         this.guiPanel = new GUIPanel(mazeController);
 		this.mazePanel = new MazePanel(maze, mazeController);
-//        this.instructions = new JLabel();
+        this.instructions = new JLabel();
 
         initDisplay();
     }
@@ -32,7 +34,7 @@ public class MazeView extends JFrame {
         setResizable(false);
         setLayout(new GridBagLayout());
 
-//        instructions.setText("Generate a maze");
+        instructions.setText(mazeController.getState().getInstruction());
 
         addComponent(mazePanel, 0, 0, 2, 1, GridBagConstraints.CENTER,
 				GridBagConstraints.BOTH);
@@ -45,9 +47,9 @@ public class MazeView extends JFrame {
         setVisible(true);
     }
 
-//    public void setInstructions(String instruction) {
-//        instructions.setText(instruction);
-//    }
+    public void setInstructions(String instruction) {
+        instructions.setText(instruction);
+    }
 
 	/**
 	 * Resizes the maze panel to account for a change in the number of rows and columns.
@@ -55,7 +57,7 @@ public class MazeView extends JFrame {
     public void resize() {
         mazePanel.resize();
         pack();
-        mazePanel.setYOffset(mazePanel.getHeight());
+        mazePanel.setOffset(mazePanel.getWidth(), mazePanel.getHeight());
 		mazePanel.repaint();
     }
 

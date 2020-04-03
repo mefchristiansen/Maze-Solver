@@ -182,9 +182,9 @@ public class Cell {
 	 * @param margin The maze margin constant
 	 * @return Boolean indicating whether a mouse click is inside the cell.
 	 */
-	public boolean pointInside(int mouseClickX, int mouseClickY, int scale, int margin) {
-		int cellXStart = margin + col * scale;
-		int cellYStart = margin + row * scale;
+	public boolean pointInside(int mouseClickX, int mouseClickY, int scale, int margin, int xOffset, int yOffset) {
+		int cellXStart = (col * scale) + margin + xOffset;
+		int cellYStart = (row * scale) + margin + yOffset;
 		int cellXEnd = cellXStart + scale;
 		int cellYEnd = cellYStart + scale;
 

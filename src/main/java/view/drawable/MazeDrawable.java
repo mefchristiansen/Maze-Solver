@@ -17,15 +17,16 @@ class MazeDrawable {
 	 * @param maze A maze instance
 	 * @param graphics A Graphics instance
 	 * @param mazeState The current state of the maze
-	 * @param yOffSet The vertical offset to center the maze
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 */
-    public void drawMaze(Maze maze, Graphics graphics, MazeState mazeState, int yOffSet) {
+    public void drawMaze(Maze maze, Graphics graphics, MazeState mazeState, int xOffset, int yOffset) {
         Graphics2D graphics2D = (Graphics2D) graphics;
 
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {
                 Cell cell = maze.mazeCell(r,c);
-                CellDrawable.drawCell(cell, graphics2D, mazeState, yOffSet);
+                CellDrawable.drawCell(cell, graphics2D, mazeState, xOffset, yOffset);
             }
         }
     }

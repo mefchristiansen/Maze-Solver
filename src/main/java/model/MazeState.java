@@ -4,5 +4,17 @@ package model;
  * The potential states for the maze to be in.
  */
 public enum MazeState {
-    INIT, GENERATING, GENERATED, SOLVING, SOLVED
+    INIT(MazeInstructionConstants.INIT), GENERATING(MazeInstructionConstants.GENERATING),
+	GENERATED(MazeInstructionConstants.GENERATED), SOLVING(MazeInstructionConstants.SOLVING),
+	SOLVED(MazeInstructionConstants.SOLVED);
+
+	public final String instruction;
+
+	MazeState(String instruction) {
+		this.instruction = instruction;
+	}
+
+	public String getInstruction() {
+		return instruction;
+	}
 }
