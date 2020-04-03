@@ -49,6 +49,9 @@ public class MazeView extends JFrame {
 //        instructions.setText(instruction);
 //    }
 
+	/**
+	 * Resizes the maze panel to account for a change in the number of rows and columns.
+	 */
     public void resize() {
         mazePanel.resize();
         pack();
@@ -56,6 +59,9 @@ public class MazeView extends JFrame {
 		mazePanel.repaint();
     }
 
+	/**
+	 * Resets the view after the reset action is triggered.
+	 */
     public void resetView() {
         mazePanel.resetWaypointSetterState();
         mazePanel.repaint();
@@ -65,7 +71,19 @@ public class MazeView extends JFrame {
         mazePanel.repaintMaze(maze);
     }
 
-	private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor, int fill) {
+	/**
+	 * Add a component to the maze view
+	 *
+	 * @param component The component to add to the view
+	 * @param gridx The component's x coordinate in the GridBayLayout
+	 * @param gridy The component's y coordinate in the GridBayLayout
+	 * @param gridwidth The GridBayLayout grid width
+	 * @param gridheight The GridBayLayout grid height
+	 * @param anchor The component's anchor in the GridBayLayout
+	 * @param fill The component's fill in the GridBayLayout
+	 */
+	private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor,
+							  int fill) {
         Insets insets = new Insets(5, 5, 5, 5);
         GridBagConstraints gbc = new GridBagConstraints(gridx, gridy, gridwidth, gridheight, 1.0, 1.0,
                 anchor, fill, insets, 0, 0);

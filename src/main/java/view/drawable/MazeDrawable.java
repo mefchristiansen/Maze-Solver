@@ -12,10 +12,12 @@ import java.awt.*;
  */
 class MazeDrawable {
 	/**
-	 * @param maze
-	 * @param graphics
-	 * @param mazeState
-	 * @param yOffSet
+	 * Iterates through and draws individual cells of the maze to draw the entire maze.
+	 *
+	 * @param maze A maze instance
+	 * @param graphics A Graphics instance
+	 * @param mazeState The current state of the maze
+	 * @param yOffSet The vertical offset to center the maze
 	 */
     public void drawMaze(Maze maze, Graphics graphics, MazeState mazeState, int yOffSet) {
         Graphics2D graphics2D = (Graphics2D) graphics;

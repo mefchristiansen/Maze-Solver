@@ -26,15 +26,6 @@ public class MazeWaypointClickListener extends MouseAdapter {
 		if (canSet()) {
 			mazePanel.setWaypoint(mouseEvent.getX(), mouseEvent.getY());
 		}
-
-		/*
-			synchronized (view) {
-				if (canSet()) {
-					this.view.mazePanel.setWaypoint(e.getX(), e.getY());
-				}
-				view.notify();
-			}
-		*/
 	}
 
 	/**
@@ -47,3 +38,22 @@ public class MazeWaypointClickListener extends MouseAdapter {
 	}
 
 }
+
+/*
+
+	* Old method used in unison with method in controller to force the user to select the start and end points for maze
+	* solving. In the current version, the user has a choice as to whether or not to set the start and end points.
+
+	@Override
+	public void mouseReleased(MouseEvent mouseEvent) {
+		if (canSet()) {
+			synchronized (view) {
+				if (canSet()) {
+					this.view.mazePanel.setWaypoint(e.getX(), e.getY());
+				}
+				view.notify();
+			}
+		}
+	}
+
+*/

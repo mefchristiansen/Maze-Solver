@@ -250,9 +250,11 @@ public class MazeController {
 //        	view.setInstructions(instruction);
 //		});
 //    }
+}
 
-	/*
-		* Old function to force the user to select the start and end points for maze solving. In the current version,
+/*
+
+		* Old method to force the user to select the start and end points for maze solving. In the current version,
 		* the user has a choice as to whether or not to set the start and end points.
 
         private void setWaypoints() {
@@ -266,5 +268,5 @@ public class MazeController {
                 }
             }
         }
-	 */
-}
+
+*/
