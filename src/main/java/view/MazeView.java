@@ -20,8 +20,8 @@ public class MazeView extends JFrame {
 
     public MazeView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
-        this.mazePanel = new MazePanel(maze, mazeController);
         this.guiPanel = new GUIPanel(mazeController);
+		this.mazePanel = new MazePanel(maze, mazeController);
 //        this.instructions = new JLabel();
 
         initDisplay();
@@ -52,6 +52,8 @@ public class MazeView extends JFrame {
     public void resize() {
         mazePanel.resize();
         pack();
+        mazePanel.setYOffset(mazePanel.getHeight());
+		mazePanel.repaint();
     }
 
     public void resetView() {

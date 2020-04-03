@@ -11,13 +11,19 @@ import java.awt.*;
  * cell.
  */
 class MazeDrawable {
-    public void drawMaze(Maze maze, Graphics graphics, MazeState mazeState) {
+	/**
+	 * @param maze
+	 * @param graphics
+	 * @param mazeState
+	 * @param yOffSet
+	 */
+    public void drawMaze(Maze maze, Graphics graphics, MazeState mazeState, int yOffSet) {
         Graphics2D graphics2D = (Graphics2D) graphics;
 
         for (int r = 0; r < maze.numRows(); r++) {
             for (int c = 0; c < maze.numCols(); c++) {
                 Cell cell = maze.mazeCell(r,c);
-                CellDrawable.drawCell(cell, graphics2D, mazeState);
+                CellDrawable.drawCell(cell, graphics2D, mazeState, yOffSet);
             }
         }
     }

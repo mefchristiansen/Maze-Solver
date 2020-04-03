@@ -26,21 +26,38 @@ public class MazePanel extends JPanel {
     private final MazeController mazeController;
     private final MazeDrawable mazeDrawable;
     private WaypointState waypointState;
+    private int yOffset;
+    private Dimension mazeDimension;
 
     public MazePanel(Maze maze, MazeController mazeController) {
     	this.maze = maze;
     	this.mazeController = mazeController;
         this.mazeDrawable = new MazeDrawable();
         this.waypointState = WaypointState.START;
+        this.yOffset = 0;
+        this.mazeDimension = new Dimension();
 
         initMazePanel();
     }
+
+	/**
+	 * @param panelHeight
+	 */
+    public void setYOffset(int panelHeight) {
+    	int heightDifference = (int)(panelHeight - mazeDimension.getHeight());
+
+    	if (heightDifference > 0) {
+    		yOffset = heightDifference / 2;
+		} else {
+			yOffset = 0;
+		}
+	}
 
     private void initMazePanel() {
         int mazeWidth = maze.numCols() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
         int mazeHeight = maze.numRows() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
 
-        Dimension mazeDimension = new Dimension(mazeWidth, mazeHeight);
+        mazeDimension = new Dimension(mazeWidth, mazeHeight);
         setMinimumSize(mazeDimension);
         setPreferredSize(mazeDimension);
         setBackground(BACKGROUND);
@@ -59,7 +76,7 @@ public class MazePanel extends JPanel {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         MazeState mazeState = mazeController.getState();
-        mazeDrawable.drawMaze(maze, graphics, mazeState);
+        mazeDrawable.drawMaze(maze, graphics, mazeState, yOffset);
     }
 
 	/**
@@ -70,10 +87,9 @@ public class MazePanel extends JPanel {
         int mazeWidth = maze.numCols() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
         int mazeHeight = maze.numRows() * CellDrawableConstants.CELL_SIZE + CellDrawableConstants.MARGIN * 2;
 
-        Dimension mazeDimension = new Dimension(mazeWidth, mazeHeight);
+		mazeDimension = new Dimension(mazeWidth, mazeHeight);
         setMinimumSize(mazeDimension);
         setPreferredSize(mazeDimension);
-        repaint();
     }
 
 	/**
