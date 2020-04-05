@@ -1,5 +1,8 @@
 package view.drawable;
 
+/**
+ * Constants for cell drawing
+ */
 class CellDrawableConstants {
     static final int CELL_SIZE = 20;
     static final int MARGIN = 10;

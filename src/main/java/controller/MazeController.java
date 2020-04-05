@@ -64,7 +64,7 @@ public class MazeController {
 
         this.view = new MazeView(maze, this);
 
-        this.animationSpeed = MazeConstants.DEFAULT_ANIMATION_SLEEP;
+        this.animationSpeed = MazeAnimationConstants.DEFAULT_ANIMATION_SLEEP;
 
         this.numRows = MazeConstants.DEFAULT_NUM_ROWS;
         this.numCols = MazeConstants.DEFAULT_NUM_COLS;
@@ -139,16 +139,16 @@ public class MazeController {
 
         switch (state) {
             case GENERATING:
-                animationSpeedMultiplier = MazeConstants.GENERATION_SLEEP_TIME_MULTIPLIER;
+                animationSpeedMultiplier = MazeAnimationConstants.GENERATION_SLEEP_TIME_MULTIPLIER;
                 break;
             case SOLVING:
-                animationSpeedMultiplier = MazeConstants.SOLVE_SLEEP_TIME_MULTIPLIER;
+                animationSpeedMultiplier = MazeAnimationConstants.SOLVE_SLEEP_TIME_MULTIPLIER;
                 break;
             case SOLVED:
-                animationSpeedMultiplier = MazeConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;
+                animationSpeedMultiplier = MazeAnimationConstants.SOLUTION_SLEEP_TIME_MULTIPLIER;
                 break;
             default:
-                animationSpeedMultiplier = MazeConstants.DEFAULT_ANIMATION_SLEEP;
+                animationSpeedMultiplier = MazeAnimationConstants.DEFAULT_ANIMATION_SLEEP;
                 break;
         }
 
@@ -252,10 +252,11 @@ public class MazeController {
         view.repaintMaze(newMaze);
     }
 
+	/**
+	 * Updates instructions for maze on the GUI (based on the maze state) asynchronously.
+	 */
     public void setInstructions() {
-    	String instruction = state.getInstruction();
-
-		SwingUtilities.invokeLater(() -> view.setInstructions(instruction));
+		SwingUtilities.invokeLater(() -> view.setInstructions());
     }
 }
 

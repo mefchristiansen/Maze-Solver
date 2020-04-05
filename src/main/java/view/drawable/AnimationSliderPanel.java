@@ -1,7 +1,7 @@
 package view.drawable;
 
 import controller.listeners.MazeAnimationSpeedSliderListener;
-import model.MazeConstants;
+import model.MazeAnimationConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +15,8 @@ class AnimationSliderPanel extends JPanel {
     public AnimationSliderPanel(MazeAnimationSpeedSliderListener mazeAnimationSpeedSliderListener) {
         setLayout(new GridBagLayout());
 
-        JSlider mazeAnimationSpeedSlider = new JSlider(JSlider.HORIZONTAL, MazeConstants.MINIMUM_ANIMATION_SLEEP,
-                MazeConstants.MAXIMUM_ANIMATION_SLEEP, MazeConstants.DEFAULT_ANIMATION_SLEEP);
+        JSlider mazeAnimationSpeedSlider = new JSlider(JSlider.HORIZONTAL, MazeAnimationConstants.MINIMUM_ANIMATION_SLEEP,
+                MazeAnimationConstants.MAXIMUM_ANIMATION_SLEEP, MazeAnimationConstants.DEFAULT_ANIMATION_SLEEP);
         mazeAnimationSpeedSlider.setInverted(true);
         mazeAnimationSpeedSlider.addChangeListener(mazeAnimationSpeedSliderListener);
 

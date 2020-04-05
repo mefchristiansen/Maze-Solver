@@ -2,6 +2,7 @@ package view;
 
 import model.Maze;
 import controller.MazeController;
+import view.drawable.InstructionsPanel;
 import view.drawable.MazePanel;
 import view.drawable.GUIPanel;
 
@@ -17,14 +18,14 @@ public class MazeView extends JFrame {
 	private final MazeController mazeController;
     private final MazePanel mazePanel;
     private final GUIPanel guiPanel;
-    private final JLabel instructions;
+    private final InstructionsPanel instructionsPanel;
 
     public MazeView(Maze maze, MazeController mazeController) {
         super("Maze Solver - Marcus Christiansen");
         this.mazeController = mazeController;
         this.guiPanel = new GUIPanel(mazeController);
 		this.mazePanel = new MazePanel(maze, mazeController);
-        this.instructions = new JLabel();
+        this.instructionsPanel = new InstructionsPanel();
 
         initDisplay();
     }
@@ -34,21 +35,27 @@ public class MazeView extends JFrame {
         setResizable(false);
         setLayout(new GridBagLayout());
 
-        instructions.setText(mazeController.getState().getInstruction());
+		Insets insets = new Insets(5, 5, 5, 5);
 
-        addComponent(mazePanel, 0, 0, 2, 1, GridBagConstraints.CENTER,
-				GridBagConstraints.BOTH);
+		addComponent(mazePanel, 0, 0, 2, 1, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, insets);
         addComponent(guiPanel, 2, 0, 1, 1, GridBagConstraints.NORTH,
-				GridBagConstraints.HORIZONTAL);
-//        addComponent(instructions, 0, 1, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
+				GridBagConstraints.HORIZONTAL, insets);
+		addComponent(instructionsPanel, 0, 1, 2, 1, GridBagConstraints.CENTER,
+				GridBagConstraints.BOTH, insets);
 
-        pack();
+		setInstructions();
 
         setVisible(true);
+		pack();
     }
 
-    public void setInstructions(String instruction) {
-        instructions.setText(instruction);
+	/**
+	 * Sets the maze instructions (based on maze state) and adjusts the view size to account for changes in text.
+	 */
+    public void setInstructions() {
+        instructionsPanel.setInstructions(mazeController.getState().getInstruction());
+        pack();
     }
 
 	/**
@@ -85,8 +92,8 @@ public class MazeView extends JFrame {
 	 * @param fill The component's fill in the GridBayLayout
 	 */
 	private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor,
-							  int fill) {
-        Insets insets = new Insets(5, 5, 5, 5);
+							  int fill, Insets insets) {
+
         GridBagConstraints gbc = new GridBagConstraints(gridx, gridy, gridwidth, gridheight, 1.0, 1.0,
                 anchor, fill, insets, 0, 0);
         getContentPane().add(component, gbc);
