@@ -12,9 +12,9 @@ import java.util.concurrent.CancellationException;
 /**
  * A SwingWorker class (extending MazeGeneratorWorker) that implements the DFS graph traversal algorithm. This algorithm
  * traverses a graph by starting at the root node (in this case the starting cell), and explores as far as possible
- * along a specific branch before backtracking. This uses the opposite strategy compared to BFS. This algorithm can be implemented either recursively or iteratively (I
- * implemented it using the iterative approach). The algorithm uses a Stack to keep track of all the previously visited
- * nodes which it will pop off when backtracking.
+ * along a specific branch before backtracking. This uses the opposite strategy compared to BFS. This algorithm can be
+ * implemented either recursively or iteratively (I implemented it using the iterative approach). The algorithm uses a
+ * Stack to keep track of all the previously visited nodes which it will pop off when backtracking.
  *
  * https://en.wikipedia.org/wiki/Depth-first_search
  */
