@@ -40,6 +40,8 @@ class CellDrawable {
 	 * @param cell The cell to be drawn
 	 * @param graphics2D A Graphics2D instance
 	 * @param mazeState The current state of the maze
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 */
     public static void drawCell(Cell cell, Graphics2D graphics2D, MazeState mazeState, int xOffset, int yOffset) {
         int cellX = cell.getCellX(MARGIN, CELL_SIZE);
@@ -73,6 +75,8 @@ class CellDrawable {
 	 * @param cell The current cell to draw
 	 * @param cellX The cells top left x coordinate in the maze panel
 	 * @param cellY The cells top left y coordinate in the maze panel
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 */
 	private static void drawCellWalls(Graphics2D graphics2D, Cell cell, int cellX, int cellY, int xOffset,
 									  int yOffset) {
@@ -99,6 +103,8 @@ class CellDrawable {
 	 * @param cell The current cell to draw
 	 * @param cellX The cells top left x coordinate in the maze panel
 	 * @param cellY The cells top left y coordinate in the maze panel
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 */
     private static void generatedCellDraw(Graphics2D graphics2D, Cell cell, int cellX, int cellY, int xOffset,
 										  int yOffset) {
@@ -118,6 +124,8 @@ class CellDrawable {
 	 * @param cell The current cell to draw
 	 * @param cellX The cells top left x coordinate in the maze panel
 	 * @param cellY The cells top left y coordinate in the maze panel
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 */
     private static void solvingCellDraw(Graphics2D graphics2D, Cell cell, int cellX, int cellY, int xOffset,
 										int yOffset) {
@@ -145,6 +153,8 @@ class CellDrawable {
 	 * @param cell The current cell to draw
 	 * @param cellX The cells top left x coordinate in the maze panel
 	 * @param cellY The cells top left y coordinate in the maze panel
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 */
     private static void solvedCellDraw(Graphics2D graphics2D, Cell cell, int cellX, int cellY, int xOffset,
 									   int yOffset) {
@@ -161,6 +171,8 @@ class CellDrawable {
 	 * @param cell The current cell to draw (in the solution path)
 	 * @param cellX The cells top left x coordinate in the maze panel
 	 * @param cellY The cells top left y coordinate in the maze panel
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 */
     private static void drawSolutionPathComponent(Graphics2D graphics2D, Cell cell, int cellX, int cellY, int xOffset,
 												  int yOffset) {
@@ -191,6 +203,8 @@ class CellDrawable {
 	 *
 	 * @param cellX The cells top left x coordinate in the maze panel
 	 * @param cellY The cells top left y coordinate in the maze panel
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 * @return A Rectangle2D to fill a cell
 	 */
     private static Rectangle2D.Double fillCell(int cellX, int cellY, int xOffset, int yOffset) {

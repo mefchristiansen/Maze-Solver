@@ -180,6 +180,8 @@ public class Cell {
 	 * @param mouseClickY The y coordinate of a mouse click
 	 * @param scale The maze scale constant
 	 * @param margin The maze margin constant
+	 * @param xOffset The x offset
+	 * @param yOffset The y offset
 	 * @return Boolean indicating whether a mouse click is inside the cell.
 	 */
 	public boolean pointInside(int mouseClickX, int mouseClickY, int scale, int margin, int xOffset, int yOffset) {

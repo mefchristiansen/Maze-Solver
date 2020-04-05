@@ -3,8 +3,8 @@ apply plugin: 'idea'
 apply plugin:'application'
 
 javadoc {
-    source = sourceSets.main.allJava
-    classpath = configurations.compile
+	source = sourceSets.main.allJava
+	classpath = configurations.compile
 }
 
 mainClassName = "MazeSolver"

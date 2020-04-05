@@ -7,8 +7,15 @@ end points, the solution algorithm, as well as vary the animation speed.
 
 ![Maze Solver Demo](maze.gif)
 
+The application is written in Java 9.
+
 See here for a quick write up of the project: LINK
 
 ## Installation
 
+I used the Gradle build tool to build and run the application.
 
+See here for Gradle installation instructions: https://gradle.org/install/
+
+To build and run the application, run the following command:
+`gradle run`
