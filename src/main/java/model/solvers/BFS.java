@@ -47,7 +47,7 @@ public class BFS extends MazeSolverWorker {
             List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
 
             /*
-            	Add each valid unvisited neighbouring cell to the Queue to be visited later
+            	Add each valid unvisited neighboring cell to the Queue to be visited later
              */
 			for (Cell neighbor : unvisitedNeighbors) {
 				if (!neighbor.visiting()) {
@@ -102,10 +102,10 @@ public class BFS extends MazeSolverWorker {
 
 	/**
 	 * Iterates through all neighbours of the currently visited cell (up, down left, right), and returns all of the
-	 * valid neighbouring cells that have not already been visited.
+	 * valid neighboring cells that have not already been visited.
 	 *
 	 * @param current The current cell
-	 * @return A list of valid (i.e. in bounds) neighbouring cells that have not already been visited
+	 * @return A list of valid (i.e. in bounds) neighboring cells that have not already been visited
 	 */
 	private List<Cell> unvisitedNeighbors(Cell current) {
 	    List<Cell> unvisitedNeighbors = new ArrayList<>();

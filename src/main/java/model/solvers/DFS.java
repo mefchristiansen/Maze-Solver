@@ -47,7 +47,7 @@ public class DFS extends MazeSolverWorker {
 
 			Cell unvisitedNeighbor = unvisitedNeighbor(current);
 
-			if (unvisitedNeighbor != null) { // There is an unvisited neighbouring cells to visit from the current cell.
+			if (unvisitedNeighbor != null) { // There is an unvisited neighboring cells to visit from the current cell.
 				searchStack.push(current);
 				current.setVisiting(true);
 				current.setCurrent(false);
@@ -58,8 +58,8 @@ public class DFS extends MazeSolverWorker {
 				current.setCurrent(true);
 			} else if (!searchStack.empty()) {
 				/*
-	        		There are no unvisited neighbouring cells for the current cell. Backtrack to the cell that was
-	        		visited previously to find an unvisited neighbouring cell from there.
+	        		There are no unvisited neighboring cells for the current cell. Backtrack to the cell that was
+	        		visited previously to find an unvisited neighboring cell from there.
 	        	 */
 
 				current.setCurrent(false);
@@ -115,10 +115,10 @@ public class DFS extends MazeSolverWorker {
 
 	/**
 	 * Iterates through all neighbours of the currently visited cell (up, down left, right), and returns a randomly
-	 * picked valid neighbouring cell that has not already been visited.
+	 * picked valid neighboring cell that has not already been visited.
 	 *
 	 * @param current The current cell
-	 * @return A randomly picked valid (i.e. in bounds) neighbouring cell that has not already been visited
+	 * @return A randomly picked valid (i.e. in bounds) neighboring cell that has not already been visited
 	 */
 	private Cell unvisitedNeighbor(Cell current) {
 	    List<Cell> unvisitedNeighbors = new ArrayList<>();

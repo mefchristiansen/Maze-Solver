@@ -11,7 +11,7 @@ import java.util.concurrent.CancellationException;
 
 /**
  * A SwingWorker class (extending MazeGeneratorWorker) that implements the recursive backtracker maze generation
- * algorithm. This algorithm is a DFS implementation which randomly picks an unvisited neighbouring cell at each
+ * algorithm. This algorithm is a DFS implementation which randomly picks an unvisited neighboring cell at each
  * iteration to visit to construct the maze.
  *
  * https://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_backtracker
@@ -46,7 +46,7 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	    while (current != null) {
 	        Cell unvisitedNeighbor = unvisitedNeighbor(current);
 
-	        if (unvisitedNeighbor != null) { // There is an unvisited neighbouring cells to visit from the current cell.
+	        if (unvisitedNeighbor != null) { // There is an unvisited neighboring cells to visit from the current cell.
 	            searchStack.push(current);
 
 	            removeWalls(current, unvisitedNeighbor);
@@ -57,8 +57,8 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	            current.setVisited(true);
 	        } else if (!searchStack.empty()) {
 	        	/*
-	        		There are no unvisited neighbouring cells for the current cell. Backtrack to the cell that was
-	        		visited previously to find an unvisited neighbouring cell from there.
+	        		There are no unvisited neighboring cells for the current cell. Backtrack to the cell that was
+	        		visited previously to find an unvisited neighboring cell from there.
 	        	 */
 	        	current.setCurrent(false);
 	            current = searchStack.pop();
@@ -115,10 +115,10 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 
 	/**
 	 * Iterates through all neighbours of the currently visited cell (up, down left, right), and returns a randomly
-	 * picked valid neighbouring cell that has not already been visited by the recursive backtracker.
+	 * picked valid neighboring cell that has not already been visited by the recursive backtracker.
 	 *
 	 * @param current The current cell being visited by the recursive backtracker
-	 * @return A randomly picked valid (i.e. in bounds) neighbouring cell that has not already been visited
+	 * @return A randomly picked valid (i.e. in bounds) neighboring cell that has not already been visited
 	 */
     private Cell unvisitedNeighbor(Cell current) {
 		Random rand = new Random();
@@ -145,13 +145,13 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	}
 
 	/**
-	 * Removes the wall between two neighbouring cells for each cell. As the cells are neighbouring, each cell has to
-	 * remove the wall in the opposite direction to the other. For example, if the neighbouring cell is to the right of
-	 * the current cell, then the current cell needs to remove its right wall, whereas the neighbouring cell needs to
+	 * Removes the wall between two neighboring cells for each cell. As the cells are neighboring, each cell has to
+	 * remove the wall in the opposite direction to the other. For example, if the neighboring cell is to the right of
+	 * the current cell, then the current cell needs to remove its right wall, whereas the neighboring cell needs to
 	 * remove it left wall.
 	 *
 	 * @param current A cell
-	 * @param neighbour A neighbouring cell
+	 * @param neighbour A neighboring cell
 	 */
 	private void removeWalls(Cell current, Cell neighbour) {
 	    Direction direction = current.directionToCell(neighbour);

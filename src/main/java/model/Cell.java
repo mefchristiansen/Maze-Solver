@@ -193,10 +193,10 @@ public class Cell {
 	}
 
 	/**
-	 * Calculates the direction from a starting cell to a neighbouring cell.
+	 * Calculates the direction from a starting cell to a neighboring cell.
 	 *
-	 * @param neighbour The neighbouring cell
-	 * @return The direction from the cell to the neighbouring cell
+	 * @param neighbour The neighboring cell
+	 * @return The direction from the cell to the neighboring cell
 	 */
 	public Direction directionToCell(Cell neighbour) {
         int x_diff = neighbour.col() - this.col();
