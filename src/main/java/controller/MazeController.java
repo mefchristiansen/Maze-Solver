@@ -256,7 +256,7 @@ public class MazeController {
 	 * Updates instructions for maze on the GUI (based on the maze state) asynchronously.
 	 */
     public void setInstructions() {
-		SwingUtilities.invokeLater(() -> view.setInstructions());
+		SwingUtilities.invokeLater(view::setInstructions);
     }
 }
 

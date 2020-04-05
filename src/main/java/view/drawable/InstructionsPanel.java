@@ -12,7 +12,7 @@ import java.awt.*;
  * are available to them.
  */
 public class InstructionsPanel extends JPanel {
-	private JTextArea instructions;
+	private final JTextArea instructions;
 
 	public InstructionsPanel() {
 		setLayout(new BorderLayout());
