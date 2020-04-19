@@ -44,8 +44,8 @@ public class Cell {
 	    }
 	}
 
-	public static enum CellVisitState {
-		UNVISITED, VISITING, VISITED;
+	public enum CellVisitState {
+		UNVISITED, VISITING, VISITED
 	}
 
 	private final int row, col;
@@ -123,10 +123,6 @@ public class Cell {
 
 	public void setVisitState(CellVisitState visitState) {
 		this.visitState = visitState;
-	}
-
-	public CellVisitState getVisitState() {
-		return visitState;
 	}
 
 	public boolean unvisited() {

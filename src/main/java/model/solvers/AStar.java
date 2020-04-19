@@ -10,8 +10,6 @@ import controller.MazeController;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 
-// TODO Comments
-
 /**
  * A SwingWorker class (extending MazeGeneratorWorker) that implements the A* graph traversal and path finding
  * algorithm. A* aims to find the path to the end point with the smallest cost (in this case, the shortest distance).
