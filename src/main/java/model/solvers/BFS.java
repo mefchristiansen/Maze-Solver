@@ -1,6 +1,7 @@
 package model.solvers;
 
 import model.Cell;
+import model.Cell.CellVisitState;
 import model.Direction;
 import model.Maze;
 import model.MazeSolverWorker;
@@ -31,18 +32,13 @@ public class BFS extends MazeSolverWorker {
 
         while (!searchQueue.isEmpty()) {
             current = searchQueue.remove();
+			current.setCurrent(true);
+			current.setVisitState(CellVisitState.VISITED);
 
-            current.setVisited(true);
-            current.setCurrent(true);
-
-            publish(maze); // Publish the current maze state to be repainted on the event dispatch thread
-
-            Thread.sleep(mazeController.getAnimationSpeed());
-
-            if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
-                maze.setGoal(current);
-                return true;
-            }
+			if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
+				maze.setGoal(current);
+				return true;
+			}
 
             List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
 
@@ -50,14 +46,15 @@ public class BFS extends MazeSolverWorker {
             	Add each valid unvisited neighboring cell to the Queue to be visited later
              */
 			for (Cell neighbor : unvisitedNeighbors) {
-				if (!neighbor.visiting()) {
-					searchQueue.add(neighbor);
-					neighbor.setVisiting(true);
-					neighbor.setParent(current);
-				}
+				searchQueue.add(neighbor);
+				neighbor.setVisitState(CellVisitState.VISITING);
+				neighbor.setParent(current);
 			}
 
-            current.setVisiting(false);
+			publish(maze); // Publish the current maze state to be repainted on the event dispatch thread
+
+			Thread.sleep(mazeController.getAnimationSpeed());
+
             current.setCurrent(false);
         }
 
@@ -108,11 +105,11 @@ public class BFS extends MazeSolverWorker {
 	 * @return A list of valid (i.e. in bounds) neighboring cells that have not already been visited
 	 */
 	private List<Cell> unvisitedNeighbors(Cell current) {
+		Cell neighbor;
 	    List<Cell> unvisitedNeighbors = new ArrayList<>();
 	    int currRow = current.row();
 	    int currCol = current.col();
 	    int newRow, newCol;
-	    Cell nextCell;
 
 	    for (Direction direction : Direction.values()) {
             newCol = currCol + direction.dx;
@@ -123,11 +120,11 @@ public class BFS extends MazeSolverWorker {
 	            continue;
             }
 
-	        nextCell = maze.mazeCell(newRow, newCol);
+	        neighbor = maze.mazeCell(newRow, newCol);
 
 			// Check that the cell hasn't already been visited and that a wall doesn't exist in that direction
-	        if (!nextCell.visited() && current.wallMissing(direction)) {
-	            unvisitedNeighbors.add(nextCell);
+	        if (current.wallMissing(direction) && neighbor.unvisited()) {
+	            unvisitedNeighbors.add(neighbor);
 	        }
 	    }
 

@@ -44,7 +44,14 @@ public class Cell {
 	    }
 	}
 
+	public static enum CellVisitState {
+		UNVISITED, VISITING, VISITED;
+	}
+
 	private final int row, col;
+
+	private CellVisitState visitState;
+
 	/**
 	 * The f and g scores used by the A* algorithm
 	 */
@@ -54,7 +61,9 @@ public class Cell {
 	 * An EnumMap storing the walls for each direction for a cell
 	 */
 	private final EnumMap<Direction, Wall> walls;
-	private boolean current, visiting, visited, start, end, solution;
+
+	private boolean current, start, end, solution;
+
 	/**
 	 * The parent of the cell for walking the solution path
 	 */
@@ -70,7 +79,8 @@ public class Cell {
 			put(Direction.RIGHT, new Wall(1, 0, 1, 1));
 		}};
 
-		current = visiting = visited = end = solution = false;
+		visitState = CellVisitState.UNVISITED;
+		current = end = solution = false;
 		parent = null;
 		fCost = gCost = hCost = Integer.MAX_VALUE;
 	}
@@ -103,14 +113,6 @@ public class Cell {
         walls.get(direction).present = false;
 	}
 
-	public boolean visited() {
-		return visited;
-	}
-
-	public void setVisited(boolean visited) {
-		this.visited = visited;
-	}
-
 	public boolean current() {
 		return current;
 	}
@@ -119,13 +121,21 @@ public class Cell {
 		this.current = current;
 	}
 
-	public void setVisiting(boolean visiting) {
-		this.visiting = visiting;
+	public void setVisitState(CellVisitState visitState) {
+		this.visitState = visitState;
 	}
 
-	public boolean visiting() {
-		return visiting;
+	public CellVisitState getVisitState() {
+		return visitState;
 	}
+
+	public boolean unvisited() {
+		return visitState == CellVisitState.UNVISITED;
+	}
+
+	public boolean visiting() { return visitState == CellVisitState.VISITING; }
+
+	public boolean visited() { return visitState == CellVisitState.VISITED; }
 
 	public void setStart(boolean state) {
 		this.start = state;

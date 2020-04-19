@@ -1,6 +1,7 @@
 package model.solvers;
 
 import model.Cell;
+import model.Cell.CellVisitState;
 import model.Direction;
 import model.Maze;
 import model.MazeSolverWorker;
@@ -33,34 +34,27 @@ public class AStar extends MazeSolverWorker {
 			The open set is the list of nodes that the algorithm can choose to traverse next
 		 */
 		List<Cell> openSet = new ArrayList<>();
-		Cell start = maze.getStartingCell();
-		Cell end = maze.getEndingCell();
-		Cell current;
+
+		Cell start, end, current;
 		int tentativeG;
+
+		start = maze.getStartingCell();
+		end = maze.getEndingCell();
 
 		start.setGCost(0);
 		start.setHCost(manhattan_distance(start, end));
 		start.setFCost(start.getGCost() + start.getHCost());
-		start.setVisiting(true);
 		openSet.add(start);
 
 		while (!openSet.isEmpty()) {
 			current = lowestFScoreCell(openSet); // Pick the node with the lowest estimated cost
-
 			current.setCurrent(true);
-
-            publish(maze); // Publish the current maze state to be repainted on the event dispatch thread
-
-			Thread.sleep(mazeController.getAnimationSpeed());
+			current.setVisitState(CellVisitState.VISITED);
 
 			if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
 				maze.setGoal(current);
 				return true;
 			}
-
-			openSet.remove(current);
-			current.setVisiting(false);
-			current.setVisited(true);
 
 			List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
 
@@ -70,11 +64,9 @@ public class AStar extends MazeSolverWorker {
             	end node) cost to calculate f (the path's estimated total cost).
              */
 			for (Cell neighbor : unvisitedNeighbors) {
-				if (!neighbor.visiting()) {
-					openSet.add(neighbor);
-					neighbor.setVisiting(true);
-					neighbor.setParent(current);
-				}
+				openSet.add(neighbor);
+				neighbor.setVisitState(CellVisitState.VISITING);
+				neighbor.setParent(current);
 
 				tentativeG = current.getGCost() + 1;
 
@@ -90,6 +82,10 @@ public class AStar extends MazeSolverWorker {
 				neighbor.setHCost(manhattan_distance(neighbor, end));
 				neighbor.setFCost(neighbor.getGCost() + neighbor.getHCost());
 			}
+
+			publish(maze); // Publish the current maze state to be repainted on the event dispatch thread
+
+			Thread.sleep(mazeController.getAnimationSpeed());
 
 			current.setCurrent(false);
 		}
@@ -141,11 +137,11 @@ public class AStar extends MazeSolverWorker {
 	 * @return A list of valid (i.e. in bounds) neighboring cells that have not already been visited
 	 */
 	private List<Cell> unvisitedNeighbors(Cell current) {
+		Cell neighbor;
 	    List<Cell> unvisitedNeighbors = new ArrayList<>();
 	    int currRow = current.row();
 	    int currCol = current.col();
 	    int newRow, newCol;
-	    Cell nextCell;
 
 	    for (Direction direction : Direction.values()) {
 	        newRow = currRow + direction.dy;
@@ -155,10 +151,10 @@ public class AStar extends MazeSolverWorker {
 	            continue;
             }
 
-	        nextCell = maze.mazeCell(newRow, newCol);
+	        neighbor = maze.mazeCell(newRow, newCol);
 
-	        if (!nextCell.visited() && current.wallMissing(direction)) {
-	            unvisitedNeighbors.add(nextCell);
+	        if (current.wallMissing(direction) && neighbor.unvisited()) {
+	            unvisitedNeighbors.add(neighbor);
 	        }
 	    }
 
@@ -186,6 +182,8 @@ public class AStar extends MazeSolverWorker {
 				lowestFScore = cellFScore;
 			}
 		}
+
+		openSet.remove(lowestFScoreCell);
 
 		return lowestFScoreCell;
 	}

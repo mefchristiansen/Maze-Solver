@@ -1,5 +1,7 @@
 package model;
 
+import model.Cell.CellVisitState;
+
 /**
  * This class represents the maze and its properties. A maze is a 2D array of cells.
  */
@@ -75,9 +77,8 @@ public class Maze {
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {
                 Cell current = maze[r][c];
-                current.setVisited(false);
                 current.setCurrent(false);
-                current.setVisiting(false);
+                current.setVisitState(CellVisitState.UNVISITED);
             }
         }
     }

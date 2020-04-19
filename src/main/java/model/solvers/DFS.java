@@ -1,6 +1,7 @@
 package model.solvers;
 
 import model.Cell;
+import model.Cell.CellVisitState;
 import model.Direction;
 import model.Maze;
 import model.MazeSolverWorker;
@@ -25,53 +26,45 @@ public class DFS extends MazeSolverWorker {
 
 	@Override
 	protected Boolean doInBackground() throws Exception {
-		Cell current, next, end;
+		Stack<Cell> searchStack = new Stack<>();
+		Cell root, current, unvisitedNeighbor, end;
 
-		current = maze.getStartingCell();
-		current.setVisited(true);
-		current.setCurrent(true);
-
+		root = maze.getStartingCell();
 		end = maze.getEndingCell();
 
-		Stack<Cell> searchStack = new Stack<>();
+		searchStack.push(root);
+		root.setVisitState(CellVisitState.VISITING);
 
-		while (current != null) {
+		while (!searchStack.isEmpty()) {
+			current = searchStack.peek();
+			current.setCurrent(true);
+
 			if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
                 maze.setGoal(current);
 				return true;
 			}
 
-            publish(maze); // Publish the current maze state to be repainted on the event dispatch thread.
-
-			Thread.sleep(mazeController.getAnimationSpeed());
-
-			Cell unvisitedNeighbor = unvisitedNeighbor(current);
+			unvisitedNeighbor = unvisitedNeighbor(current);
 
 			if (unvisitedNeighbor != null) { // There is an unvisited neighboring cells to visit from the current cell.
-				searchStack.push(current);
-				current.setVisiting(true);
-				current.setCurrent(false);
-				next = unvisitedNeighbor;
-				next.setParent(current);
-				current = next;
-				current.setVisited(true);
-				current.setCurrent(true);
-			} else if (!searchStack.empty()) {
+				searchStack.push(unvisitedNeighbor);
+				unvisitedNeighbor.setVisitState(CellVisitState.VISITING);
+
+				unvisitedNeighbor.setParent(current);
+			} else {
 				/*
 	        		There are no unvisited neighboring cells for the current cell. Backtrack to the cell that was
 	        		visited previously to find an unvisited neighboring cell from there.
 	        	 */
-
-				current.setCurrent(false);
-				current.setVisiting(false);
-				current.setParent(null);
-				current = searchStack.pop();
-				current.setCurrent(true);
-			} else { // All cells have been visited
-				current.setCurrent(false);
-				current.setVisiting(false);
-				current = null;
+				current.setVisitState(CellVisitState.VISITED);
+				searchStack.pop();
 			}
+
+			publish(maze); // Publish the current maze state to be repainted on the event dispatch thread.
+
+			Thread.sleep(mazeController.getAnimationSpeed());
+
+			current.setCurrent(false);
 		}
 
 		return false;
@@ -121,11 +114,12 @@ public class DFS extends MazeSolverWorker {
 	 * @return A randomly picked valid (i.e. in bounds) neighboring cell that has not already been visited
 	 */
 	private Cell unvisitedNeighbor(Cell current) {
+		Cell neighbor;
 	    List<Cell> unvisitedNeighbors = new ArrayList<>();
 	    int currRow = current.row();
 	    int currCol = current.col();
 	    int newRow, newCol;
-	    Cell nextCell;
+
 	    Random rand = new Random();
 
 	    for (Direction direction : Direction.values()) {
@@ -137,11 +131,11 @@ public class DFS extends MazeSolverWorker {
                 continue;
             }
 
-	        nextCell = maze.mazeCell(newRow, newCol);
+			neighbor = maze.mazeCell(newRow, newCol);
 
             // Check that the cell hasn't already been visited and that a wall doesn't exist in that direction
-	        if (!nextCell.visited() && current.wallMissing(direction)) {
-	            unvisitedNeighbors.add(nextCell);
+	        if (current.wallMissing(direction) && neighbor.unvisited()) {
+	            unvisitedNeighbors.add(neighbor);
 	        }
 	    }
 

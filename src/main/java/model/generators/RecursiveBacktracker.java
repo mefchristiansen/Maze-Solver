@@ -1,6 +1,7 @@
 package model.generators;
 
 import model.Cell;
+import model.Cell.CellVisitState;
 import model.Direction;
 import model.Maze;
 import model.MazeGeneratorWorker;
@@ -31,46 +32,42 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	 */
 	@Override
 	protected Boolean doInBackground() throws Exception {
+		Stack<Cell> searchStack = new Stack<>();
+		Cell root, current, unvisitedNeighbor;
 	    Random rand = new Random();
 
 	    int startRow = rand.nextInt(maze.numRows() - 1);
 	    int startCol = rand.nextInt(maze.numCols() - 1);
 
-	    Cell current;
-	    current = maze.mazeCell(startRow, startCol);
-	    current.setCurrent(true);
-	    current.setVisited(true);
+	    root = maze.mazeCell(startRow, startCol);
 
-	    Stack<Cell> searchStack = new Stack<>();
+	    searchStack.push(root);
+		root.setVisitState(CellVisitState.VISITING);
 
-	    while (current != null) {
-	        Cell unvisitedNeighbor = unvisitedNeighbor(current);
+	    while (!searchStack.isEmpty()) {
+	    	current = searchStack.peek();
+			current.setCurrent(true);
+	        unvisitedNeighbor = unvisitedNeighbor(current);
 
 	        if (unvisitedNeighbor != null) { // There is an unvisited neighboring cells to visit from the current cell.
-	            searchStack.push(current);
+	            searchStack.push(unvisitedNeighbor);
+				unvisitedNeighbor.setVisitState(CellVisitState.VISITING);
 
 	            removeWalls(current, unvisitedNeighbor);
-
-	            current.setCurrent(false);
-	            current = unvisitedNeighbor;
-	            current.setCurrent(true);
-	            current.setVisited(true);
-	        } else if (!searchStack.empty()) {
+	        } else {
 	        	/*
 	        		There are no unvisited neighboring cells for the current cell. Backtrack to the cell that was
 	        		visited previously to find an unvisited neighboring cell from there.
 	        	 */
-	        	current.setCurrent(false);
-	            current = searchStack.pop();
-	            current.setCurrent(true);
-	        } else { // All cells have been visited
-	        	current.setCurrent(false);
-	            current = null;
+				current.setVisitState(CellVisitState.VISITED);
+	            searchStack.pop();
 	        }
 
 	        publish(maze); // Publish the current maze state to be repainted on the event dispatch thread.
 
             Thread.sleep(mazeController.getAnimationSpeed());
+
+			current.setCurrent(false);
 		}
 
 		maze.voidVisits();
@@ -121,6 +118,7 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	 * @return A randomly picked valid (i.e. in bounds) neighboring cell that has not already been visited
 	 */
     private Cell unvisitedNeighbor(Cell current) {
+    	Cell unvisitedNeighbor;
 		Random rand = new Random();
 	    List<Cell> unvisitedNeighbors = new ArrayList<>();
 	    int currRow = current.row();
@@ -131,8 +129,15 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	        newRow = currRow + dir.dy;
 	        newCol = currCol + dir.dx;
 
+			// Check that the cell is in the bounds of the maze
+			if (!maze.inBounds(newRow, newCol)) {
+				continue;
+			}
+
+	        unvisitedNeighbor = maze.mazeCell(newRow, newCol);
+
 	        // Check that the cell is in the bounds of the maze, and that it hasn't already been visited
-	        if (maze.inBounds(newRow, newCol) && !maze.mazeCell(newRow, newCol).visited()) {
+	        if (unvisitedNeighbor.unvisited()) {
 	            unvisitedNeighbors.add(maze.mazeCell(newRow, newCol));
 	        }
 	    }
