@@ -71,14 +71,19 @@ public class MazeView extends JFrame {
 	/**
 	 * Resets the view after the reset action is triggered.
 	 */
-    public void resetView() {
+    public void resetView(int checks, int solutionLength) {
         mazePanel.resetWaypointSetterState();
         mazePanel.repaint();
+		guiPanel.setStats(checks, solutionLength);
     }
 
     public void repaintMaze(Maze maze) {
         mazePanel.repaintMaze(maze);
     }
+
+    public void updateStats(int checks, int solutionLength) {
+    	guiPanel.setStats(checks, solutionLength);
+	}
 
 	/**
 	 * Add a component to the maze view

@@ -16,6 +16,7 @@ import static view.drawable.DrawableHelper.addComponent;
  */
 public class GUIPanel extends JPanel implements ActionListener {
     private final MazeController mazeController;
+    private StatsPanel statsPanel;
 
     public GUIPanel(MazeController mazeController) {
         this.mazeController = mazeController;
@@ -56,9 +57,18 @@ public class GUIPanel extends JPanel implements ActionListener {
         initButton(new JButton("Reset"),"reset", 5,
 				mazeController.getMazeResetListener(), insets);
 
+        statsPanel = new StatsPanel(0, 0);
+		addComponent(this, statsPanel, 0, 6, 1, 1,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets);
+
         // Exit Button
-        initButton(new JButton("Exit"),"exit", 6, this, insets);
+        initButton(new JButton("Exit"),"exit", 7, this, insets);
     }
+
+    public void setStats(int checks, int solutionLength) {
+		statsPanel.setNumChecks(checks);
+		statsPanel.setSolutionPathLength(solutionLength);
+	}
 
 	/**
 	 * Initializes a button and adds it to the GUI panel.

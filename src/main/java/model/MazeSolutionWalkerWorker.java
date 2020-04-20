@@ -32,10 +32,12 @@ public class MazeSolutionWalkerWorker extends SwingWorker<Void, Maze> {
         Cell goal = maze.getGoal();
 
         while (goal != null) {
+        	maze.incrementSolutionLength();
             goal.setSolution(true);
             goal = goal.parent();
 
             publish(maze);
+
             Thread.sleep(mazeController.getAnimationSpeed());
         }
 
@@ -49,7 +51,7 @@ public class MazeSolutionWalkerWorker extends SwingWorker<Void, Maze> {
     @Override
     protected void process(List<Maze> chunks) {
         for (Maze maze : chunks) {
-            mazeController.repaintMaze(maze);
+            mazeController.updateMaze(maze);
         }
     }
 }

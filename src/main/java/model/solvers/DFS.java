@@ -38,6 +38,7 @@ public class DFS extends MazeSolverWorker {
 		while (!searchStack.isEmpty()) {
 			current = searchStack.peek();
 			current.setCurrent(true);
+			maze.incrementChecks();
 
 			if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
                 maze.setGoal(current);
@@ -77,7 +78,7 @@ public class DFS extends MazeSolverWorker {
 	@Override
 	protected void process(List<Maze> chunks) {
 		for (Maze maze : chunks) {
-			mazeController.repaintMaze(maze);
+			mazeController.updateMaze(maze);
 		}
 	}
 

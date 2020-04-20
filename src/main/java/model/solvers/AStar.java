@@ -14,7 +14,7 @@ import java.util.concurrent.CancellationException;
  * A SwingWorker class (extending MazeGeneratorWorker) that implements the A* graph traversal and path finding
  * algorithm. A* aims to find the path to the end point with the smallest cost (in this case, the shortest distance).
  * At each iteration, the algorithm chooses the path that minimizes a cost function: f(n) = g(n) + h(n), where g(n) is
- * the cost to the current node from the start node and h(n) is the estimate of the remaining cost to the end node using a heuristic. In
+ * the cost to the current node from the root node and h(n) is the estimate of the remaining cost to the end node using a heuristic. In
  * this case, the heuristic (i.e. estimated cost), is the Manhattan Distance between the current and end node. Unlike
  * BFS and DFS, A* is an informed search algorithm, meaning that it knows where the end node is, and uses this knowledge
  * to make an informed guess as to which path is most efficient.
@@ -33,21 +33,22 @@ public class AStar extends MazeSolverWorker {
 		 */
 		List<Cell> openSet = new ArrayList<>();
 
-		Cell start, end, current;
+		Cell root, current, end;
 		int tentativeG;
 
-		start = maze.getStartingCell();
+		root = maze.getStartingCell();
 		end = maze.getEndingCell();
 
-		start.setGCost(0);
-		start.setHCost(manhattan_distance(start, end));
-		start.setFCost(start.getGCost() + start.getHCost());
-		openSet.add(start);
+		root.setCosts(0, manhattan_distance(root, end));
+
+		openSet.add(root);
+		root.setVisitState(CellVisitState.VISITING);
 
 		while (!openSet.isEmpty()) {
 			current = lowestFScoreCell(openSet); // Pick the node with the lowest estimated cost
 			current.setCurrent(true);
 			current.setVisitState(CellVisitState.VISITED);
+			maze.incrementChecks();
 
 			if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
 				maze.setGoal(current);
@@ -58,7 +59,7 @@ public class AStar extends MazeSolverWorker {
 
 			/*
             	Add each valid unvisited neighboring cell to the open set list to be visited later, and calculate its
-            	g (the cost to the current node from the start node) and h (the estimate of the remaining cost to the
+            	g (the cost to the current node from the root node) and h (the estimate of the remaining cost to the
             	end node) cost to calculate f (the path's estimated total cost).
              */
 			for (Cell neighbor : unvisitedNeighbors) {
@@ -76,9 +77,7 @@ public class AStar extends MazeSolverWorker {
 					continue;
 				}
 
-				neighbor.setGCost(tentativeG);
-				neighbor.setHCost(manhattan_distance(neighbor, end));
-				neighbor.setFCost(neighbor.getGCost() + neighbor.getHCost());
+				neighbor.setCosts(tentativeG, manhattan_distance(neighbor, end));
 			}
 
 			publish(maze); // Publish the current maze state to be repainted on the event dispatch thread
@@ -98,7 +97,7 @@ public class AStar extends MazeSolverWorker {
 	@Override
 	protected void process(List<Maze> chunks) {
 		for (Maze maze : chunks) {
-			mazeController.repaintMaze(maze);
+			mazeController.updateMaze(maze);
 		}
 	}
 

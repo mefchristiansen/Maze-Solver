@@ -6,11 +6,9 @@ import model.Cell.CellVisitState;
  * This class represents the maze and its properties. A maze is a 2D array of cells.
  */
 public class Maze {
-	private int numRows;
-	private int numCols;
+	private int numRows, numCols, checks, solutionLength;
 	private Cell[][] maze;
-    private Cell startingCell, endingCell;
-    private Cell goal;
+    private Cell startingCell, endingCell, goal;
 
     public Maze() {
         this(MazeConstants.DEFAULT_NUM_ROWS, MazeConstants.DEFAULT_NUM_COLS);
@@ -24,7 +22,9 @@ public class Maze {
         this.numRows = numRows;
         this.numCols = numCols;
 
-        maze = new Cell[numRows][numCols];
+		checks = solutionLength = 0;
+
+		maze = new Cell[numRows][numCols];
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {
                 maze[r][c] = new Cell(r, c);
@@ -48,6 +48,22 @@ public class Maze {
 
 	public Cell getGoal() {
 		return goal;
+	}
+
+	public int getChecks() {
+    	return checks;
+	}
+
+	public int getSolutionLength() {
+		return solutionLength;
+	}
+
+	public void incrementChecks() {
+    	checks++;
+	}
+
+	public void incrementSolutionLength() {
+		solutionLength++;
 	}
 
     public Cell mazeCell(int r, int c) {
@@ -88,6 +104,7 @@ public class Maze {
 	 */
     public void resetMaze() {
         startingCell = endingCell = goal = null;
+		checks = solutionLength = 0;
 
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {

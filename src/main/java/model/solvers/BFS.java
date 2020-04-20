@@ -25,15 +25,20 @@ public class BFS extends MazeSolverWorker {
 
     @Override
     protected Boolean doInBackground() throws Exception {
-        Cell current;
-        Cell end = maze.getEndingCell();
-        Queue<Cell> searchQueue = new LinkedList<>();
-        searchQueue.add(maze.getStartingCell());
+		Queue<Cell> searchQueue = new LinkedList<>();
+        Cell root, current, end;
+
+        root = maze.getStartingCell();
+        end = maze.getEndingCell();
+
+        searchQueue.add(root);
+        root.setVisitState(CellVisitState.VISITING);
 
         while (!searchQueue.isEmpty()) {
             current = searchQueue.remove();
 			current.setCurrent(true);
 			current.setVisitState(CellVisitState.VISITED);
+			maze.incrementChecks();
 
 			if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
 				maze.setGoal(current);
@@ -68,7 +73,7 @@ public class BFS extends MazeSolverWorker {
     @Override
     protected void process(List<Maze> chunks) {
         for (Maze maze : chunks) {
-            mazeController.repaintMaze(maze);
+            mazeController.updateMaze(maze);
         }
     }
 

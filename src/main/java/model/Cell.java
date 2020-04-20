@@ -159,25 +159,19 @@ public class Cell {
 
 	public boolean getSolution() { return solution; }
 
-	public void setFCost(int fCost) {
-		this.fCost = fCost;
+	public void setCosts(int gCost, int hCost) {
+		this.gCost = gCost;
+		this.hCost = hCost;
+		fCost = gCost + hCost;
 	}
 
 	public int getFCost() {
 		return fCost;
 	}
 
-	public void setGCost(int gCost) {
-		this.gCost = gCost;
-	}
-
 	public int getGCost() {
 		return gCost;
 	}
-
-	public int getHCost() { return hCost; }
-
-	public void setHCost(int hCost) { this.hCost = hCost; }
 
 	/**
 	 * Returns a boolean indicating whether a mouse click is inside the cell.

@@ -81,7 +81,7 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
     @Override
     protected void process(List<Maze> chunks) {
         for (Maze maze : chunks) {
-            mazeController.repaintMaze(maze);
+            mazeController.updateMaze(maze);
         }
     }
 

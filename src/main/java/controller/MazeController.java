@@ -225,7 +225,7 @@ public class MazeController {
 		setInstructions();
 
         maze.resetMaze();
-        view.resetView();
+        view.resetView(maze.getChecks(), maze.getSolutionLength());
     }
 
 	/**
@@ -248,8 +248,9 @@ public class MazeController {
         }
     }
 
-    public void repaintMaze(Maze newMaze) {
-        view.repaintMaze(newMaze);
+    public void updateMaze(Maze maze) {
+    	view.repaintMaze(maze);
+    	view.updateStats(maze.getChecks(), maze.getSolutionLength());
     }
 
 	/**
