@@ -55,7 +55,7 @@ public class Cell {
 	/**
 	 * The f and g scores used by the A* algorithm
 	 */
-    private int fCost, gCost, hCost;
+    private int fCost, gCost;
 
 	/**
 	 * An EnumMap storing the walls for each direction for a cell
@@ -82,7 +82,7 @@ public class Cell {
 		visitState = CellVisitState.UNVISITED;
 		current = end = solution = false;
 		parent = null;
-		fCost = gCost = hCost = Integer.MAX_VALUE;
+		fCost = gCost = Integer.MAX_VALUE;
 	}
 
 	public int col() {
@@ -161,7 +161,6 @@ public class Cell {
 
 	public void setCosts(int gCost, int hCost) {
 		this.gCost = gCost;
-		this.hCost = hCost;
 		fCost = gCost + hCost;
 	}
 

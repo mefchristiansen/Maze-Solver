@@ -6,7 +6,8 @@ import java.awt.*;
 import static view.drawable.DrawableHelper.addComponent;
 
 public class StatsPanel extends JPanel {
-	JLabel numChecks, solutionPathLength;
+	private final JLabel numChecks;
+	private final JLabel solutionPathLength;
 
 	public StatsPanel(int checks, int solutionLength) {
 		setLayout(new GridBagLayout());
