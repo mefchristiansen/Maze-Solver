@@ -33,10 +33,10 @@ public class DFS extends MazeSolverWorker {
 		end = maze.getEndingCell();
 
 		searchStack.push(root);
-		root.setVisitState(CellVisitState.VISITING);
 
 		while (!searchStack.isEmpty()) {
 			current = searchStack.peek();
+			current.setVisitState(CellVisitState.VISITING);
 			current.setCurrent(true);
 			maze.incrementChecks();
 

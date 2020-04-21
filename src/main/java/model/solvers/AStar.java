@@ -42,10 +42,10 @@ public class AStar extends MazeSolverWorker {
 		root.setCosts(0, manhattan_distance(root, end));
 
 		openSet.add(root);
-		root.setVisitState(CellVisitState.VISITING);
 
 		while (!openSet.isEmpty()) {
 			current = lowestFScoreCell(openSet); // Pick the node with the lowest estimated cost
+			current.setVisitState(CellVisitState.VISITING);
 			current.setCurrent(true);
 			current.setVisitState(CellVisitState.VISITED);
 			maze.incrementChecks();

@@ -42,10 +42,10 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	    root = maze.mazeCell(startRow, startCol);
 
 	    searchStack.push(root);
-		root.setVisitState(CellVisitState.VISITING);
 
 	    while (!searchStack.isEmpty()) {
 	    	current = searchStack.peek();
+	    	current.setVisitState(CellVisitState.VISITING);
 			current.setCurrent(true);
 	        unvisitedNeighbor = unvisitedNeighbor(current);
 
