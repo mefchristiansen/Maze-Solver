@@ -9,7 +9,7 @@ end points, the solution algorithm, as well as vary the animation speed.
 
 The application is written in Java 9.
 
-See here for a quick write up of the project: LINK
+See here for a quick write up of the project: https://mefchristiansen.github.io/projects/maze-solver/
 
 ## Installation
 
