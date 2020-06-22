@@ -1,4 +1,6 @@
-# MazeSolver
+# Maze Solver
+
+> See here for a quick write up of the project: https://mefchristiansen.github.io/projects/maze-solver/
 
 A maze solver Java application that automatically generates a random maze, and then proceeds to traverse and solve the
 maze using a variety of graph traversal algorithms (BFS, DFS, A*). This generation and traversal is visualized using
@@ -8,8 +10,6 @@ end points, the solution algorithm, as well as vary the animation speed.
 ![Maze Solver Demo](maze.gif)
 
 The application is written in Java 9.
-
-See here for a quick write up of the project: https://mefchristiansen.github.io/projects/maze-solver/
 
 ## Installation
 
