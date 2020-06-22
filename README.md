@@ -17,5 +17,7 @@ I used the Gradle build tool to build and run the application.
 
 See here for Gradle installation instructions: https://gradle.org/install/
 
+## Run
+
 To build and run the application, run the following command:
 `gradle run`
