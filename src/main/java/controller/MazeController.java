@@ -134,7 +134,7 @@ public class MazeController {
 	 *
 	 * @return the thread sleep time for animation
 	 */
-	public long getAnimationSpeed() {
+    public long getAnimationSpeed() {
         double animationSpeedMultiplier;
 
         switch (state) {
@@ -199,7 +199,7 @@ public class MazeController {
 
 	/**
 	 * Function called on maze generation success to update the maze state, and to trigger the solution path walker.
- 	 */
+	 */
     public void solveMazeSuccess() {
         state = MazeState.SOLVED;
         walkSolutionPath();
@@ -208,7 +208,7 @@ public class MazeController {
 
 	/**
 	 * Executes the solution path walker to draw the solution path from the starting cell to the ending cell.
- 	 */
+	 */
     private void walkSolutionPath() {
         solutionWalker = new MazeSolutionWalkerWorker(maze, this);
         solutionWalker.execute();
@@ -217,7 +217,7 @@ public class MazeController {
 	/**
 	 * Resets the maze to its initial state, ready to generate a new maze. This includes cancelling all currently
 	 * running threads, resetting the maze cells, and repainting the view.
- 	 */
+	 */
     public void reset() {
         resetThreads();
 
@@ -254,13 +254,14 @@ public class MazeController {
 
 	/**
 	 * Updates instructions for maze on the GUI (based on the maze state) asynchronously.
- 	 */
+	 */
     public void setInstructions() {
 		SwingUtilities.invokeLater(view::setInstructions);
     }
 }
 
 /*
+
 	* Old method to force the user to select the start and end points for maze solving. In the current version,
 	* the user has a choice as to whether or not to set the start and end points.
 
@@ -275,4 +276,5 @@ public class MazeController {
 			}
 		}
 	}
+
 */
