@@ -6,9 +6,9 @@ import java.awt.event.ActionListener;
  * An abstract ActionListener class. All ActionListeners extend this class to gain access to the maze controller.
  */
 public abstract class MazeActionListener implements ActionListener {
-    protected final MazeController mazeController;
+	protected final MazeController mazeController;
 
-    protected MazeActionListener(MazeController mazeController) {
-        this.mazeController = mazeController;
-    }
+	protected MazeActionListener(MazeController mazeController) {
+		this.mazeController = mazeController;
+	}
 }

@@ -9,54 +9,82 @@ public class Maze {
 	private int numRows;
 	private int numCols;
 	private Cell[][] maze;
-    private Cell startingCell, endingCell;
-    private Cell goal;
+	private Cell startingCell, endingCell;
+	private Cell goal;
 
-    public Maze() {
-        this(MazeConstants.DEFAULT_NUM_ROWS, MazeConstants.DEFAULT_NUM_COLS);
-    }
+	public Maze() {
+		this(MazeConstants.DEFAULT_NUM_ROWS, MazeConstants.DEFAULT_NUM_COLS);
+	}
 
 	public Maze(int numRows, int numCols) {
-        initMaze(numRows, numCols);
+		initMaze(numRows, numCols);
 	}
 
 	public void initMaze(int numRows, int numCols) {
-        this.numRows = numRows;
-        this.numCols = numCols;
+		this.numRows = numRows;
+		this.numCols = numCols;
 
-        maze = new Cell[numRows][numCols];
-        for (int r = 0; r < numRows; r++) {
-            for (int c = 0; c < numCols; c++) {
-                maze[r][c] = new Cell(r, c);
-            }
-        }
-    }
+		maze = new Cell[numRows][numCols];
+		for (int r = 0; r < numRows; r++) {
+			for (int c = 0; c < numCols; c++) {
+				maze[r][c] = new Cell(r, c);
+			}
+		}
+	}
 
-    public Cell getStartingCell() { return startingCell; }
+	public Cell getStartingCell() {
+		return startingCell;
+	}
 
-    public Cell getEndingCell() { return endingCell; }
+	/**
+	 * Sets the starting cell of the maze
+	 *
+	 * @param cell The starting cell
+	 */
+	public void setStartingCell(Cell cell) {
+		startingCell.setStart(false);
+		startingCell = cell;
+		startingCell.setStart(true);
+	}
 
-    public int numRows() {
-        return numRows;
-    }
+	public Cell getEndingCell() {
+		return endingCell;
+	}
 
-    public int numCols() { return numCols; }
+	/**
+	 * Sets the ending cell of the maze
+	 *
+	 * @param cell The ending cell
+	 */
+	public void setEndingCell(Cell cell) {
+		endingCell.setEnd(false);
+		endingCell = cell;
+		endingCell.setEnd(true);
+	}
 
-	public void setGoal(Cell goal) {
-		this.goal = goal;
+	public int numRows() {
+		return numRows;
+	}
+
+	public int numCols() {
+		return numCols;
 	}
 
 	public Cell getGoal() {
 		return goal;
 	}
 
-    public Cell mazeCell(int r, int c) {
-        if (inBounds(r, c)) {
-            return maze[r][c];
-        }
+	public void setGoal(Cell goal) {
+		this.goal = goal;
+	}
 
-        return null;
-    }
+	public Cell mazeCell(int r, int c) {
+		if (inBounds(r, c)) {
+			return maze[r][c];
+		}
+
+		return null;
+	}
 
 	/**
 	 * Determines if a cell at the current row and column is in the bounds of the maze.
@@ -65,66 +93,44 @@ public class Maze {
 	 * @param col A column
 	 * @return A boolean indicating if a cell at that row and column is in the bounds of the maze
 	 */
-    public boolean inBounds(int row, int col) {
-        return row >= 0 && col >= 0 && row < numRows && col < numCols;
-    }
+	public boolean inBounds(int row, int col) {
+		return row >= 0 && col >= 0 && row < numRows && col < numCols;
+	}
 
 	/**
 	 * Set all properties of the cell related to it being visited to false. This function is called after the generator
 	 * has generated the maze so that the solver can visit any cell in the maze.
 	 */
-    public void voidVisits() {
-        for (int r = 0; r < numRows; r++) {
-            for (int c = 0; c < numCols; c++) {
-                Cell current = maze[r][c];
-                current.setCurrent(false);
-                current.setVisitState(CellVisitState.UNVISITED);
-            }
-        }
-    }
+	public void voidVisits() {
+		for (int r = 0; r < numRows; r++) {
+			for (int c = 0; c < numCols; c++) {
+				Cell current = maze[r][c];
+				current.setCurrent(false);
+				current.setVisitState(CellVisitState.UNVISITED);
+			}
+		}
+	}
 
 	/**
 	 * Resets the maze, clearing the start, end and goal cells, as well as reinitializing the maze cells.
 	 */
-    public void resetMaze() {
-        startingCell = endingCell = goal = null;
+	public void resetMaze() {
+		startingCell = endingCell = goal = null;
 
-        for (int r = 0; r < numRows; r++) {
-            for (int c = 0; c < numCols; c++) {
-                maze[r][c] = new Cell(r, c);
-            }
-        }
-    }
-
-	/**
-	 * Sets the starting cell of the maze
-	 *
-	 * @param cell The starting cell
-	 */
-    public void setStartingCell(Cell cell) {
-        startingCell.setStart(false);
-        startingCell = cell;
-        startingCell.setStart(true);
-    }
-
-	/**
-	 * Sets the ending cell of the maze
-	 *
-	 * @param cell The ending cell
-	 */
-    public void setEndingCell(Cell cell) {
-        endingCell.setEnd(false);
-        endingCell = cell;
-        endingCell.setEnd(true);
-    }
+		for (int r = 0; r < numRows; r++) {
+			for (int c = 0; c < numCols; c++) {
+				maze[r][c] = new Cell(r, c);
+			}
+		}
+	}
 
 	/**
 	 * Defaults the start and end points for the maze. This function is called at the end of generation so that the user
 	 * isn't required to pick start and end points. The start point is defaulted to the top left cell, and the end point
 	 * is defaulted to the bottom right cell.
 	 */
-    public void defaultWaypoints() {
-        startingCell = maze[0][0];
-        endingCell = maze[maze.length - 1][maze[maze.length - 1].length - 1];
-    }
+	public void defaultWaypoints() {
+		startingCell = maze[0][0];
+		endingCell = maze[maze.length - 1][maze[maze.length - 1].length - 1];
+	}
 }

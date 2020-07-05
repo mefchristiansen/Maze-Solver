@@ -11,15 +11,15 @@ import javax.swing.event.ChangeEvent;
  * the number of rows to be used in the next maze generation accordingly.
  */
 public class MazeCustomNumRowsListener extends MazeChangeListener {
-    public MazeCustomNumRowsListener(MazeController mazeController) {
-        super(mazeController);
-    }
+	public MazeCustomNumRowsListener(MazeController mazeController) {
+		super(mazeController);
+	}
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        JSpinner rowsSpinner = (JSpinner) e.getSource();
-        SpinnerNumberModel rowsSpinnerModel = (SpinnerNumberModel)(rowsSpinner.getModel());
-        int numRows = (int) rowsSpinnerModel.getNumber();
-        mazeController.setMazeNumRows(numRows);
-    }
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		JSpinner rowsSpinner = (JSpinner) e.getSource();
+		SpinnerNumberModel rowsSpinnerModel = (SpinnerNumberModel) (rowsSpinner.getModel());
+		int numRows = (int) rowsSpinnerModel.getNumber();
+		mazeController.setMazeNumRows(numRows);
+	}
 }

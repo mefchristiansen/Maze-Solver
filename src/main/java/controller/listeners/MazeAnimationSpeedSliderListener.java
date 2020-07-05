@@ -11,16 +11,16 @@ import javax.swing.event.ChangeEvent;
  * the animation speed accordingly.
  */
 public class MazeAnimationSpeedSliderListener extends MazeChangeListener {
-    public MazeAnimationSpeedSliderListener(MazeController mazeController) {
-        super(mazeController);
-    }
+	public MazeAnimationSpeedSliderListener(MazeController mazeController) {
+		super(mazeController);
+	}
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        JSlider source = (JSlider)e.getSource();
-        if (!source.getValueIsAdjusting()) { // Only set the speed once the user releases the slider.
-            int animationSpeed = source.getValue();
-            mazeController.setAnimationSpeed(animationSpeed);
-        }
-    }
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		JSlider source = (JSlider) e.getSource();
+		if (!source.getValueIsAdjusting()) { // Only set the speed once the user releases the slider.
+			int animationSpeed = source.getValue();
+			mazeController.setAnimationSpeed(animationSpeed);
+		}
+	}
 }

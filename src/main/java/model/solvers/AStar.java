@@ -1,13 +1,14 @@
 package model.solvers;
 
+import controller.MazeController;
 import model.Cell;
 import model.Cell.CellVisitState;
 import model.Direction;
 import model.Maze;
 import model.MazeSolverWorker;
-import controller.MazeController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 
 /**
@@ -18,7 +19,7 @@ import java.util.concurrent.CancellationException;
  * this case, the heuristic (i.e. estimated cost), is the Manhattan Distance between the current and end node. Unlike
  * BFS and DFS, A* is an informed search algorithm, meaning that it knows where the end node is, and uses this knowledge
  * to make an informed guess as to which path is most efficient.
- *
+ * <p>
  * https://en.wikipedia.org/wiki/A*_search_algorithm
  */
 public class AStar extends MazeSolverWorker {
@@ -136,27 +137,27 @@ public class AStar extends MazeSolverWorker {
 	 */
 	private List<Cell> unvisitedNeighbors(Cell current) {
 		Cell neighbor;
-	    List<Cell> unvisitedNeighbors = new ArrayList<>();
-	    int currRow = current.row();
-	    int currCol = current.col();
-	    int newRow, newCol;
+		List<Cell> unvisitedNeighbors = new ArrayList<>();
+		int currRow = current.row();
+		int currCol = current.col();
+		int newRow, newCol;
 
-	    for (Direction direction : Direction.values()) {
-	        newRow = currRow + direction.dy;
-	        newCol = currCol + direction.dx;
+		for (Direction direction : Direction.values()) {
+			newRow = currRow + direction.dy;
+			newCol = currCol + direction.dx;
 
-	        if (!maze.inBounds(newRow, newCol)) {
-	            continue;
-            }
+			if (!maze.inBounds(newRow, newCol)) {
+				continue;
+			}
 
-	        neighbor = maze.mazeCell(newRow, newCol);
+			neighbor = maze.mazeCell(newRow, newCol);
 
-	        if (current.wallMissing(direction) && neighbor.unvisited()) {
-	            unvisitedNeighbors.add(neighbor);
-	        }
-	    }
+			if (current.wallMissing(direction) && neighbor.unvisited()) {
+				unvisitedNeighbors.add(neighbor);
+			}
+		}
 
-	    return unvisitedNeighbors;
+		return unvisitedNeighbors;
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class AStar extends MazeSolverWorker {
 	 * ending cell
 	 *
 	 * @param cell A cell
-	 * @param end The maze ending
+	 * @param end  The maze ending
 	 * @return The Manhattan Distance between the two cells
 	 */
 	private int manhattan_distance(Cell cell, Cell end) {

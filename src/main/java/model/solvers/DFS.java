@@ -1,13 +1,16 @@
 package model.solvers;
 
+import controller.MazeController;
 import model.Cell;
 import model.Cell.CellVisitState;
 import model.Direction;
 import model.Maze;
 import model.MazeSolverWorker;
-import controller.MazeController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Stack;
 import java.util.concurrent.CancellationException;
 
 /**
@@ -16,7 +19,7 @@ import java.util.concurrent.CancellationException;
  * along a specific branch before backtracking. This uses the opposite strategy compared to BFS. This algorithm can be
  * implemented either recursively or iteratively (I implemented it using the iterative approach). The algorithm uses a
  * Stack to keep track of all the previously visited nodes which it will pop off when backtracking.
- *
+ * <p>
  * https://en.wikipedia.org/wiki/Depth-first_search
  */
 public class DFS extends MazeSolverWorker {
@@ -40,7 +43,7 @@ public class DFS extends MazeSolverWorker {
 			current.setCurrent(true);
 
 			if (current == end) { // Check if the current cell is the goal cell (i.e. maze has been solved)
-                maze.setGoal(current);
+				maze.setGoal(current);
 				return true;
 			}
 
@@ -115,34 +118,34 @@ public class DFS extends MazeSolverWorker {
 	 */
 	private Cell unvisitedNeighbor(Cell current) {
 		Cell neighbor;
-	    List<Cell> unvisitedNeighbors = new ArrayList<>();
-	    int currRow = current.row();
-	    int currCol = current.col();
-	    int newRow, newCol;
+		List<Cell> unvisitedNeighbors = new ArrayList<>();
+		int currRow = current.row();
+		int currCol = current.col();
+		int newRow, newCol;
 
-	    Random rand = new Random();
+		Random rand = new Random();
 
-	    for (Direction direction : Direction.values()) {
-	        newRow = currRow + direction.dy;
-	        newCol = currCol + direction.dx;
+		for (Direction direction : Direction.values()) {
+			newRow = currRow + direction.dy;
+			newCol = currCol + direction.dx;
 
 			// Check that the cell is in the bounds of the maze
-            if (!maze.inBounds(newRow, newCol)) {
-                continue;
-            }
+			if (!maze.inBounds(newRow, newCol)) {
+				continue;
+			}
 
 			neighbor = maze.mazeCell(newRow, newCol);
 
-            // Check that the cell hasn't already been visited and that a wall doesn't exist in that direction
-	        if (current.wallMissing(direction) && neighbor.unvisited()) {
-	            unvisitedNeighbors.add(neighbor);
-	        }
-	    }
+			// Check that the cell hasn't already been visited and that a wall doesn't exist in that direction
+			if (current.wallMissing(direction) && neighbor.unvisited()) {
+				unvisitedNeighbors.add(neighbor);
+			}
+		}
 
-	    if (unvisitedNeighbors.size() == 0) {
-	        return null;
-	    }
+		if (unvisitedNeighbors.size() == 0) {
+			return null;
+		}
 
-	    return unvisitedNeighbors.get(rand.nextInt(unvisitedNeighbors.size()));
+		return unvisitedNeighbors.get(rand.nextInt(unvisitedNeighbors.size()));
 	}
 }

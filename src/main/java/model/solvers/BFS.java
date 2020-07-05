@@ -1,13 +1,16 @@
 package model.solvers;
 
+import controller.MazeController;
 import model.Cell;
 import model.Cell.CellVisitState;
 import model.Direction;
 import model.Maze;
 import model.MazeSolverWorker;
-import controller.MazeController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CancellationException;
 
 /**
@@ -15,7 +18,7 @@ import java.util.concurrent.CancellationException;
  * traverses a graph by starting at the root node (in this case the starting cell), and explores all of the cells at
  * the present depth before moving onto nodes at the next depth. This uses the opposite strategy compared to DFS. The
  * algorithm uses a Queue to store the cells to be visited at each depth.
- *
+ * <p>
  * https://en.wikipedia.org/wiki/Breadth-first_search
  */
 public class BFS extends MazeSolverWorker {
@@ -23,15 +26,15 @@ public class BFS extends MazeSolverWorker {
 		super(maze, mazeController);
 	}
 
-    @Override
-    protected Boolean doInBackground() throws Exception {
-        Cell current;
-        Cell end = maze.getEndingCell();
-        Queue<Cell> searchQueue = new LinkedList<>();
-        searchQueue.add(maze.getStartingCell());
+	@Override
+	protected Boolean doInBackground() throws Exception {
+		Cell current;
+		Cell end = maze.getEndingCell();
+		Queue<Cell> searchQueue = new LinkedList<>();
+		searchQueue.add(maze.getStartingCell());
 
-        while (!searchQueue.isEmpty()) {
-            current = searchQueue.remove();
+		while (!searchQueue.isEmpty()) {
+			current = searchQueue.remove();
 			current.setCurrent(true);
 			current.setVisitState(CellVisitState.VISITED);
 
@@ -40,7 +43,7 @@ public class BFS extends MazeSolverWorker {
 				return true;
 			}
 
-            List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
+			List<Cell> unvisitedNeighbors = unvisitedNeighbors(current);
 
             /*
             	Add each valid unvisited neighboring cell to the Queue to be visited later
@@ -55,22 +58,22 @@ public class BFS extends MazeSolverWorker {
 
 			Thread.sleep(mazeController.getAnimationSpeed());
 
-            current.setCurrent(false);
-        }
+			current.setCurrent(false);
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 	/**
 	 * Override of the SwingWorker process function, which repaints the maze at every iteration of maze solving
 	 * asynchronously on the event dispatch thread.
 	 */
-    @Override
-    protected void process(List<Maze> chunks) {
-        for (Maze maze : chunks) {
-            mazeController.repaintMaze(maze);
-        }
-    }
+	@Override
+	protected void process(List<Maze> chunks) {
+		for (Maze maze : chunks) {
+			mazeController.repaintMaze(maze);
+		}
+	}
 
 	/**
 	 * Override of the SwingWorker done function (run after the thread is completed). If the maze was successfully
@@ -79,23 +82,23 @@ public class BFS extends MazeSolverWorker {
 	 * maze reset function in the controller, and any clean-up will be handled there. For other exceptions, these will
 	 * not have been triggered by the maze reset function, so that will trigger the maze reset function to clean up.
 	 */
-    @Override
-    protected void done() {
+	@Override
+	protected void done() {
 		Boolean status;
 
-        try {
-            status = get();
+		try {
+			status = get();
 
-            if (status) {
-                mazeController.solveMazeSuccess();
-            } else {
-                mazeController.reset();
-            }
+			if (status) {
+				mazeController.solveMazeSuccess();
+			} else {
+				mazeController.reset();
+			}
 		} catch (CancellationException ignore) {
 		} catch (Exception e) {
 			mazeController.reset();
 		}
-    }
+	}
 
 	/**
 	 * Iterates through all neighbours of the currently visited cell (up, down left, right), and returns all of the
@@ -106,28 +109,28 @@ public class BFS extends MazeSolverWorker {
 	 */
 	private List<Cell> unvisitedNeighbors(Cell current) {
 		Cell neighbor;
-	    List<Cell> unvisitedNeighbors = new ArrayList<>();
-	    int currRow = current.row();
-	    int currCol = current.col();
-	    int newRow, newCol;
+		List<Cell> unvisitedNeighbors = new ArrayList<>();
+		int currRow = current.row();
+		int currCol = current.col();
+		int newRow, newCol;
 
-	    for (Direction direction : Direction.values()) {
-            newCol = currCol + direction.dx;
-	        newRow = currRow + direction.dy;
+		for (Direction direction : Direction.values()) {
+			newCol = currCol + direction.dx;
+			newRow = currRow + direction.dy;
 
 			// Check that the cell is in the bounds of the maze
-	        if (!maze.inBounds(newRow, newCol)) {
-	            continue;
-            }
+			if (!maze.inBounds(newRow, newCol)) {
+				continue;
+			}
 
-	        neighbor = maze.mazeCell(newRow, newCol);
+			neighbor = maze.mazeCell(newRow, newCol);
 
 			// Check that the cell hasn't already been visited and that a wall doesn't exist in that direction
-	        if (current.wallMissing(direction) && neighbor.unvisited()) {
-	            unvisitedNeighbors.add(neighbor);
-	        }
-	    }
+			if (current.wallMissing(direction) && neighbor.unvisited()) {
+				unvisitedNeighbors.add(neighbor);
+			}
+		}
 
-	    return unvisitedNeighbors;
+		return unvisitedNeighbors;
 	}
 }

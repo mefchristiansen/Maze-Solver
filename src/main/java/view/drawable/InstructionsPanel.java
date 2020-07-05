@@ -16,7 +16,7 @@ public class InstructionsPanel extends JPanel {
 
 	public InstructionsPanel() {
 		setLayout(new BorderLayout());
-		Border margin = new EmptyBorder(5,5,5,5);
+		Border margin = new EmptyBorder(5, 5, 5, 5);
 		setBorder(new CompoundBorder(new EtchedBorder(), margin));
 
 		this.instructions = new JTextArea();

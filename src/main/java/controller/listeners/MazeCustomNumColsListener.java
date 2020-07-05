@@ -11,15 +11,15 @@ import javax.swing.event.ChangeEvent;
  * the number of columns to be used in the next maze generation accordingly.
  */
 public class MazeCustomNumColsListener extends MazeChangeListener {
-    public MazeCustomNumColsListener(MazeController mazeController) {
-        super(mazeController);
-    }
+	public MazeCustomNumColsListener(MazeController mazeController) {
+		super(mazeController);
+	}
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        JSpinner colsSpinner = (JSpinner) e.getSource();
-        SpinnerNumberModel colsSpinnerModel = (SpinnerNumberModel)(colsSpinner.getModel());
-        int numCols = (int) colsSpinnerModel.getNumber();
-        mazeController.setMazeNumCols(numCols);
-    }
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		JSpinner colsSpinner = (JSpinner) e.getSource();
+		SpinnerNumberModel colsSpinnerModel = (SpinnerNumberModel) (colsSpinner.getModel());
+		int numCols = (int) colsSpinnerModel.getNumber();
+		mazeController.setMazeNumCols(numCols);
+	}
 }

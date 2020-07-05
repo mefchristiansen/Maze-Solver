@@ -1,7 +1,9 @@
 package model;
 
 import controller.MazeController;
-import model.solvers.*;
+import model.solvers.AStar;
+import model.solvers.BFS;
+import model.solvers.DFS;
 
 /**
  * The MazeSolverWorker factory.
@@ -15,7 +17,7 @@ public class MazeSolverWorkerFactory {
 
 		MazeSolverWorker mazeSolverWorker;
 
-		switch(solverType) {
+		switch (solverType) {
 			case BFS:
 				mazeSolverWorker = new BFS(maze, mazeController);
 				break;

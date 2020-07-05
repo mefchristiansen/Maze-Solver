@@ -11,19 +11,19 @@ import java.awt.event.ActionEvent;
  * radio, and updates the maze solve selection accordingly on change.
  */
 public class MazeSolverSelectionRadioListener extends MazeActionListener {
-    public MazeSolverSelectionRadioListener(MazeController mazeController) {
-        super(mazeController);
-    }
+	public MazeSolverSelectionRadioListener(MazeController mazeController) {
+		super(mazeController);
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-        SolverType solverTypeChoice = SolverType.fromString(command); // Determines which solver type has been selected.
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String command = e.getActionCommand();
+		SolverType solverTypeChoice = SolverType.fromString(command); // Determines which solver type has been selected.
 
-        if (solverTypeChoice == null) {
-            return;
-        }
+		if (solverTypeChoice == null) {
+			return;
+		}
 
-        mazeController.setSolverType(solverTypeChoice);
-    }
+		mazeController.setSolverType(solverTypeChoice);
+	}
 }

@@ -10,12 +10,12 @@ import java.awt.event.ActionEvent;
  * button and triggers maze resetting.
  */
 public class MazeResetListener extends MazeActionListener {
-    public MazeResetListener(MazeController mazeController) {
-        super(mazeController);
-    }
+	public MazeResetListener(MazeController mazeController) {
+		super(mazeController);
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        mazeController.reset();
-    }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		mazeController.reset();
+	}
 }
