@@ -94,20 +94,19 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	 */
     @Override
     protected void done() {
-		Boolean status;
+    	Boolean status;
 
-		try {
-			status = get();
-
-			if (status) {
-				mazeController.generateMazeSuccess();
-			} else {
-				mazeController.reset();
-			}
-		} catch (CancellationException ignore) {
+    	try {
+    		status = get();
+    		if (status) {
+    			mazeController.generateMazeSuccess();
+    		} else {
+    			mazeController.reset();
+    		}
+    	} catch (CancellationException ignore) {
 		} catch (Exception e) {
-			mazeController.reset();
-		}
+    		mazeController.reset();
+    	}
     }
 
 	/**
