@@ -175,7 +175,7 @@ public class MazeController {
 	/**
 	 * Function called on maze generation success to update the maze state, and to default the starting and ending cell
 	 * for solving the maze.
- 	*/
+	 */
     public void generateMazeSuccess() {
         state = MazeState.GENERATED;
         maze.defaultWaypoints();
@@ -199,7 +199,7 @@ public class MazeController {
 
 	/**
 	 * Function called on maze generation success to update the maze state, and to trigger the solution path walker.
- 	*/
+ 	 */
     public void solveMazeSuccess() {
         state = MazeState.SOLVED;
         walkSolutionPath();
@@ -208,7 +208,7 @@ public class MazeController {
 
 	/**
 	 * Executes the solution path walker to draw the solution path from the starting cell to the ending cell.
- 	*/
+ 	 */
     private void walkSolutionPath() {
         solutionWalker = new MazeSolutionWalkerWorker(maze, this);
         solutionWalker.execute();
@@ -217,7 +217,7 @@ public class MazeController {
 	/**
 	 * Resets the maze to its initial state, ready to generate a new maze. This includes cancelling all currently
 	 * running threads, resetting the maze cells, and repainting the view.
- 	*/
+ 	 */
     public void reset() {
         resetThreads();
 
@@ -230,7 +230,7 @@ public class MazeController {
 
 	/**
 	 * Cancels any currently running SwingWorker.
- 	*/
+	 */
     private void resetThreads() {
         if (generator != null) {
             generator.cancel(true);
@@ -254,7 +254,7 @@ public class MazeController {
 
 	/**
 	 * Updates instructions for maze on the GUI (based on the maze state) asynchronously.
- 	*/
+ 	 */
     public void setInstructions() {
 		SwingUtilities.invokeLater(view::setInstructions);
     }
