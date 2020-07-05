@@ -133,7 +133,7 @@ public class MazeController {
 	 * each stage has an individual scaling factor.
 	 *
 	 * @return the thread sleep time for animation
-	*/
+	 */
 	public long getAnimationSpeed() {
         double animationSpeedMultiplier;
 
