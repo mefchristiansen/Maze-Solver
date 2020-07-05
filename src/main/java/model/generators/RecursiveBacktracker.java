@@ -104,7 +104,7 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
     			mazeController.reset();
     		}
     	} catch (CancellationException ignore) {
-		} catch (Exception e) {
+    	} catch (Exception e) {
     		mazeController.reset();
     	}
     }
