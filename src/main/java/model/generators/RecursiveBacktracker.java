@@ -119,11 +119,11 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	 */
     private Cell unvisitedNeighbor(Cell current) {
     	Cell unvisitedNeighbor;
-		Random rand = new Random();
-	    List<Cell> unvisitedNeighbors = new ArrayList<>();
-	    int currRow = current.row();
-	    int currCol = current.col();
-	    int newRow, newCol;
+    	Random rand = new Random();
+    	List<Cell> unvisitedNeighbors = new ArrayList<>();
+    	int currRow = current.row();
+    	int currCol = current.col();
+    	int newRow, newCol;
 
 	    for (Direction dir : Direction.values()) {
 	        newRow = currRow + dir.dy;
@@ -160,7 +160,7 @@ public class RecursiveBacktracker extends MazeGeneratorWorker {
 	 */
 	private void removeWalls(Cell current, Cell neighbour) {
 	    Direction direction = current.directionToCell(neighbour);
-        current.removeWall(direction);
-        neighbour.removeWall(direction.oppositeDirection());
+	    current.removeWall(direction);
+	    neighbour.removeWall(direction.oppositeDirection());
 	}
 }
